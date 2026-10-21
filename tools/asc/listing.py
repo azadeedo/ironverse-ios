@@ -94,8 +94,13 @@ def _():
 
 @step('App Review contact and notes')
 def _():
+    phone = os.environ.get('IV_CONTACT_PHONE', '').strip()
+    if not phone:
+        # Apple refuses the review details without a +country phone number
+        print('   SKIPPED: set IV_CONTACT_PHONE (e.g. +61 4xx xxx xxx) in Codemagic to write these')
+        return
     attrs = {'contactFirstName': 'Nouri', 'contactLastName': 'Khalil', 'contactEmail': 'azade@live.com.au',
-             'demoAccountRequired': False, 'notes': NOTES}
+             'contactPhone': phone, 'demoAccountRequired': False, 'notes': NOTES}
     r = requests.get(API + f'/v1/appStoreVersions/{VID}/appStoreReviewDetail', headers={'Authorization': 'Bearer ' + token()}, timeout=60)
     existing = r.json().get('data') if r.status_code == 200 else None
     if existing:
@@ -142,6 +147,37 @@ def upload_review_shot(sub_id, path):
 
 for sid, p in SUBS.items():
     step(f'review screenshot for subscription {sid}')(lambda sid=sid, p=p: upload_review_shot(sid, p))
+
+GROUP = '22499474'
+
+
+def get(path):
+    r = requests.get(API + path, headers={'Authorization': 'Bearer ' + token()}, timeout=60)
+    return r.json() if r.status_code == 200 else {'error': r.status_code, 'body': r.text[:300]}
+
+
+@step('subscription group localization (App Store display name)')
+def _():
+    locs = get(f'/v1/subscriptionGroups/{GROUP}/subscriptionGroupLocalizations').get('data') or []
+    for l in locs:
+        print(f'   {l["attributes"].get("locale")}: "{l["attributes"].get("name")}" state {l["attributes"].get("state")}')
+    if not any(l['attributes'].get('locale') == 'en-AU' for l in locs):
+        call('POST', '/v1/subscriptionGroupLocalizations', {'data': {'type': 'subscriptionGroupLocalizations',
+             'attributes': {'locale': 'en-AU', 'name': 'Ironverse Pro'},
+             'relationships': {'subscriptionGroup': {'data': {'type': 'subscriptionGroups', 'id': GROUP}}}}})
+        print('   created en-AU group name "Ironverse Pro"')
+
+
+@step('subscription metadata check')
+def _():
+    for sid in SUBS:
+        a = call('GET', f'/v1/subscriptions/{sid}')['data']['attributes']
+        locs = get(f'/v1/subscriptions/{sid}/subscriptionLocalizations').get('data') or []
+        prices = get(f'/v1/subscriptions/{sid}/prices?limit=200').get('data') or []
+        shot = (get(f'/v1/subscriptions/{sid}/appStoreReviewScreenshot').get('data') or {}).get('attributes', {})
+        print(f'   {a.get("productId")}: state {a.get("state")}, period {a.get("subscriptionPeriod")}, family {a.get("familySharable")}, '
+              f'review note {bool(a.get("reviewNote"))}, localizations {[(l["attributes"]["locale"], l["attributes"].get("state")) for l in locs]}, '
+              f'price rows {len(prices)}, screenshot {(shot.get("assetDeliveryState") or {}).get("state")}')
 
 print('\nSUMMARY: ' + ('all steps OK' if not failures else 'FAILED: ' + '; '.join(failures)))
 sys.exit(1 if failures else 0)
