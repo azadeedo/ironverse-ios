@@ -13,7 +13,15 @@
 // ============================================================
 
 import Anthropic from '@anthropic-ai/sdk'
-import { SETTING_KEYS, getSetting } from '@/db'
+import { SETTING_KEYS, getSetting, setSetting } from '@/db'
+import { isAppStoreEdition } from './edition'
+
+export const AI_CONSENT_KEY = 'ai:consent'
+export const AI_CONSENT_TEXT = [
+  'Send this meal photo to Anthropic (Claude) for a calorie estimate?',
+  'The photo is sent using YOUR Anthropic API key, straight from this iPhone to Anthropic — Ironverse has no server and keeps no copy. Anthropic handles it under its own privacy policy.',
+  'Allow photo estimates?',
+].join('\n\n')
 
 export const VISION_MODEL = 'claude-opus-5-5'
 const DEFAULT_TIMEOUT_MS = 45_000
@@ -276,6 +284,13 @@ export async function estimateMealFromPhoto(
 ): Promise<VisionItem[]> {
   const key = await getAiKey()
   if (!key) throw new VisionError('no-key', NO_KEY_HEADLINE, NO_KEY_DETAIL)
+
+  // App Store build: ask once before any photo goes to a third-party AI service (App Review 5.1.2)
+  if (isAppStoreEdition() && !(await getSetting<boolean>(AI_CONSENT_KEY, false))) {
+    const yes = typeof window !== 'undefined' && window.confirm(AI_CONSENT_TEXT)
+    if (!yes) throw new VisionError('no-key', 'Photo estimate not sent.', 'Nothing left your iPhone. You can add the meal by hand, or allow photo estimates next time.')
+    await setSetting(AI_CONSENT_KEY, true)
+  }
 
   if (typeof navigator !== 'undefined' && navigator.onLine === false) {
     throw new VisionError(

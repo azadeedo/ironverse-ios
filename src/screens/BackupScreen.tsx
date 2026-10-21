@@ -410,6 +410,12 @@ export default function BackupScreen() {
                 })}
             </Card>
 
+            <div className={`rounded-xl2 px-3.5 py-2.5 text-[12.5px] ${pending.integrity === 'verified' ? 'bg-emerald-500/10 text-emerald-300' : 'bg-surface2 text-ink3'}`}>
+              {pending.integrity === 'verified'
+                ? 'Integrity check passed — this file is exactly as it was saved.'
+                : 'Older backup (made before integrity checks) — row counts were checked and match.'}
+            </div>
+
             <div>
               <div className="mb-2 text-[13px] font-semibold text-ink">How should it be applied?</div>
               <div className="space-y-2">

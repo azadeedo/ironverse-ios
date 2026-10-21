@@ -5,3 +5,14 @@ dev-dist
 
 # Local Netlify folder
 .netlify
+
+# iOS / signing secrets — never commit
+*.p8
+*.p12
+*.cer
+*.mobileprovision
+*.keystore
+.env.local
+.env.*.local
+AuthKey_*.p8
+ios/App/App/public

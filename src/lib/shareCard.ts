@@ -1,6 +1,7 @@
 // Hevy-style workout share card: drawn on a canvas on the phone, shared as a PNG
 // through the system share sheet (or downloaded). Nothing is uploaded anywhere.
 import type { WorkoutLog } from '@/db/types'
+import { isNativeApp } from './edition'
 
 export interface CardData { log: WorkoutLog; durationSec: number; volumeKg: number; prs: { name: string; detail: string }[]; names: Record<string, string> }
 
@@ -48,6 +49,8 @@ export async function shareWorkoutCard(d: CardData): Promise<'shared' | 'downloa
   const c = document.createElement('canvas'); drawWorkoutCard(d, c)
   const blob: Blob = await new Promise((res) => c.toBlob((b) => res(b!), 'image/png'))
   const file = new File([blob], `ironverse-${d.log.date}.png`, { type: 'image/png' })
+  // iOS app: hand the PNG to the native share sheet (Save Image, Messages, …)
+  if (isNativeApp()) { try { const { nativeShareBlob } = await import('@/native/files'); if (await nativeShareBlob(blob, file.name, d.log.title)) return 'shared' } catch { /* fall through */ } }
   if (navigator.canShare?.({ files: [file] })) { try { await navigator.share({ files: [file], title: d.log.title }); return 'shared' } catch { /* cancelled */ } }
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = file.name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000)
   return 'downloaded'

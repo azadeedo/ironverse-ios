@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { RefreshCw, Sparkles } from 'lucide-react'
 import { Button, Card } from '@/components/ui'
+import { isAppStoreEdition } from '@/lib/edition'
 import { applyUpdate, BUILD, checkForUpdates, RELEASED, VERSION, type UpdateCheck } from '@/lib/version'
 
 
@@ -46,6 +47,12 @@ export function AppVersionCard() {
     <Card className="space-y-2 p-4 text-[13px]">
       <div className="flex items-baseline justify-between"><b className="text-[15px]">App version</b><span className="big-num text-brand">v{VERSION}</span></div>
       <div className="text-[12px] text-ink3">Build {BUILD} · released {new Date(RELEASED).toLocaleString('en-AU', { dateStyle: 'medium', timeStyle: 'short' })}</div>
+      {isAppStoreEdition() ? (
+        <div className="space-y-2">
+          <Button small variant="ghost" onClick={() => navigate('/whats-new')}>What’s new</Button>
+          <div className="text-[11px] text-ink3">Updates arrive through the App Store. Your workouts and logs stay on this iPhone and are kept through every update.</div>
+        </div>
+      ) : (<>
       <div className="flex gap-2">
         <Button small variant="secondary" disabled={busy} onClick={() => { setBusy(true); void checkForUpdates().then(setRes).finally(() => setBusy(false)) }}><RefreshCw size={14} /> {busy ? 'Checking…' : 'Check for updates'}</Button>
         <Button small variant="ghost" onClick={() => navigate('/whats-new')}>What’s new</Button>
@@ -54,6 +61,7 @@ export function AppVersionCard() {
       {res?.state === 'available' && <div className="space-y-1.5 text-amber-200"><div>v{res.live.version} is live (build {res.live.build}). It is downloading — tap Update now when the banner appears, or close and reopen the app.</div><Button small onClick={() => void applyUpdate()}>Update now</Button></div>}
       {res?.state === 'offline' && <div className="text-ink3">Couldn’t reach the server — you may be offline. Everything still works offline.</div>}
       <div className="text-[11px] text-ink3">Updates never require deleting the Home Screen icon. Accept the prompt, or fully close the app and reopen it.</div>
+      </>)}
     </Card>
   )
 }
@@ -84,6 +92,11 @@ export function LaunchStatus() {
   useEffect(() => {
     let last: string | null = null
     try { last = localStorage.getItem(LAST_KEY); localStorage.setItem(LAST_KEY, BUILD) } catch { /* private mode */ }
+    // iOS app: the App Store installs updates, so only confirm an update that just happened
+    if (isAppStoreEdition()) {
+      if (last && last !== BUILD) setState({ kind: 'updated', text: `Updated to v${VERSION} — your data is unchanged` })
+      return
+    }
     const t = window.setTimeout(() => {
       void checkForUpdates().then((r) => {
         if (r.state === 'available') { if (!(window as unknown as { __ivNeedRefresh?: boolean }).__ivNeedRefresh) setState({ kind: 'new', text: `Update ready · v${r.live.version}` }) }

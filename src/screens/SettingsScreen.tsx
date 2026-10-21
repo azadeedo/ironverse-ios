@@ -29,6 +29,8 @@ import {
   recommendedWaterMl, stackStepsToText, upsertTodayWeighIn,
 } from './settings/lib'
 import { Stepper } from './settings/Stepper'
+import { useTour } from '@/components/Tour'
+import { isAppStoreEdition } from '@/lib/edition'
 import { AiKeyCard } from './settings/AiKeyCard'
 import { AdaptiveCaloriesCard } from './settings/AdaptiveCaloriesCard'
 import { FoodPrefsCard } from './settings/FoodPrefsCard'
@@ -504,6 +506,22 @@ export default function SettingsScreen() {
             subtitle="Re-answer the onboarding questions"
             onClick={() => navigate('/onboarding')}
           />
+          <div data-tour="replay-tour">
+            <ListRow
+              leading={<Sparkles size={19} className="text-brand" />}
+              title="Replay the app tour"
+              subtitle="Where to start workouts, log sets, track calories and more"
+              onClick={() => useTour.getState().start('/settings')}
+            />
+          </div>
+          {isAppStoreEdition() && (
+            <ListRow
+              leading={<Wrench size={19} className="text-ink2" />}
+              title="First-time setup"
+              subtitle="Goals, strength check and training preferences — your data is kept"
+              onClick={() => navigate('/welcome?step=1')}
+            />
+          )}
           <ListRow
             leading={<Database size={19} className="text-ink2" />}
             title="Ironverse"

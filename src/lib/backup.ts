@@ -12,6 +12,7 @@
 import { db, setSetting, SETTING_KEYS } from '@/db'
 import type { Snapshot } from '@/db/types'
 import { newId, nowIso, todayStr } from './id'
+import { isAppStoreEdition, isNativeApp } from './edition'
 
 const FORMAT = 'ironverse-backup'
 const FORMAT_VERSION = 2
@@ -74,6 +75,23 @@ export interface BackupPayload {
   appVersion?: string
   counts: Record<string, number>
   tables: Record<string, unknown[]>
+  // ---- added for the iOS app (all optional, so every older backup still imports) ----
+  /** Dexie schema version of the database that wrote it */
+  schema?: number
+  /** 'web' or 'ios' — where the backup was made */
+  edition?: string
+  /** SHA-256 (hex) of JSON.stringify(tables) — detects a truncated or edited file */
+  checksum?: string
+}
+
+/** SHA-256 of the tables block, exactly as it is written into the file. */
+export async function tablesChecksum(tables: Record<string, unknown[]>): Promise<string | null> {
+  try {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(JSON.stringify(tables)))
+    return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('')
+  } catch {
+    return null // no WebCrypto — the backup is still written, just without a checksum
+  }
 }
 
 /** Everything in the database, Blobs included. */
@@ -90,12 +108,17 @@ export async function buildBackupPayload(
     tables[table.name] = (await serialise(rows)) as unknown[]
     counts[table.name] = rows.length
   }
+  const checksum = await tablesChecksum(tables)
   return {
     format: FORMAT,
     version: FORMAT_VERSION,
     exportedAt: nowIso(),
+    appVersion: typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : undefined,
+    schema: db.verno,
+    edition: isAppStoreEdition() ? 'ios' : 'web',
     counts,
     tables,
+    ...(checksum ? { checksum } : {}),
   }
 }
 
@@ -128,6 +151,12 @@ export interface BackupInfo {
   /** earliest / latest dated record found, for a human sanity check */
   dateRange?: { from: string; to: string }
   payload: BackupPayload
+  /** 'verified' = checksum matched; 'unchecked' = an older backup made before checksums existed */
+  integrity?: 'verified' | 'unchecked'
+}
+
+export class DamagedBackup extends Error {
+  constructor(detail: string) { super(`This backup file is damaged or was changed after it was saved (${detail}). Nothing was imported.`) }
 }
 
 export class NeedsPassphrase extends Error { constructor() { super('This backup is encrypted — enter its passphrase') } }
@@ -147,6 +176,20 @@ export async function inspectBackup(file: Blob, passphrase?: string): Promise<Ba
     data = JSON.parse(text)
   }
   if (data?.format !== FORMAT) throw new Error('That is not an Ironverse backup file.')
+  if (!data.tables || typeof data.tables !== 'object') throw new DamagedBackup('no data tables')
+
+  // integrity: every table must hold the number of rows the header says,
+  // and (backups from this version on) the SHA-256 must match
+  for (const [name, n] of Object.entries(data.counts ?? {})) {
+    const rows = (data.tables as Record<string, unknown[]>)[name]
+    if (n > 0 && (!Array.isArray(rows) || rows.length !== n)) throw new DamagedBackup(`${name}: expected ${n} rows, found ${Array.isArray(rows) ? rows.length : 0}`)
+  }
+  let integrity: BackupInfo['integrity'] = 'unchecked'
+  if (data.checksum) {
+    const actual = await tablesChecksum(data.tables)
+    if (actual && actual !== data.checksum) throw new DamagedBackup('checksum mismatch')
+    if (actual) integrity = 'verified'
+  }
 
   const counts = data.counts ?? {}
   const totalRows = Object.values(counts).reduce((a, b) => a + b, 0)
@@ -170,6 +213,7 @@ export async function inspectBackup(file: Blob, passphrase?: string): Promise<Ba
     totalRows,
     dateRange: from && to ? { from, to } : undefined,
     payload: data,
+    integrity,
   }
 }
 
@@ -343,6 +387,8 @@ export async function daysSinceExport(): Promise<number | null> {
 
 // ---------- file out ----------
 export function downloadBlob(blob: Blob, filename: string): void {
+  // iOS app: <a download> does nothing inside the native shell — use the share sheet
+  if (isNativeApp()) { void import('@/native/files').then((m) => m.nativeShareBlob(blob, filename)).catch(() => {}); return }
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url
@@ -359,6 +405,10 @@ export function downloadBlob(blob: Blob, filename: string): void {
  * files, so try that first and fall back to a download.
  */
 export async function shareOrDownload(blob: Blob, filename: string, title?: string): Promise<void> {
+  if (isNativeApp()) {
+    const { nativeShareBlob } = await import('@/native/files')
+    if (await nativeShareBlob(blob, filename, title)) return
+  }
   const file = new File([blob], filename, { type: blob.type })
   const nav = navigator as Navigator & { canShare?: (d: ShareData) => boolean }
   if (typeof nav.canShare === 'function' && nav.canShare({ files: [file] })) {

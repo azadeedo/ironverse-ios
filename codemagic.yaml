@@ -1,0 +1,78 @@
+# Ironverse iOS — Codemagic cloud builds (macOS + Xcode in the cloud; nothing here runs on Windows).
+# Docs: docs/IOS.md. Free plan: 500 macOS (M2) minutes / month. One build ≈ 10–15 min.
+# No secrets live in this file: signing comes from the App Store Connect API key you add
+# in Codemagic → Team settings → Integrations, under the name below.
+
+workflows:
+  # 1) Works TODAY with no Apple account: proves the native project compiles (simulator, unsigned).
+  ios-compile-check:
+    name: Ironverse iOS — compile check (no signing)
+    instance_type: mac_mini_m2
+    max_build_duration: 45
+    environment:
+      node: 22
+      xcode: latest
+    triggering:
+      events: [push]
+      branch_patterns:
+        - pattern: main
+    scripts:
+      - name: Install
+        script: npm ci
+      - name: Unit tests
+        script: npm test
+      - name: Build web bundle (iOS edition)
+        script: npm run build:ios && node tools/verify-ios-build.mjs
+      - name: Sync native project
+        script: npx cap sync ios
+      - name: Compile for the iOS simulator (unsigned)
+        script: |
+          xcodebuild -project ios/App/App.xcodeproj -scheme App \
+            -configuration Debug -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO build | xcpretty || exit ${PIPESTATUS[0]}
+
+  # 2) After Apple Developer enrollment + the ASC API key: signed build → TestFlight.
+  #    Manual start only. It never submits for App Store review.
+  ios-testflight:
+    name: Ironverse iOS — signed build to TestFlight
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    integrations:
+      app_store_connect: Ironverse ASC key
+    environment:
+      node: 22
+      xcode: latest
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.nouriapps.ironverse
+      vars:
+        XCODE_PROJECT: ios/App/App.xcodeproj
+        XCODE_SCHEME: App
+        # App Store Connect → your app → App Information → Apple ID (a number). Fill after the app record exists.
+        APP_STORE_APPLE_ID: 0
+    scripts:
+      - name: Install
+        script: npm ci
+      - name: Unit tests
+        script: npm test
+      - name: Build web bundle (iOS edition)
+        script: npm run build:ios && node tools/verify-ios-build.mjs
+      - name: Sync native project
+        script: npx cap sync ios
+      - name: Signing profiles
+        script: xcode-project use-profiles
+      - name: Build number (one higher than the latest TestFlight build)
+        script: |
+          LATEST=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID" || echo 0)
+          cd ios/App && agvtool new-version -all $((LATEST + 1))
+      - name: Build signed IPA
+        script: xcode-project build-ipa --project "$XCODE_PROJECT" --scheme "$XCODE_SCHEME"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        submit_to_app_store: false   # App Store review only after the owner approves it

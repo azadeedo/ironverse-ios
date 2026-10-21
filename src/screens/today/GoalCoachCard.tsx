@@ -16,6 +16,7 @@ import { upsertTodayWeighIn } from '@/screens/settings/lib'
 import { metCalories } from '@/lib/nutrition'
 import { ActivitySession } from './ActivitySession'
 import { resolvePlanDay } from './lib'
+import { isAppStoreEdition } from '@/lib/edition'
 
 /** rough energy of a normal gym session he'd be replacing */
 const SESSION_KCAL = 350
@@ -225,7 +226,7 @@ export function RunGoalCard() {
           {p.sessions.map((s) => (
             <div key={s.title} className="rounded-xl bg-surface3 px-3 py-2"><div className="text-[13.5px] font-semibold text-ink">{s.title}</div><div className="text-[12px] text-ink2">{s.detail}</div></div>
           ))}
-          <p className="text-[11.5px] text-ink3">3 runs a week: intervals, tempo, easy. Never two hard runs on back-to-back days. Losing weight toward 85 kg makes this easier too — every kg off is roughly 2–3 s/km faster.</p>
+          <p className="text-[11.5px] text-ink3">3 runs a week: intervals, tempo, easy. Never two hard runs on back-to-back days. {isAppStoreEdition() ? 'Losing body fat' : 'Losing weight toward 85 kg'} makes this easier too — every kg off is roughly 2–3 s/km faster.</p>
         </div>
       )}
     </Card>

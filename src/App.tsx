@@ -9,6 +9,8 @@ import { registerCustomExercises } from './data/exercises'
 import { Spinner, ToastHost } from './components/ui'
 import { RestTimerBar } from './components/RestTimerBar'
 import { LaunchStatus, UpdatePrompt } from './components/UpdatePrompt'
+import { isAppStoreEdition } from './lib/edition'
+import { TourOverlay } from './components/Tour'
 
 const TodayScreen = lazy(() => import('@/screens/TodayScreen'))
 const WorkoutScreen = lazy(() => import('@/screens/WorkoutScreen'))
@@ -53,6 +55,7 @@ const PRQuestScreen = lazy(() => import('@/screens/QuestScreens').then((m) => ({
 const BodyScreen = lazy(() => import('@/screens/QuestScreens').then((m) => ({ default: m.BodyScreen })))
 const SkillsScreen = lazy(() => import('@/screens/QuestScreens').then((m) => ({ default: m.SkillsScreen })))
 const ResearchScreen = lazy(() => import('@/screens/QuestScreens').then((m) => ({ default: m.ResearchScreen })))
+const FirstRunScreen = lazy(() => import('@/screens/firstRun/FirstRunScreen'))
 const StrengthJourneyScreen = lazy(() => import('@/screens/QuestScreens').then((m) => ({ default: m.StrengthJourneyScreen })))
 
 function S({ children }: { children: ReactNode }) {
@@ -74,7 +77,19 @@ const TABS = [
 function Shell() {
   const location = useLocation()
   const navigate = useNavigate()
-  const hideNav = /^\/session|^\/onboarding/.test(location.pathname)
+  const hideNav = /^\/session|^\/onboarding|^\/welcome/.test(location.pathname)
+  // App Store build: open (or resume) first-time setup until it is finished
+  useEffect(() => {
+    if (!isAppStoreEdition()) return
+    void import('./lib/firstRun').then(async (m) => {
+      if (await m.isFirstRunDone()) return
+      const me = await db.profile.get('me')
+      const draft = await m.loadDraft()
+      if (!me?.onboarded || (draft && draft.step >= 6)) {
+        if (!/^\/welcome|^\/backup/.test(window.location.pathname)) navigate(`/welcome${draft && draft.step > 0 ? `?step=${draft.step}` : ''}`, { replace: true })
+      }
+    }).catch(() => {})
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <div className="flex h-full flex-col">
       <div key={location.pathname} className="page-in scroll-y flex-1" style={{ paddingBottom: hideNav ? 0 : 'calc(var(--sab) + 78px)' }}>
@@ -88,7 +103,7 @@ function Shell() {
               const active = t.match(location.pathname)
               const Icon = t.icon
               return (
-                <button key={t.path} type="button" onClick={() => navigate(t.path)}
+                <button key={t.path} type="button" data-tour={`tab-${t.label.toLowerCase()}`} onClick={() => navigate(t.path)}
                   className={`pressable flex flex-1 flex-col items-center gap-0.5 py-2 ${active ? 'text-brand' : 'text-ink3'}`}>
                   <Icon size={23} strokeWidth={active ? 2.4 : 2} />
                   <span className="text-[10px] font-semibold">{t.label}</span>
@@ -99,6 +114,7 @@ function Shell() {
         </nav>
       )}
       <ToastHost />
+      <TourOverlay />
       <UpdatePrompt />
       <LaunchStatus />
     </div>
@@ -112,6 +128,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <S><TodayScreen /></S> },
       { path: 'onboarding', element: <S><OnboardingScreen /></S> },
+      { path: 'welcome', element: <S><FirstRunScreen /></S> },
       { path: 'workout', element: <S><WorkoutScreen /></S> },
       { path: 'plan', element: <S><PlanScreen /></S> },
       { path: 'session/:logId', element: <S><SessionScreen /></S> },
@@ -165,12 +182,15 @@ export default function App() {
     void seedIfNeeded()
       .then(async () => {
         void ensureEquipmentProfiles()
-        void import('./lib/ownerFoods').then((m) => m.ensureOwnerFoodsOnce()).catch(() => {})
+        // App Store build: the owner-only once-routines below never start on a stranger's phone (lib/edition.ts)
+        const owner = !isAppStoreEdition()
+        if (owner) void import('./lib/ownerFoods').then((m) => m.ensureOwnerFoodsOnce()).catch(() => {})
+        if (!owner) void import('./native/bridge').then((m) => m.initNative()).catch(() => {})
         void autoSnapshotIfDue()
         // v6: user-created exercises join the registry before any screen renders
         try { registerCustomExercises(await db.customExercises.toArray()) } catch { /* table missing on a failed upgrade */ }
         // v7: program plans from the old weekday-template generator → the 48 written workouts (plan id kept, backup kept)
-        try { const { ensureProgramUpgraded } = await import('./lib/programStore'); await ensureProgramUpgraded(); const { ensureProgramActive } = await import('./lib/programStore'); await ensureProgramActive(); { const { restartProgramOnce } = await import('./lib/programStore'); await restartProgramOnce() } const { fixSeedProfileOnce } = await import('./lib/programStore'); await fixSeedProfileOnce(); const o = await import('./lib/owner'); await o.applyOwnerProfileOnce(); const ct = await import('./lib/calorieTarget'); await ct.migrateAutoChangeToProposal(); await ct.evaluateProposal() } catch (e) { console.warn('program upgrade skipped', e) }
+        try { const { ensureProgramUpgraded } = await import('./lib/programStore'); await ensureProgramUpgraded(); if (owner) { const { ensureProgramActive } = await import('./lib/programStore'); await ensureProgramActive(); { const { restartProgramOnce } = await import('./lib/programStore'); await restartProgramOnce() } const { fixSeedProfileOnce } = await import('./lib/programStore'); await fixSeedProfileOnce(); const o = await import('./lib/owner'); await o.applyOwnerProfileOnce() } const ct = await import('./lib/calorieTarget'); await ct.migrateAutoChangeToProposal(); await ct.evaluateProposal() } catch (e) { console.warn('program upgrade skipped', e) }
       })
       .finally(() => setReady(true))
     if (navigator.storage?.persist) void navigator.storage.persist()

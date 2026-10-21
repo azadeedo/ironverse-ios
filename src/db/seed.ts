@@ -1,6 +1,7 @@
 import { db } from './index'
 import { newId, nowIso, todayStr } from '@/lib/id'
 import type { Profile, ReminderConfig, WorkDay } from './types'
+import { isAppStoreEdition } from '@/lib/edition'
 
 /** Default work week: Mon–Fri 8:00–17:00 (editable in Settings → Work schedule). */
 function defaultWorkSchedule(): WorkDay[] {
@@ -31,6 +32,13 @@ export async function seedIfNeeded(): Promise<void> {
     db.foodLog.count(), db.measurements.count(),
   ])
   if (profileCount + weighCount + logCount + foodCount + measCount > 0) return
+
+  // App Store build: a stranger's phone starts with neutral defaults and the
+  // first-time setup, never the owner's personal numbers (see lib/edition.ts).
+  if (isAppStoreEdition()) {
+    await seedNeutralProfile()
+    return
+  }
 
   const ts = nowIso()
   const today = todayStr()
@@ -79,6 +87,56 @@ export async function seedIfNeeded(): Promise<void> {
     creatineEnabled: true,
     creatineTime: '08:30',
     workoutEnabled: true,
+    workoutLeadMin: 30,
+    updatedAt: ts,
+  }
+  await db.reminders.put(reminders)
+}
+
+/**
+ * App Store build only: placeholder profile so every screen has something to
+ * read. `onboarded: false` sends the user through first-time setup, which
+ * replaces these values with their own. No weigh-in or measurement is invented.
+ */
+export async function seedNeutralProfile(): Promise<void> {
+  const ts = nowIso()
+  const profile: Profile = {
+    id: 'me',
+    name: '',
+    sex: 'male',
+    birthYear: new Date().getFullYear() - 30,
+    heightCm: 175,
+    weightKg: 80,
+    goal: 'recomp',
+    activityLevel: 'moderate',
+    experience: 'beginner',
+    daysPerWeek: 3,
+    sessionMinutes: 60,
+    workSchedule: defaultWorkSchedule(),
+    preferredSlot: 'auto',
+    calorieTarget: 2300,
+    proteinTarget: 160,
+    waterTargetMl: 2500,
+    creatineGrams: 5,
+    barbellKg: 20,
+    curlBarKg: 10,
+    smithBarKg: 15,
+    platePairsKg: [5, 10, 15, 20],
+    stackStepsKg: [6, 11, 17, 22, 28, 34, 39, 45, 51, 56, 62, 68, 74],
+    onboarded: false,
+    halalMode: false,
+    createdAt: ts,
+    updatedAt: ts,
+  }
+  await db.profile.put(profile)
+  const reminders: ReminderConfig = {
+    id: 'reminders',
+    waterEnabled: false,
+    waterIntervalMin: 90,
+    waterWindow: ['07:00', '21:30'],
+    creatineEnabled: false,
+    creatineTime: '08:30',
+    workoutEnabled: false,
     workoutLeadMin: 30,
     updatedAt: ts,
   }

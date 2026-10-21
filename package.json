@@ -7,10 +7,27 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "build:ios": "tsc --noEmit && vite build --mode ios",
+    "test": "vitest run",
+    "cap:sync": "npm run build:ios && npx cap sync ios",
+    "ios:assets": "python tools/ios_assets.py",
+    "verify:ios": "node tools/verify-ios-build.mjs",
+    "dev:ios": "vite --mode ios --port 5188 --strictPort",
+    "check:preserve": "node tools/preservation-check.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.134.0",
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/core": "^8.5.3",
+    "@capacitor/filesystem": "^8.1.5",
+    "@capacitor/haptics": "^8.0.2",
+    "@capacitor/ios": "^8.5.3",
+    "@capacitor/keyboard": "^8.0.6",
+    "@capacitor/local-notifications": "^8.3.1",
+    "@capacitor/share": "^8.0.3",
+    "@capacitor/splash-screen": "^8.0.2",
+    "@capacitor/status-bar": "^8.0.4",
     "@types/three": "^0.180.0",
     "@zxing/library": "^0.21.3",
     "dayjs": "^1.11.13",
@@ -25,6 +42,8 @@
     "zustand": "^5.0.2"
   },
   "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.5.3",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@vitejs/plugin-react": "^4.3.4",

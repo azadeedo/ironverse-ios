@@ -20,6 +20,7 @@ import { deleteWithUndo, toastWithUndo } from '@/lib/undo'
 import { mealForNow } from './food/helpers'
 import type { CreatineLog, ReminderConfig, WaterLog } from '@/db/types'
 import { Stepper } from './cardio/shared'
+import { isNativeApp } from '@/lib/edition'
 
 const WATER = '#38bdf8'
 const QUICK = [250, 500, 750]
@@ -469,6 +470,11 @@ export default function HydrationScreen() {
                 Honest note: Ironverse has no server, so reminders only fire while the app is open (foreground or installed and running).
                 Add it to your Home Screen and leave it open during the day — and the Today timeline always shows the full schedule regardless.
               </p>
+              {isNativeApp() && (
+                <p className="mt-2 text-[12.5px] leading-relaxed text-ink2">
+                  iPhone app: when you leave Ironverse, today's remaining reminders are handed to iOS as local notifications, so they still arrive while the app is in the background. They are created on your phone only — nothing is sent anywhere.
+                </p>
+              )}
             </Card>
           </>
         ) : (

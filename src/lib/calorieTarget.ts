@@ -15,6 +15,7 @@ import { db, getProfile, getSetting, saveProfile, setSetting } from '@/db'
 import type { DayAdjust, Profile } from '@/db/types'
 import { bmr } from './nutrition'
 import { DEFAULT_GOAL_DATE, computeGoalPlan, nextTarget, type GoalPlan } from './goalCoach'
+import { isAppStoreEdition } from './edition'
 
 export const MIN_DAILY_KCAL = 1200
 export const MIN_BASE_KCAL = 1500
@@ -161,6 +162,20 @@ export interface GoalSettings { auto: boolean; date: string; kg: number }
 export async function goalSettings(): Promise<GoalSettings> {
   const me = await getProfile()
   const g = await getSetting<Partial<GoalSettings>>('goal:settings', {})
+  // App Store build: the user's OWN goal, a safe pace, and no automatic calorie
+  // changes until they switch them on (the owner's 85 kg / 14 Jan defaults are web-only)
+  if (isAppStoreEdition()) {
+    const kg = g.kg ?? me?.goalWeightKg ?? me?.weightKg ?? 80
+    let date = g.date
+    if (!date) {
+      const w = me?.weightKg ?? kg
+      const perWeek = Math.max(0.25, w * 0.005) // ~0.5% of bodyweight a week
+      const weeks = Math.max(8, Math.ceil(Math.abs(w - kg) / perWeek))
+      date = dayjs().add(weeks, 'week').format('YYYY-MM-DD')
+      await setSetting('goal:settings', { ...g, date })
+    }
+    return { auto: g.auto ?? false, date, kg }
+  }
   return { auto: g.auto ?? true, date: g.date ?? DEFAULT_GOAL_DATE, kg: g.kg ?? me?.goalWeightKg ?? 85 }
 }
 export async function saveGoalSettings(g: Partial<GoalSettings>): Promise<void> {

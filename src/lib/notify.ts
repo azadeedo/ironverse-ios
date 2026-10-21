@@ -5,12 +5,17 @@
 // so the Today timeline + badges keep the schedule visible instead.
 
 import { useUI } from './store'
+import { isNativeApp } from './edition'
+// iOS app only — every function there returns early in a browser
+import * as native from '@/native/notifications'
 
 export function notificationsSupported(): boolean {
+  if (isNativeApp()) return true // iOS app: local notifications
   return typeof Notification !== 'undefined'
 }
 
 export async function ensurePermission(): Promise<boolean> {
+  if (isNativeApp()) return native.nativePermission(true)
   if (!notificationsSupported()) return false
   if (Notification.permission === 'granted') return true
   if (Notification.permission === 'denied') return false
@@ -23,7 +28,8 @@ export async function ensurePermission(): Promise<boolean> {
 
 export async function showNotification(title: string, body: string, tag?: string): Promise<void> {
   const toast = useUI.getState().toast
-  if (notificationsSupported() && Notification.permission === 'granted') {
+  if (isNativeApp() && (await native.nativeShowNow(title, body, tag))) return
+  if (!isNativeApp() && notificationsSupported() && Notification.permission === 'granted') {
     try {
       const reg = await navigator.serviceWorker?.getRegistration()
       if (reg) {
@@ -49,8 +55,10 @@ export function scheduleAt(key: string, hhmm: string, title: string, body: strin
   const target = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0)
   const delay = target.getTime() - now.getTime()
   if (delay <= 0) return () => {}
+  native.trackPending({ key, at: target.getTime(), title, body })
   const id = window.setTimeout(() => {
     timers.delete(key)
+    native.untrackPending(key)
     void (stillNeeded ? stillNeeded().catch(() => true) : Promise.resolve(true)).then((need) => { if (need) void showNotification(title, body, key) })
   }, delay)
   timers.set(key, id)
@@ -59,6 +67,7 @@ export function scheduleAt(key: string, hhmm: string, title: string, body: strin
 
 export function cancelKey(key: string): void {
   const id = timers.get(key)
+  native.untrackPending(key)
   if (id !== undefined) {
     clearTimeout(id)
     timers.delete(key)
@@ -68,6 +77,7 @@ export function cancelKey(key: string): void {
 export function cancelAll(): void {
   for (const id of timers.values()) clearTimeout(id)
   timers.clear()
+  native.untrackAll()
 }
 
 /** app badge (supported on installed PWAs in some browsers) */

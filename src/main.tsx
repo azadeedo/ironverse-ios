@@ -7,7 +7,8 @@ import { backupBeforeUpgrade } from './lib/migrate'
 
 // Updates wait for his OK (UpdatePrompt) — no reload in the middle of a set.
 // Everything he types is saved to IndexedDB as he goes, so accepting is safe.
-const updateSW = registerSW({
+// iOS app: no service worker — the App Store delivers updates and every file is bundled in the app
+const updateSW = import.meta.env.VITE_EDITION === 'ios' ? async () => { location.reload() } : registerSW({
   immediate: true,
   // remember it too: when an update is already waiting at launch this fires BEFORE the UI mounts
   onNeedRefresh() { (window as unknown as { __ivNeedRefresh?: boolean }).__ivNeedRefresh = true; window.dispatchEvent(new CustomEvent('iv:update-ready')) },

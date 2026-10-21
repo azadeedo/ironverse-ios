@@ -17,7 +17,9 @@ const versionManifest = () => ({
   },
 })
 
-export default defineConfig({
+// `vite build --mode ios` = the App Store build (see src/lib/edition.ts): same app, no
+// service worker (iOS app updates come from the App Store) and VITE_EDITION=ios.
+export default defineConfig(({ mode }) => ({
   define: {
     __APP_VERSION__: JSON.stringify(PKG.version),
     __BUILD_ID__: JSON.stringify(BUILD_ID),
@@ -27,6 +29,7 @@ export default defineConfig({
     react(),
     versionManifest(),
     VitePWA({
+      disable: mode === 'ios',
       // 'prompt': a new version waits for his OK instead of reloading mid-workout
       registerType: 'prompt',
       includeAssets: ['logo.png', 'apple-touch-icon.png'],
@@ -68,4 +71,4 @@ export default defineConfig({
   ],
   resolve: { alias: { '@': path.resolve(__dirname, 'src') } },
   build: { target: 'es2022', chunkSizeWarningLimit: 2500 },
-})
+}))
