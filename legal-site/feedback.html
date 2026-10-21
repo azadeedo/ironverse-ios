@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ironverse feedback</title>
+<style>body{margin:0;background:#0c111c;color:#e8edf5;font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}main{max-width:640px;margin:0 auto;padding:40px 16px}h1{font-size:28px}label{display:block;margin-top:14px;color:#aab4c3}input,select,textarea{width:100%;box-sizing:border-box;margin-top:4px;padding:10px;border-radius:10px;border:1px solid #2a3344;background:#151c2b;color:#e8edf5;font:inherit}button{margin-top:18px;padding:12px 18px;border:0;border-radius:12px;background:#fbbf24;font-weight:700}.hp{display:none}</style>
+</head><body><main>
+<h1>Suggest, report or request a fix</h1>
+<p style="color:#aab4c3">Ideas, bugs, fixes and additions for Ironverse. Read by the developer.</p>
+<form name="feedback" method="POST" data-netlify="true" netlify-honeypot="bot-field" enctype="multipart/form-data" action="/thanks.html">
+  <p class="hp"><label>Leave empty <input name="bot-field" /></label></p>
+  <label>Type <select name="type"><option>Idea / new feature</option><option>Bug</option><option>Fix or edit</option><option>Other</option></select></label>
+  <label>Message <textarea name="message" rows="6" required></textarea></label>
+  <label>Your email (optional, only if you want a reply) <input type="email" name="email" /></label>
+  <label>Screenshot (optional) <input type="file" name="screenshot" accept="image/*" /></label>
+  <input type="hidden" name="app_version" /><input type="hidden" name="device" /><input type="hidden" name="screen" />
+  <button type="submit">Send</button>
+</form>
+</main></body></html>

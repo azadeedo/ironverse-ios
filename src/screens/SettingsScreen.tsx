@@ -506,6 +506,20 @@ export default function SettingsScreen() {
             subtitle="Re-answer the onboarding questions"
             onClick={() => navigate('/onboarding')}
           />
+          <ListRow
+            leading={<Sparkles size={19} className="text-brand" />}
+            title="Suggest & report"
+            subtitle="Ideas, bugs, fixes and additions — sent to the developer"
+            onClick={() => navigate('/feedback')}
+          />
+          {isAppStoreEdition() && (
+            <ListRow
+              leading={<Sparkles size={19} className="text-brand" />}
+              title="Ironverse Pro"
+              subtitle="Your plan, restore purchases, manage subscription"
+              onClick={() => navigate('/pro')}
+            />
+          )}
           <div data-tour="replay-tour">
             <ListRow
               leading={<Sparkles size={19} className="text-brand" />}

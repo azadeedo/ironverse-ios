@@ -25,6 +25,8 @@ import { dayForDate } from '@/lib/plangen'
 import { minutesOf, todayTimeline, type TimelineItem } from '@/lib/schedule'
 import { useUI } from '@/lib/store'
 import { APP_VERSION, GOAL_META, fmt12, nowMinutes, parseNumber, upsertTodayWeighIn } from './settings/lib'
+import { Crown, MessageSquarePlus } from 'lucide-react'
+import { isAppStoreEdition } from '@/lib/edition'
 
 const TIMELINE_ICONS: Record<TimelineItem['kind'], typeof Droplets> = {
   water: Droplets,
@@ -47,7 +49,7 @@ const TILE_GROUPS: [string, string[]][] = [
   ['Training', ['/plan', '/exercises', '/programs', '/review', '/cardio']],
   ['Body & progress', ['/progress', '/hub', '/photos', '/anatomy', '/achievements']],
   ['Food & health', ['/calories', '/nutrition-week', '/meal-plan', '/health-scan', '/hydration', '/pill-box']],
-  ['App', ['/devices', '/backup', '/whats-new', '/settings']],
+  ['App', [...(isAppStoreEdition() ? ['/pro'] : []), '/feedback', '/devices', '/backup', '/whats-new', '/settings']],
 ]
 const TILES = [
   { label: 'Cardio', sub: 'Runs, walks & rope', icon: HeartPulse, to: '/cardio', tint: 'text-rose-400', bg: 'bg-rose-400/12' },
@@ -70,6 +72,8 @@ const TILES = [
   { label: 'Nutrition chart', sub: '7 / 14 / 30 days', icon: TrendingUp, to: '/nutrition-week', tint: 'text-orange-300', bg: 'bg-orange-300/12' },
   { label: 'Meal planner', sub: 'Plan the next 7 days', icon: CalendarRange, to: '/meal-plan', tint: 'text-lime-400', bg: 'bg-lime-400/12' },
   { label: 'Settings', sub: 'Profile & data', icon: Settings, to: '/settings', tint: 'text-ink2', bg: 'bg-surface3' },
+  { label: 'Suggest & report', sub: 'Ideas, bugs, fixes', icon: MessageSquarePlus, to: '/feedback', tint: 'text-brand', bg: 'bg-brand/12' },
+  { label: 'Ironverse Pro', sub: 'Plans & subscription', icon: Crown, to: '/pro', tint: 'text-brand', bg: 'bg-brand/12' },
 ]
 
 const INSIGHT_TONES = {

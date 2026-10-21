@@ -11,6 +11,8 @@ import { RestTimerBar } from './components/RestTimerBar'
 import { LaunchStatus, UpdatePrompt } from './components/UpdatePrompt'
 import { isAppStoreEdition } from './lib/edition'
 import { TourOverlay } from './components/Tour'
+import { ProLocked } from './components/ProGate'
+import { hasPro, proFeatureForPath, usePro } from './lib/pro'
 
 const TodayScreen = lazy(() => import('@/screens/TodayScreen'))
 const WorkoutScreen = lazy(() => import('@/screens/WorkoutScreen'))
@@ -56,6 +58,8 @@ const BodyScreen = lazy(() => import('@/screens/QuestScreens').then((m) => ({ de
 const SkillsScreen = lazy(() => import('@/screens/QuestScreens').then((m) => ({ default: m.SkillsScreen })))
 const ResearchScreen = lazy(() => import('@/screens/QuestScreens').then((m) => ({ default: m.ResearchScreen })))
 const FirstRunScreen = lazy(() => import('@/screens/firstRun/FirstRunScreen'))
+const ProScreen = lazy(() => import('@/screens/ProScreen'))
+const FeedbackScreen = lazy(() => import('@/screens/FeedbackScreen'))
 const StrengthJourneyScreen = lazy(() => import('@/screens/QuestScreens').then((m) => ({ default: m.StrengthJourneyScreen })))
 
 function S({ children }: { children: ReactNode }) {
@@ -71,13 +75,17 @@ const TABS = [
   { path: '/workout', label: 'Workout', icon: Dumbbell, match: (p: string) => p.startsWith('/workout') || p.startsWith('/session') || p.startsWith('/plan') || p.startsWith('/exercise') || p.startsWith('/programs') || p.startsWith('/prs') || p.startsWith('/history') || p.startsWith('/tools') || p.startsWith('/program') || ['/pr-quest', '/body', '/skills', '/research', '/strength-journey'].some((x) => p.startsWith(x)) },
   { path: '/food', label: 'Food', icon: Apple, match: (p: string) => p.startsWith('/food') },
   { path: '/progress', label: 'Progress', icon: TrendingUp, match: (p: string) => p.startsWith('/progress') || p.startsWith('/review') || p.startsWith('/photos') },
-  { path: '/more', label: 'More', icon: LayoutGrid, match: (p: string) => ['/more', '/settings', '/cardio', '/hydration', '/backup', '/search', '/achievements', '/whats-new'].some((x) => p.startsWith(x)) },
+  { path: '/more', label: 'More', icon: LayoutGrid, match: (p: string) => ['/more', '/settings', '/cardio', '/hydration', '/backup', '/search', '/achievements', '/whats-new', '/feedback', '/pro'].some((x) => p.startsWith(x)) },
 ]
 
 function Shell() {
   const location = useLocation()
   const navigate = useNavigate()
-  const hideNav = /^\/session|^\/onboarding|^\/welcome/.test(location.pathname)
+  const hideNav = /^\/session|^\/onboarding|^\/welcome|^\/pro$/.test(location.pathname)
+  // App Store build: Pro screens show an upgrade card for free users (the screen itself is untouched)
+  const tier = usePro((s) => s.tier)
+  const lockedFeature = proFeatureForPath(location.pathname)
+  const locked = !!lockedFeature && !hasPro(tier)
   // App Store build: open (or resume) first-time setup until it is finished
   useEffect(() => {
     if (!isAppStoreEdition()) return
@@ -93,7 +101,7 @@ function Shell() {
   return (
     <div className="flex h-full flex-col">
       <div key={location.pathname} className="page-in scroll-y flex-1" style={{ paddingBottom: hideNav ? 0 : 'calc(var(--sab) + 78px)' }}>
-        <Outlet />
+        {locked ? <ProLocked feature={lockedFeature!} /> : <Outlet />}
       </div>
       {!hideNav && <RestTimerBar />}
       {!hideNav && (
@@ -129,6 +137,8 @@ const router = createBrowserRouter([
       { index: true, element: <S><TodayScreen /></S> },
       { path: 'onboarding', element: <S><OnboardingScreen /></S> },
       { path: 'welcome', element: <S><FirstRunScreen /></S> },
+      { path: 'pro', element: <S><ProScreen /></S> },
+      { path: 'feedback', element: <S><FeedbackScreen /></S> },
       { path: 'workout', element: <S><WorkoutScreen /></S> },
       { path: 'plan', element: <S><PlanScreen /></S> },
       { path: 'session/:logId', element: <S><SessionScreen /></S> },
@@ -186,6 +196,8 @@ export default function App() {
         const owner = !isAppStoreEdition()
         if (owner) void import('./lib/ownerFoods').then((m) => m.ensureOwnerFoodsOnce()).catch(() => {})
         if (!owner) void import('./native/bridge').then((m) => m.initNative()).catch(() => {})
+        // Pro: trial clock + what the App Store says this Apple Account owns
+        if (!owner) void usePro.getState().refresh().then(() => import('./lib/pro')).then((m) => m.syncEntitlement()).catch(() => {})
         void autoSnapshotIfDue()
         // v6: user-created exercises join the registry before any screen renders
         try { registerCustomExercises(await db.customExercises.toArray()) } catch { /* table missing on a failed upgrade */ }

@@ -13,6 +13,7 @@ import { Segmented, Sheet } from '@/components/ui'
 import { energyUnit, halalMode } from '@/db/defaults'
 import { BarcodeFlow } from './BarcodeFlow'
 import { PhotoFlow } from './PhotoFlow'
+import { ProGate } from '@/components/ProGate'
 import { MEALS } from '../helpers'
 import { useProfile } from '../useFoodData'
 import type { CaptureResult, CaptureSheetProps, DraftItem } from './types'
@@ -65,21 +66,21 @@ export function CaptureSheet({ open, onClose, meal, onConfirm, mode = 'photo' }:
 
       <div className="mt-4">
         {tab === 'photo' ? (
-          <PhotoFlow
+          <ProGate feature="aiPhoto"><PhotoFlow
             halal={halal}
             unit={unit}
             confirmLabel={confirmLabel}
             busy={busy}
             onConfirm={(items, photo) => { void confirm(items, 'photo', photo) }}
-          />
+          /></ProGate>
         ) : (
-          <BarcodeFlow
+          <ProGate feature="barcode"><BarcodeFlow
             halal={halal}
             unit={unit}
             confirmLabel={confirmLabel}
             busy={busy}
             onConfirm={(items) => { void confirm(items, 'barcode') }}
-          />
+          /></ProGate>
         )}
       </div>
     </Sheet>

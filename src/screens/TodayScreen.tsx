@@ -34,6 +34,7 @@ import { MissedSessionCard } from './today/MissedSessionCard'
 import { goalSettings } from '@/lib/calorieTarget'
 import { targetForDateWith } from './food/helpers'
 import { ed } from '@/lib/edition'
+import { ProGate, TrialBanner } from '@/components/ProGate'
 
 export default function TodayScreen() {
   const programPlanId = useLiveQuery(async () => (await getProgramPlan())?.id ?? null, [])
@@ -211,14 +212,15 @@ export default function TodayScreen() {
           />
         )}
 
-        <GoalCoachCard
+        <TrialBanner />
+        <ProGate feature="goalCoach"><GoalCoachCard
           profile={profile}
           plan={plan}
           isTrainingDay={isTrainingDay}
           trainedToday={!!todayLog?.finishedAt}
           eaten={food?.kcal ?? 0}
           target={targetForDateWith(today, profile, todayAdjust ? new Map([[today, todayAdjust]]) : undefined)}
-        />
+        /></ProGate>
         <div className="px-1 pt-3 text-[11px] font-semibold uppercase tracking-wider text-ink3">Training</div>
         <MissedSessionCard />
         <ProgramTodayCard />
