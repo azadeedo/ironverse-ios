@@ -35,7 +35,12 @@ failures = []
 
 def pem_key():
     # Codemagic may hand the .p8 over with literal "\n", stray quotes or no PEM armour
-    raw = os.environ['APP_STORE_CONNECT_PRIVATE_KEY'].strip().strip('"').strip("'").replace(chr(92) + 'n', ' ')
+    raw = os.environ['APP_STORE_CONNECT_PRIVATE_KEY'].strip()
+    # Codemagic CLI-style references: "@file:/path/key.p8" or "@env:OTHER_VAR"
+    if raw.startswith('@file:'):
+        raw = open(os.path.expanduser(raw[6:]), encoding='utf-8').read().strip()
+    elif raw.startswith('@env:'):
+        raw = os.environ[raw[5:]].strip().strip('"').strip("'").replace(chr(92) + 'n', ' ')
     raw = raw.replace('-----BEGIN PRIVATE KEY-----', ' ').replace('-----END PRIVATE KEY-----', ' ')
     body = ''.join(raw.split())
     lines = [body[i:i + 64] for i in range(0, len(body), 64)]
