@@ -14,7 +14,7 @@ import { db } from '@/db'
 import type { FoodLogEntry, MealKey, Profile, Recipe } from '@/db/types'
 import { energyUnit, halalMode } from '@/db/defaults'
 import {
-  FOOD_CATEGORIES, FOOD_CATEGORY_LABELS, foodIdCandidates, type FoodCategory,
+  CUISINES, CUISINE_LABELS, FOOD_CATEGORIES, FOOD_CATEGORY_LABELS, foodIdCandidates, type Cuisine, type FoodCategory,
 } from '@/data/foods'
 import {
   autoDietTags, cautionReason, filterHalal, isHalalCaution, primaryTagLabel,
@@ -77,6 +77,8 @@ export function AddFoodSheet({
   const [meal, setMeal] = useState<MealKey>(initialMeal)
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState<Filter>(null)
+  // v9: cuisine sub-category, combined with the food-type filter above
+  const [cuisine, setCuisine] = useState<Cuisine | null>(null)
   const [picked, setPicked] = useState<CatalogFood | null>(null)
   const [mode, setMode] = useState<'grams' | 'serving'>('grams')
   const [gramsStr, setGramsStr] = useState('100')
@@ -125,6 +127,7 @@ export function AddFoodSheet({
     let list = visible
     if (filter === 'mine') list = list.filter((c) => c.custom)
     else if (filter) list = list.filter((c) => c.category === filter)
+    if (cuisine) list = list.filter((c) => c.cuisine === cuisine)
     if (q) {
       list = list.filter(
         (c) => c.name.toLowerCase().includes(q) || (c.brand ?? '').toLowerCase().includes(q),
@@ -136,7 +139,7 @@ export function AddFoodSheet({
       })
     }
     return list.slice(0, 60)
-  }, [visible, query, filter])
+  }, [visible, query, filter, cuisine])
 
   /** "No pork items — try these:" when a search asks for something hidden */
   const substitutes = useMemo(() => {
@@ -499,6 +502,15 @@ export function AddFoodSheet({
                 </button>
               ))}
             </div>
+            <div className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 py-1" aria-label="Cuisine">
+              <span className="shrink-0 self-center text-[11px] font-semibold uppercase tracking-wide text-ink3">Cuisine</span>
+              {([null, ...CUISINES] as (Cuisine | null)[]).map((c) => (
+                <button key={String(c)} type="button" onClick={() => setCuisine(c)}
+                  className={`shrink-0 rounded-full px-3 py-1.5 text-[12.5px] font-semibold ${cuisine === c ? 'bg-brand text-black' : 'bg-surface2 text-ink2'}`}>
+                  {c === null ? 'Any' : CUISINE_LABELS[c]}
+                </button>
+              ))}
+            </div>
 
             {substitutes && (
               <div className="mt-3 rounded-xl2 bg-surface3 p-3">
@@ -523,7 +535,7 @@ export function AddFoodSheet({
               </div>
             )}
 
-            {!query.trim() && filter === null && (
+            {!query.trim() && filter === null && cuisine === null && (
               <>
                 {favourites.length > 0 && (
                   <>

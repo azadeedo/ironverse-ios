@@ -2,12 +2,14 @@
 import { targetBreakdown } from '@/lib/calorieTarget'
 import { db } from '@/db'
 import type { DayAdjust, FoodItem, FoodLogEntry, MealKey, Profile, Recipe } from '@/db/types'
-import type { FoodCategory } from '@/data/foods'
+import type { Cuisine, FoodCategory } from '@/data/foods'
 import { bmr } from '@/lib/nutrition'
 import { dayjs } from '@/lib/fmt'
 
 export interface CatalogFood extends FoodItem {
   category?: FoodCategory
+  /** v9: world-food cuisine sub-category */
+  cuisine?: Cuisine
 }
 
 export const MEALS: { key: MealKey; label: string; short: string }[] = [

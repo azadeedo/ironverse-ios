@@ -204,21 +204,41 @@ export function RunGoalCard() {
   const [open, setOpen] = useState(false)
   const seen = useLiveQuery(() => getSetting<boolean>('run4:open', false), [])
   useEffect(() => { if (seen) setOpen(true) }, [seen])
-  if (!runs) return null
+  // App Store build: the pace goal is the user's own (set below); the web build keeps the owner's 4:00
+  const ownGoal = useLiveQuery(() => getSetting<number | null>('run:goalPaceSec', null), [])
+  const [goalText, setGoalText] = useState('')
+  if (!runs || ownGoal === undefined) return null
+  const goalSec = isAppStoreEdition() ? ownGoal : RUN_GOAL_SEC
+  if (goalSec === null) {
+    return (
+      <Card className="p-4">
+        <div className="flex items-center gap-2"><Timer size={16} className="text-brand" /><span className="flex-1 text-[15px] font-semibold">1 km pace goal</span></div>
+        <p className="mt-1.5 text-[12.5px] text-ink2">Want to run a faster kilometre? Set your target pace and Ironverse builds a weekly run plan toward it.</p>
+        <div className="mt-2 flex gap-2">
+          <input inputMode="decimal" placeholder="e.g. 5:00" value={goalText} onChange={(e) => setGoalText(e.target.value)} className="min-h-[44px] w-28 rounded-xl border border-line bg-surface2 px-3 text-[14px] text-ink" aria-label="Target pace per km (minutes:seconds)" />
+          <button type="button" className="pressable min-h-[44px] rounded-xl bg-brand px-4 text-[14px] font-bold text-black" onClick={() => {
+            const m = goalText.trim().match(/^(\d{1,2})[:.](\d{1,2})$/)
+            const sec = m ? Number(m[1]) * 60 + Number(m[2]) : NaN
+            if (sec >= 150 && sec <= 900) void setSetting('run:goalPaceSec', sec)
+          }}>Set goal</button>
+        </div>
+      </Card>
+    )
+  }
   const best = bestKmPace(runs)
-  const p = runPlan(best)
+  const p = runPlan(best, goalSec)
   return (
     <Card className="p-4">
       <button type="button" className="flex w-full items-center gap-2 text-left" onClick={() => { setOpen((v) => !v); void setSetting('run4:open', !open) }}>
-        <Timer size={16} className="text-brand" /><span className="flex-1 text-[15px] font-semibold">4:00 km goal</span>
+        <Timer size={16} className="text-brand" /><span className="flex-1 text-[15px] font-semibold">{fmtPace(goalSec)} km goal</span>
         <span className="big-num text-[13px] text-ink2">{best ? `best ${fmtPace(best)}` : 'no 1 km run yet'}</span>
       </button>
       {best && p.gap !== null && (
-        <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface3"><div className="h-full rounded-full bg-brand" style={{ width: `${Math.min(100, (RUN_GOAL_SEC / best) * 100)}%` }} /></div>
+        <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface3"><div className="h-full rounded-full bg-brand" style={{ width: `${Math.min(100, (goalSec / best) * 100)}%` }} /></div>
       )}
       <p className="mt-1.5 text-[12.5px] text-ink2">
         {!best ? 'Run 1 km as fast as you can and log it as a run with distance — that sets your starting point.'
-          : p.gap === 0 ? 'You’ve done it — 4:00 or faster. Keep one interval session a week to hold it.'
+          : p.gap === 0 ? `You’ve done it — ${fmtPace(goalSec)} or faster. Keep one interval session a week to hold it.`
           : `${p.gap} s/km to find. Next milestone: ${fmtPace(p.next)}/km. ${p.weeks ? `Usually ${p.weeks[0]}–${p.weeks[1]} weeks with 3 runs a week (a rough guide).` : ''}`}
       </p>
       {open && (

@@ -166,11 +166,12 @@ export function bestKmPace(runs: CardioLog[]): number | null {
 }
 export const fmtPace = (s: number) => `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, '0')}`
 export interface RunSession { title: string; detail: string }
-export function runPlan(best: number | null): { best: number | null; gap: number | null; next: number; weeks: [number, number] | null; sessions: RunSession[] } {
+/** `goal` = target seconds per km; the owner's 4:00 is the default (the App Store build passes the user's own) */
+export function runPlan(best: number | null, goal = RUN_GOAL_SEC): { best: number | null; gap: number | null; next: number; weeks: [number, number] | null; sessions: RunSession[] } {
   const b = best ?? 330
-  const gap = best ? Math.max(0, best - RUN_GOAL_SEC) : null
-  const next = Math.max(RUN_GOAL_SEC, b - 10)
-  const work = Math.max(RUN_GOAL_SEC - 5, next - 5)
+  const gap = best ? Math.max(0, best - goal) : null
+  const next = Math.max(goal, b - 10)
+  const work = Math.max(goal - 5, next - 5)
   const rep400 = Math.round(work * 0.4)
   const sessions: RunSession[] = [
     { title: 'Intervals', detail: `Warm up 10 min easy, then 6–8 × 400 m in ${rep400} s each (${fmtPace(work)}/km pace) with 90 s walk/jog between. Cool down 5 min.` },

@@ -1,6 +1,8 @@
 // ============================================================
 // Seed food database — Australian foods & drinks, Middle Eastern / Lebanese
-// staples, halal-friendly takeaway and supplements.
+// staples, halal-friendly takeaway, supplements, and (v9) world foods with a
+// cuisine sub-category: Italian, Greek, Turkish, Mexican, Indian, Chinese,
+// Japanese, Korean, Thai, Vietnamese, Filipino, African, American, Australian.
 //
 // All macro values are PER 100g (drinks treated as ~1g/ml).
 // servingName/servingGrams give a natural "1 serving" shortcut; `serves` adds
@@ -41,7 +43,22 @@ export const FOOD_CATEGORIES: FoodCategory[] = [
 
 export interface SeedFood extends FoodItem {
   category: FoodCategory
+  /** v9: cuisine sub-category (world foods). Optional — staples have none. */
+  cuisine?: Cuisine
 }
+
+// ---------- cuisines (sub-categories across every food type) ----------
+export type Cuisine =
+  | 'australian' | 'middle-eastern' | 'turkish' | 'greek' | 'italian' | 'mexican' | 'indian'
+  | 'chinese' | 'japanese' | 'korean' | 'thai' | 'vietnamese' | 'filipino' | 'african' | 'american'
+
+export const CUISINE_LABELS: Record<Cuisine, string> = {
+  australian: 'Australian', 'middle-eastern': 'Middle Eastern', turkish: 'Turkish', greek: 'Greek',
+  italian: 'Italian', mexican: 'Mexican', indian: 'Indian', chinese: 'Chinese', japanese: 'Japanese',
+  korean: 'Korean', thai: 'Thai', vietnamese: 'Vietnamese', filipino: 'Filipino', african: 'African',
+  american: 'American',
+}
+export const CUISINES = Object.keys(CUISINE_LABELS) as Cuisine[]
 
 /** Extra, optional detail for a seed food. */
 export interface FoodOpts {
@@ -53,6 +70,7 @@ export interface FoodOpts {
   sodium?: number
   satFat?: number
   substituteIds?: string[]
+  cuisine?: Cuisine
 }
 
 // ---------- tag shorthands ----------
@@ -85,6 +103,7 @@ function make(
     if (opts.sodium !== undefined) food.sodium = opts.sodium
     if (opts.satFat !== undefined) food.satFat = opts.satFat
     if (opts.substituteIds?.length) food.substituteIds = opts.substituteIds
+    if (opts.cuisine) food.cuisine = opts.cuisine
   }
   return food
 }
@@ -623,7 +642,144 @@ export const SEED_FOODS: SeedFood[] = [
   f('cordial', 'Cordial, made up', 'drinks', 20, 0, 5, 0, 'glass', 250, { tags: VG }),
   f('water-sparkling', 'Sparkling mineral water', 'drinks', 0, 0, 0, 0, 'bottle', 500, { tags: VG }),
   f('jallab', 'Jallab', 'drinks', 70, 0.2, 17, 0.2, 'glass', 250, { tags: VG }),
+  // ============================================================
+  // v9 — WORLD FOODS by cuisine. Typical values per 100 g for home-style or
+  // takeaway versions (AUSNUT / USDA-style averages). Restaurant portions vary,
+  // so these are estimates. Takeaway meat is 'unclear' for halal, as above.
+  // ============================================================
+  // Italian
+  f('w-carbonara', 'Spaghetti carbonara', 'meals', 190, 8, 20, 9, 'bowl', 350, { tags: ['pork', 'dairy'], cuisine: 'italian' }),
+  f('w-risotto-mushroom', 'Mushroom risotto', 'meals', 140, 3.5, 20, 5, 'bowl', 350, { tags: DV, cuisine: 'italian' }),
+  f('w-minestrone', 'Minestrone soup', 'meals', 35, 1.5, 6, 0.8, 'bowl', 300, { tags: VG, cuisine: 'italian' }),
+  f('w-gnocchi-napoli', 'Gnocchi, napoli sauce', 'meals', 130, 3, 25, 2, 'bowl', 300, { tags: V, cuisine: 'italian' }),
+  f('w-penne-arrabbiata', 'Penne arrabbiata', 'meals', 125, 4, 23, 2, 'bowl', 350, { tags: VG, cuisine: 'italian' }),
+  f('w-chicken-pesto-pasta', 'Chicken pesto pasta', 'meals', 175, 10, 18, 7, 'bowl', 350, { tags: UNSURE, cuisine: 'italian' }),
+  f('w-bruschetta', 'Bruschetta', 'snacks', 170, 5, 25, 5.5, 'piece', 60, { tags: VG, cuisine: 'italian' }),
+  f('w-tiramisu', 'Tiramisu', 'snacks', 283, 4.5, 30, 16, 'slice', 100, { tags: ['dairy', 'unclear'], cuisine: 'italian' }),
+  f('w-calzone', 'Calzone, ham & cheese', 'meals', 245, 11, 28, 10, 'calzone', 300, { tags: ['pork', 'dairy'], cuisine: 'italian' }),
+  f('w-arancini', 'Arancini ball', 'snacks', 230, 6, 28, 10, 'ball', 90, { tags: V, cuisine: 'italian' }),
+  // Greek
+  f('w-gyros-wrap', 'Gyros wrap, lamb', 'meals', 215, 11, 20, 10, 'wrap', 330, { tags: UNSURE, cuisine: 'greek' }),
+  f('w-chicken-souvlaki-wrap', 'Chicken souvlaki wrap', 'meals', 190, 13, 18, 7, 'wrap', 300, { tags: UNSURE, cuisine: 'greek' }),
+  f('w-moussaka', 'Moussaka', 'meals', 130, 6, 8, 8, 'serve', 350, { tags: ['dairy', 'unclear'], cuisine: 'greek' }),
+  f('w-greek-salad', 'Greek salad', 'fruit-veg', 80, 3, 4, 6, 'bowl', 250, { tags: DV, cuisine: 'greek' }),
+  f('w-tzatziki', 'Tzatziki', 'fats', 95, 4, 4, 7, 'tbsp', 30, { tags: DV, cuisine: 'greek' }),
+  f('w-spanakopita', 'Spanakopita', 'snacks', 300, 8, 25, 19, 'piece', 120, { tags: DV, cuisine: 'greek' }),
+  f('w-dolmades', 'Dolmades', 'snacks', 130, 2.5, 18, 5.5, 'piece', 30, { tags: VG, cuisine: 'greek' }),
+  f('w-lamb-skewer', 'Lamb souvlaki skewer', 'protein', 230, 22, 2, 15, 'skewer', 120, { tags: UNSURE, cuisine: 'greek' }),
+  // Turkish
+  f('w-gozleme-spinach', 'Gozleme, spinach & cheese', 'meals', 230, 9, 28, 9, 'gozleme', 250, { tags: DV, cuisine: 'turkish' }),
+  f('w-gozleme-lamb', 'Gozleme, lamb', 'meals', 245, 11, 27, 10, 'gozleme', 250, { tags: UNSURE, cuisine: 'turkish' }),
+  f('w-pide-lamb', 'Turkish pide, lamb', 'meals', 250, 12, 30, 9, 'pide', 300, { tags: UNSURE, cuisine: 'turkish' }),
+  f('w-lahmacun', 'Lahmacun', 'meals', 220, 10, 30, 6.5, 'piece', 180, { tags: UNSURE, cuisine: 'turkish' }),
+  f('w-adana-kebab', 'Adana kebab', 'protein', 250, 18, 2, 19, 'skewer', 120, { tags: UNSURE, cuisine: 'turkish' }),
+  f('w-turkish-delight', 'Turkish delight', 'snacks', 380, 0.5, 92, 1, 'piece', 15, { tags: ['gelatine', 'vegetarian'], cuisine: 'turkish' }),
+  f('w-mercimek', 'Red lentil soup (mercimek)', 'meals', 75, 4.5, 11, 1.5, 'bowl', 300, { tags: VG, cuisine: 'turkish' }),
+  // Mexican
+  f('w-quesadilla-chicken', 'Chicken quesadilla', 'meals', 260, 14, 22, 13, 'serve', 250, { tags: UNSURE, cuisine: 'mexican' }),
+  f('w-beef-tacos', 'Beef tacos, hard shell', 'meals', 220, 10, 17, 12, 'taco', 90, { tags: UNSURE, cuisine: 'mexican' }),
+  f('w-fish-tacos', 'Fish tacos, soft', 'meals', 190, 10, 20, 8, 'taco', 120, { cuisine: 'mexican' }),
+  f('w-burrito-bowl', 'Chicken burrito bowl', 'meals', 140, 10, 15, 4.5, 'bowl', 450, { tags: UNSURE, cuisine: 'mexican' }),
+  f('w-nachos', 'Nachos, beef & cheese', 'meals', 250, 9, 23, 14, 'plate', 300, { tags: UNSURE, cuisine: 'mexican' }),
+  f('w-enchiladas', 'Chicken enchiladas', 'meals', 165, 11, 14, 7.5, 'enchilada', 180, { tags: UNSURE, cuisine: 'mexican' }),
+  f('w-guacamole', 'Guacamole', 'fats', 160, 2, 8.5, 14.5, 'tbsp', 30, { tags: VG, cuisine: 'mexican' }),
+  f('w-salsa', 'Tomato salsa', 'fruit-veg', 30, 1.5, 6.5, 0.2, 'tbsp', 30, { tags: VG, cuisine: 'mexican' }),
+  f('w-refried-beans', 'Refried beans', 'carbs', 90, 5.5, 13, 1.5, 'half cup', 120, { tags: VG, cuisine: 'mexican' }),
+  f('w-churros', 'Churros', 'snacks', 380, 5, 45, 20, 'churro', 40, { tags: V, cuisine: 'mexican' }),
+  // Indian
+  f('w-tikka-masala', 'Chicken tikka masala', 'meals', 140, 12, 6, 8, 'serve', 300, { tags: UNSURE, cuisine: 'indian' }),
+  f('w-dal-tadka', 'Dal tadka', 'meals', 110, 6, 14, 3.5, 'bowl', 250, { tags: V, cuisine: 'indian' }),
+  f('w-palak-paneer', 'Palak paneer', 'meals', 150, 7, 6, 11, 'serve', 250, { tags: DV, cuisine: 'indian' }),
+  f('w-chana-masala', 'Chana masala', 'meals', 130, 6, 18, 4.5, 'serve', 250, { tags: VG, cuisine: 'indian' }),
+  f('w-rogan-josh', 'Lamb rogan josh', 'meals', 150, 13, 5, 9, 'serve', 300, { tags: UNSURE, cuisine: 'indian' }),
+  f('w-chicken-biryani', 'Chicken biryani', 'meals', 165, 9, 22, 4.5, 'plate', 400, { tags: UNSURE, cuisine: 'indian' }),
+  f('w-tandoori-chicken', 'Tandoori chicken', 'protein', 150, 25, 3, 4.5, 'piece', 120, { tags: UNSURE, cuisine: 'indian' }),
+  f('w-garlic-naan', 'Garlic naan', 'carbs', 300, 8.5, 48, 8.5, 'naan', 90, { tags: DV, cuisine: 'indian' }),
+  f('w-samosa', 'Vegetable samosa', 'snacks', 260, 5, 30, 13, 'samosa', 80, { tags: VG, cuisine: 'indian' }),
+  f('w-raita', 'Raita', 'fats', 65, 3, 5, 3.5, 'tbsp', 40, { tags: DV, cuisine: 'indian' }),
+  // Chinese
+  f('w-honey-chicken', 'Honey chicken', 'meals', 250, 11, 30, 9.5, 'serve', 300, { tags: UNSURE, cuisine: 'chinese' }),
+  f('w-sweet-sour-pork', 'Sweet and sour pork', 'meals', 230, 9, 25, 10.5, 'serve', 300, { tags: PORK, cuisine: 'chinese' }),
+  f('w-beef-black-bean', 'Beef and black bean', 'meals', 130, 11, 7, 6.5, 'serve', 300, { tags: UNSURE, cuisine: 'chinese' }),
+  f('w-kung-pao', 'Kung pao chicken', 'meals', 165, 14, 8, 9, 'serve', 300, { tags: UNSURE, cuisine: 'chinese' }),
+  f('w-chow-mein', 'Chicken chow mein', 'meals', 140, 8, 16, 5, 'serve', 350, { tags: UNSURE, cuisine: 'chinese' }),
+  f('w-dumplings-pork', 'Pork dumplings, steamed', 'meals', 190, 8, 22, 7.5, 'dumpling', 25, { tags: PORK, cuisine: 'chinese' }),
+  f('w-san-choy-bow', 'San choy bow', 'meals', 110, 10, 5, 5.5, 'cup', 120, { tags: UNSURE, cuisine: 'chinese' }),
+  f('w-mapo-tofu', 'Mapo tofu', 'meals', 110, 7, 5, 7, 'serve', 300, { tags: UNSURE, cuisine: 'chinese' }),
+  // Japanese
+  f('w-katsu-curry', 'Chicken katsu curry with rice', 'meals', 175, 8, 22, 6, 'plate', 450, { tags: UNSURE, cuisine: 'japanese' }),
+  f('w-ramen-tonkotsu', 'Ramen, tonkotsu', 'meals', 95, 5, 11, 3.5, 'bowl', 600, { tags: PORK, cuisine: 'japanese' }),
+  f('w-teriyaki-don', 'Teriyaki chicken don', 'meals', 160, 10, 22, 3.5, 'bowl', 450, { tags: UNSURE, cuisine: 'japanese' }),
+  f('w-miso-soup', 'Miso soup', 'meals', 30, 2, 3, 1, 'bowl', 250, { tags: VG, cuisine: 'japanese' }),
+  f('w-edamame', 'Edamame', 'protein', 120, 11, 9, 5, 'half cup', 80, { tags: VG, cuisine: 'japanese' }),
+  f('w-gyoza', 'Gyoza, pork', 'snacks', 200, 8, 22, 9, 'piece', 25, { tags: PORK, cuisine: 'japanese' }),
+  f('w-onigiri', 'Onigiri, tuna mayo', 'carbs', 180, 5, 33, 3, 'onigiri', 110, { cuisine: 'japanese' }),
+  // Korean
+  f('w-bibimbap', 'Bibimbap', 'meals', 130, 6, 20, 3.5, 'bowl', 500, { tags: UNSURE, cuisine: 'korean' }),
+  f('w-korean-fried-chicken', 'Korean fried chicken', 'meals', 290, 17, 18, 17, 'piece', 60, { tags: UNSURE, cuisine: 'korean' }),
+  f('w-bulgogi', 'Beef bulgogi', 'protein', 190, 16, 9, 10, 'serve', 200, { tags: UNSURE, cuisine: 'korean' }),
+  f('w-kimchi', 'Kimchi', 'fruit-veg', 20, 1.5, 3.5, 0.5, 'serve', 50, { tags: UNSURE, cuisine: 'korean' }),
+  f('w-japchae', 'Japchae', 'meals', 150, 3.5, 25, 4.5, 'serve', 250, { tags: UNSURE, cuisine: 'korean' }),
+  f('w-tteokbokki', 'Tteokbokki', 'meals', 160, 3, 33, 1.5, 'serve', 250, { tags: UNSURE, cuisine: 'korean' }),
+  // Thai
+  f('w-green-curry', 'Green curry, chicken', 'meals', 130, 9, 5, 8.5, 'serve', 300, { tags: UNSURE, cuisine: 'thai' }),
+  f('w-massaman', 'Massaman beef curry', 'meals', 160, 10, 9, 9.5, 'serve', 300, { tags: UNSURE, cuisine: 'thai' }),
+  f('w-tom-yum', 'Tom yum soup, prawn', 'meals', 40, 4, 3, 1.5, 'bowl', 350, { cuisine: 'thai' }),
+  f('w-pad-see-ew', 'Pad see ew, chicken', 'meals', 180, 7, 24, 6.5, 'plate', 400, { tags: UNSURE, cuisine: 'thai' }),
+  f('w-basil-chicken', 'Thai basil chicken', 'meals', 150, 13, 6, 8.5, 'serve', 300, { tags: UNSURE, cuisine: 'thai' }),
+  f('w-som-tam', 'Green papaya salad (som tam)', 'fruit-veg', 60, 2, 12, 1, 'serve', 200, { cuisine: 'thai' }),
+  f('w-satay-skewer', 'Chicken satay skewer', 'protein', 220, 20, 6, 13, 'skewer', 50, { tags: UNSURE, cuisine: 'thai' }),
+  f('w-mango-sticky-rice', 'Mango sticky rice', 'snacks', 250, 3, 45, 7, 'serve', 200, { tags: VG, cuisine: 'thai' }),
+  // Vietnamese
+  f('w-rice-paper-rolls', 'Rice paper rolls, prawn', 'meals', 110, 6, 18, 1.5, 'roll', 70, { cuisine: 'vietnamese' }),
+  f('w-vermicelli-chicken', 'Lemongrass chicken vermicelli bowl', 'meals', 140, 9, 18, 4, 'bowl', 450, { tags: UNSURE, cuisine: 'vietnamese' }),
+  f('w-bun-cha', 'Bun cha', 'meals', 150, 9, 18, 4.5, 'bowl', 450, { tags: PORK, cuisine: 'vietnamese' }),
+  f('w-com-tam', 'Broken rice, pork chop', 'meals', 190, 10, 25, 5.5, 'plate', 450, { tags: PORK, cuisine: 'vietnamese' }),
+  // Filipino
+  f('w-chicken-adobo', 'Chicken adobo', 'protein', 190, 18, 3, 12, 'serve', 250, { tags: UNSURE, cuisine: 'filipino' }),
+  f('w-pancit', 'Pancit canton', 'meals', 150, 7, 20, 4.5, 'plate', 300, { tags: UNSURE, cuisine: 'filipino' }),
+  f('w-lumpia', 'Lumpia', 'snacks', 240, 7, 23, 13, 'roll', 40, { tags: UNSURE, cuisine: 'filipino' }),
+  // African
+  f('w-jollof-rice', 'Jollof rice', 'carbs', 150, 3, 25, 4.5, 'cup', 200, { tags: VG, cuisine: 'african' }),
+  f('w-bobotie', 'Bobotie', 'meals', 170, 11, 10, 9.5, 'serve', 300, { tags: UNSURE, cuisine: 'african' }),
+  f('w-injera', 'Injera', 'carbs', 130, 4, 26, 1, 'piece', 100, { tags: VG, cuisine: 'african' }),
+  f('w-doro-wat', 'Doro wat (chicken stew)', 'meals', 150, 13, 6, 8, 'serve', 300, { tags: UNSURE, cuisine: 'african' }),
+  f('w-shakshuka', 'Shakshuka', 'meals', 100, 6, 6, 6, 'serve', 300, { tags: V, cuisine: 'african' }),
+  // American
+  f('w-mac-cheese', 'Mac and cheese', 'meals', 165, 7, 18, 7, 'bowl', 300, { tags: DV, cuisine: 'american' }),
+  f('w-buffalo-wings', 'Buffalo wings', 'protein', 250, 20, 3, 18, 'wing', 45, { tags: UNSURE, cuisine: 'american' }),
+  f('w-hot-dog', 'Hot dog, beef', 'meals', 250, 10, 20, 15, 'hot dog', 150, { tags: UNSURE, cuisine: 'american' }),
+  f('w-pancakes-syrup', 'Pancakes with maple syrup', 'snacks', 230, 5, 40, 6, 'stack of 3', 200, { tags: V, cuisine: 'american' }),
+  f('w-bagel-cream-cheese', 'Bagel with cream cheese', 'carbs', 290, 9, 40, 10, 'bagel', 120, { tags: DV, cuisine: 'american' }),
+  f('w-pulled-beef-burger', 'BBQ pulled beef burger', 'meals', 240, 13, 24, 10, 'burger', 250, { tags: UNSURE, cuisine: 'american' }),
+  // Australian
+  f('w-barramundi', 'Barramundi, grilled', 'protein', 110, 21, 0, 2.5, 'fillet', 180, { tags: HK, cuisine: 'australian' }),
+  f('w-lamb-roast', 'Roast lamb, lean', 'protein', 230, 25, 0, 14.5, 'serve', 150, { tags: UNSURE, cuisine: 'australian' }),
+  f('w-pavlova', 'Pavlova with cream & fruit', 'snacks', 260, 3, 50, 6, 'slice', 100, { tags: DV, cuisine: 'australian' }),
+  f('w-lamington', 'Lamington', 'snacks', 370, 4.5, 50, 17, 'lamington', 70, { tags: V, cuisine: 'australian' }),
+  f('w-vegemite-toast', 'Vegemite on buttered toast', 'carbs', 260, 10, 40, 6.5, 'slice', 45, { tags: V, cuisine: 'australian' }),
+  f('w-smashed-avo', 'Smashed avo on toast', 'meals', 220, 6, 22, 12, 'serve', 200, { tags: VG, cuisine: 'australian' }),
+  f('w-anzac-biscuit', 'Anzac biscuit', 'snacks', 470, 5.5, 63, 22, 'biscuit', 25, { tags: V, cuisine: 'australian' }),
+  f('w-snag-sizzle', 'Sausage sizzle (beef snag in bread)', 'meals', 250, 9, 22, 14, 'sanga', 130, { tags: UNSURE, cuisine: 'australian' }),
 ]
+
+// cuisine for dishes that were already in the list (ids never change)
+const EXISTING_CUISINE: Record<string, Cuisine> = {
+  'sf-spag-bol': 'italian', 'sf-lasagna': 'italian', 'sf-pizza-margherita': 'italian', 'sf-pizza-pepperoni': 'italian', 'sf-parma': 'australian',
+  'sf-pho': 'vietnamese', 'sf-banh-mi': 'vietnamese', 'sf-banh-mi-chicken': 'vietnamese',
+  'sf-pad-thai': 'thai', 'sf-butter-chicken': 'indian', 'sf-burrito': 'mexican',
+  'sf-sushi-roll': 'japanese', 'sf-sushi-salmon': 'japanese', 'sf-sashimi-salmon': 'japanese',
+  'sf-souvlaki': 'greek', 'sf-meat-pie': 'australian', 'sf-sausage-roll': 'australian', 'sf-fish-chips': 'australian',
+  'sf-schnitzel': 'australian', 'sf-fried-rice': 'chinese', 'sf-dim-sim': 'australian', 'sf-spring-roll': 'chinese',
+  'sf-chicken-kebab': 'middle-eastern', 'sf-lamb-kebab': 'middle-eastern', 'sf-hsp': 'australian', 'sf-hsp-chicken': 'australian',
+  'sf-falafel-wrap': 'middle-eastern', 'sf-shawarma-bowl': 'middle-eastern', 'sf-beef-burger': 'american', 'sf-chicken-burger': 'american',
+  'sf-steak-sandwich': 'australian', 'sf-sausage-in-bread': 'australian', 'sf-grilled-chicken-peri': 'african',
+}
+for (const food of SEED_FOODS) {
+  if (food.cuisine) continue
+  if (food.category === 'middle-eastern') food.cuisine = 'middle-eastern'
+  else if (EXISTING_CUISINE[food.id]) food.cuisine = EXISTING_CUISINE[food.id]
+}
 
 export const seedFoodById: Map<string, SeedFood> = new Map(SEED_FOODS.map((x) => [x.id, x]))
 

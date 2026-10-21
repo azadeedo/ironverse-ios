@@ -35,7 +35,7 @@ export function useCatalog(): CatalogFood[] {
     for (const s of SEED_FOODS) byId.set(s.id, s)
     for (const r of rows) {
       const seed = seedFoodById.get(r.id)
-      byId.set(r.id, seed ? { ...r, category: seed.category } : r)
+      byId.set(r.id, seed ? { ...r, category: seed.category, cuisine: seed.cuisine } : r)
     }
     return [...byId.values()].sort((a, b) => a.name.localeCompare(b.name))
   }, [dbFoods])
