@@ -22,6 +22,7 @@ import {
 import type { EquipmentProfile, WorkDay } from '@/db/types'
 import { GOAL_LABELS, WEEK_ORDER } from './workout/helpers'
 import { EquipmentEditorSheet } from './workout/EquipmentEditor'
+import { ed } from '@/lib/edition'
 
 /** One honest line about what a location actually has. */
 function eqSummary(p: EquipmentProfile): string {
@@ -153,7 +154,7 @@ export default function PlanScreen() {
       <PageHeader
         title="Plan"
         back="/workout"
-        subtitle="Your program, built for your garage"
+        subtitle={ed("Your program, built for your garage", "Your program, built for your equipment")}
         actions={(
           <Button variant="ghost" small onClick={() => navigate('/settings')}>
             <Settings2 size={15} /> Settings

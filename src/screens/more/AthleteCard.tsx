@@ -12,6 +12,7 @@ import { trophies, xp } from '@/lib/progressHub'
 import { programWeekFor } from '@/lib/program12'
 import { todayStr } from '@/lib/id'
 import { useUI } from '@/lib/store'
+import { ed } from '@/lib/edition'
 
 const PHOTO_KEY = 'profile:photo'
 
@@ -29,7 +30,7 @@ export function AthleteCard({ profile, plan }: { profile: Profile; plan: Plan | 
     const sorted = [...weighIns].sort((a, b) => a.date.localeCompare(b.date))
     const start = profile.startWeightKg ?? sorted[0]?.weightKg ?? profile.weightKg
     const now = sorted[sorted.length - 1]?.weightKg ?? profile.weightKg
-    const goal = profile.goalWeightKg ?? 85
+    const goal = profile.goalWeightKg ?? ed(85, profile.weightKg)
     const pct = start !== goal ? Math.max(0, Math.min(100, ((start - now) / (start - goal)) * 100)) : 0
     return { tro: tro.length, lv, start, now, goal, pct, sessions: logs.filter((l) => l.finishedAt && !l.skipped).length }
   }, [logs, weighIns, profile, plan])

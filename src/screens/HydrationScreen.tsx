@@ -20,7 +20,7 @@ import { deleteWithUndo, toastWithUndo } from '@/lib/undo'
 import { mealForNow } from './food/helpers'
 import type { CreatineLog, ReminderConfig, WaterLog } from '@/db/types'
 import { Stepper } from './cardio/shared'
-import { isNativeApp } from '@/lib/edition'
+import { ed, isAppStoreEdition, isNativeApp } from '@/lib/edition'
 
 const WATER = '#38bdf8'
 const QUICK = [250, 500, 750]
@@ -29,12 +29,13 @@ const QUICK = [250, 500, 750]
 interface Bottle { id: string; name: string; ml: number; pct: number; /** v10: drinks with calories also go into the food log */ kcal?: number; protein?: number; carbs?: number; fat?: number }
 /** his energy drink: mostly water — research finds caffeinated drinks hydrate about as well as water at normal doses (Maughan et al. 2016, Beverage Hydration Index) */
 const MONSTER_BOTTLE: Bottle = { id: 'owner-monster-peach', name: 'Monster Ultra Peachy Keen', ml: 500, pct: 100, kcal: 12, carbs: 3 }
-const DEFAULT_BOTTLES: Bottle[] = [MONSTER_BOTTLE]
+const DEFAULT_BOTTLES: Bottle[] = ed([MONSTER_BOTTLE], [{ id: 'bottle-750', name: 'Water bottle', ml: 750, pct: 100 }])
 
 function BottleRow({ onAdd }: { onAdd: (b: Bottle) => void }) {
   const bottles = useLiveQuery(() => getSetting<Bottle[]>('water:bottles', DEFAULT_BOTTLES), []) ?? DEFAULT_BOTTLES
   // existing users: add the Monster bottle once (writes can't happen inside a live query)
   useEffect(() => { void (async () => {
+    if (isAppStoreEdition()) return // the owner's drink is pre-saved in the web app only
     if (await getSetting<boolean>('water:monster-v1', false)) return
     await setSetting('water:monster-v1', true)
     const L = await getSetting<Bottle[]>('water:bottles', DEFAULT_BOTTLES)

@@ -30,3 +30,11 @@ export function isNativeApp(): boolean {
 }
 
 export const EDITION_LABEL = (): string => (isAppStoreEdition() ? 'iOS App Store edition' : 'Web app')
+
+/**
+ * Wording that is personal to the owner (his gym, his goal, his garage) in the
+ * web app, and neutral in the App Store build. The web text is returned unchanged.
+ */
+export function ed<T>(web: T, ios: T): T {
+  return isAppStoreEdition() ? ios : web
+}

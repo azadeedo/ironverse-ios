@@ -16,6 +16,7 @@ import { dateOfDay, dayIdFor, mondayBefore, programDayOn, programWeekFor, weight
 import { getProgramPlan, getCheckin, saveCheckin } from '@/lib/programStore'
 import { todayStr } from '@/lib/id'
 import { useUI } from '@/lib/store'
+import { ed } from '@/lib/edition'
 
 export function ProgramTodayCard() {
   const navigate = useNavigate()
@@ -68,7 +69,7 @@ export function GoalWeightCard({ profile }: { profile: Profile }) {
   const weighIns = useLiveQuery(() => db.weighIns.toArray(), [])
   if (!weighIns) return null
   const start = profile.startWeightKg ?? [...weighIns].sort((a, b) => a.date.localeCompare(b.date))[0]?.weightKg ?? profile.weightKg
-  const goal = profile.goalWeightKg ?? 85
+  const goal = profile.goalWeightKg ?? ed(85, profile.weightKg)
   const ws = weightStats(weighIns, start, goal, todayStr())
   const series = ws.weekly.slice(-10).map((w) => ({ x: dayjs(w.week).format('D/M'), y: Math.round(w.avg * 10) / 10 }))
   return (

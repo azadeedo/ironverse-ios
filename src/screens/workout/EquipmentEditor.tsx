@@ -4,6 +4,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { Check, Trash2 } from 'lucide-react'
+import { ed } from '@/lib/edition'
 import {
   Badge, Button, Field, Input, Sheet,
 } from '@/components/ui'
@@ -132,7 +133,7 @@ export function EquipmentEditorSheet({ open, target, onClose, onSave, onDelete }
         <Input
           value={draft.name}
           onChange={(e) => patch({ name: e.target.value })}
-          placeholder="Home, Flex 24/7, Hotel gym…"
+          placeholder={ed("Home, Flex 24/7, Hotel gym…", "Home, Gym, Hotel gym…")}
         />
       </Field>
 
@@ -210,7 +211,7 @@ export function EquipmentEditorSheet({ open, target, onClose, onSave, onDelete }
         </Button>
       ) : (
         <p className="mt-2 px-1 text-center text-[12px] text-ink3">
-          Home and Flex 24/7 are built in — editable, but they stay.
+          {ed("Home and Flex 24/7", "Home and Gym")} are built in — editable, but they stay.
         </p>
       )}
     </Sheet>

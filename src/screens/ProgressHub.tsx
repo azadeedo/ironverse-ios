@@ -13,6 +13,7 @@ import { useUI } from '@/lib/store'
 import { newId, todayStr } from '@/lib/id'
 import { getAnyProgramPlan, getProgramPlan, getSkips } from '@/lib/programStore'
 import { compareWeeklyVolume } from '@/lib/strength'
+import { ed } from '@/lib/edition'
 import {
   athleteProfile, BAND_LABEL, challengeProgress, cycleSummaries, goalForecast, GROUPS, groupAnalytics, heatmap, volumeShare, RECOVERY_NOTE,
   recoveryEstimate, trophies, xp, type Challenge, type DayState,
@@ -45,7 +46,7 @@ export default function ProgressHub() {
         {TABS.map(([k, l, I]) => <button key={k} type="button" onClick={() => setTab(k)} className={`pressable flex shrink-0 items-center gap-1 rounded-full px-3 py-1.5 text-[12.5px] font-semibold ${tab === k ? 'bg-brand text-white' : 'bg-surface2 text-ink2'}`}><I size={13} /> {l}</button>)}
       </div>
       <div className="space-y-3 px-4">
-        {tab === 'overview' && <Overview lvl={lvl} weighIns={weighIns} goal={profile?.goalWeightKg ?? 85} start={profile?.startWeightKg} logs={logs} measurements={measurements} />}
+        {tab === 'overview' && <Overview lvl={lvl} weighIns={weighIns} goal={profile?.goalWeightKg ?? ed(85, profile?.weightKg ?? 85)} start={profile?.startWeightKg} logs={logs} measurements={measurements} />}
         {tab === 'calendar' && <Calendar plan={plan} logs={logs} skips={skips ?? new Set()} today={today} />}
         {tab === 'trophies' && (
           <div className="space-y-2">

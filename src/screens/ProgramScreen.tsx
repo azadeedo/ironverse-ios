@@ -34,6 +34,7 @@ import { weekReviewDue } from '@/lib/weekReview'
 import type { CardioLog, Plan, PlanDay, PlanExercise } from '@/db/types'
 import { newId, nowIso } from '@/lib/id'
 import { upsertTodayWeighIn } from './settings/lib'
+import { ed } from '@/lib/edition'
 
 export default function ProgramScreen() {
   const [params] = useSearchParams()
@@ -77,7 +78,7 @@ function SetupForm({ existing, pausedPlan }: { existing?: ProgramSetup; pausedPl
       const s: ProgramSetup = {
         squat: lift('squat'), bench: lift('bench'), deadlift: lift('deadlift'),
         squatPR: n('squatPR', existing?.squatPR), benchPR: n('benchPR', existing?.benchPR), deadliftPR: n('deadliftPR', existing?.deadliftPR),
-        bodyweightKg: n('bw', lastWeigh?.weightKg ?? profile?.weightKg), goalWeightKg: n('goal', existing?.goalWeightKg ?? 85),
+        bodyweightKg: n('bw', lastWeigh?.weightKg ?? profile?.weightKg), goalWeightKg: n('goal', existing?.goalWeightKg ?? ed(85, profile?.goalWeightKg ?? profile?.weightKg ?? 85)),
         heightCm: n('height', existing?.heightCm ?? 169), age: n('age', existing?.age ?? 26),
         steps: n('steps', existing?.steps), sleepHours: n('sleep', existing?.sleepHours),
         cardio: (v('cardio', existing?.cardio ?? 'incline-walk') as ProgramSetup['cardio']),
@@ -127,7 +128,7 @@ function SetupForm({ existing, pausedPlan }: { existing?: ProgramSetup; pausedPl
         <Section title="You">
           <Card className="grid grid-cols-2 gap-3 p-4">
             <Field label="Bodyweight now (kg)"><Input inputMode="decimal" defaultValue={lastWeigh?.weightKg ?? profile?.weightKg ?? 98} onChange={set('bw')} /></Field>
-            <Field label="Goal (kg)"><Input inputMode="decimal" defaultValue={existing?.goalWeightKg ?? 85} onChange={set('goal')} /></Field>
+            <Field label="Goal (kg)"><Input inputMode="decimal" defaultValue={existing?.goalWeightKg ?? ed(85, profile?.goalWeightKg ?? profile?.weightKg ?? 85)} onChange={set('goal')} /></Field>
             <Field label="Height (cm)"><Input inputMode="decimal" defaultValue={existing?.heightCm ?? 169} onChange={set('height')} /></Field>
             <Field label="Age"><Input inputMode="numeric" defaultValue={existing?.age ?? 26} onChange={set('age')} /></Field>
             <Field label="Steps on a normal day"><Input inputMode="numeric" placeholder="optional" aria-label="optional" defaultValue={existing?.steps ?? ''} onChange={set('steps')} /></Field>
@@ -167,7 +168,7 @@ function SetupForm({ existing, pausedPlan }: { existing?: ProgramSetup; pausedPl
         <Section title="Start">
           <Card className="space-y-2 p-4">
             <Field label="Week 1 starts (Tuesday)"><Input type="date" defaultValue={start} onChange={set('start')} /></Field>
-            <div className="text-[12px] text-ink3">Training Tue–Fri at Flex 24/7 Mickleham. Saturday–Monday are recovery days.</div>
+            <div className="text-[12px] text-ink3">{ed("Training Tue–Fri at Flex 24/7 Mickleham. Saturday–Monday are recovery days.", "Training Tue–Fri. Saturday–Monday are recovery days.")}</div>
           </Card>
         </Section>
         <Button full disabled={busy} onClick={() => void submit()}>{busy ? 'Building your 12 weeks…' : existing?.completedAt ? 'Rebuild the program with these answers' : 'Build my 12-week program'}</Button>
@@ -381,7 +382,7 @@ function Dashboard({ plan }: { plan: Plan }) {
             <Tile icon={<User size={18} />} label="Body map" sub="Muscles + sets" onClick={() => navigate('/body')} />
             <Tile icon={<GitBranch size={18} />} label="Skill trees" sub="Unlocks + levels" onClick={() => navigate('/skills')} />
             <Tile icon={<Activity size={18} />} label="Strength journey" sub="Start → now → next" onClick={() => navigate('/strength-journey')} />
-            <Tile icon={<Weight size={18} />} label="Bodyweight" sub="98 → 85 kg" onClick={() => navigate('/progress')} />
+            <Tile icon={<Weight size={18} />} label="Bodyweight" sub={ed("98 → 85 kg", "Weight trend")} onClick={() => navigate('/progress')} />
             <Tile icon={<BookOpen size={18} />} label="Research" sub="Why this program" onClick={() => navigate('/research')} />
           </div>
         </Section>

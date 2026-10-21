@@ -18,6 +18,7 @@ import {
 } from '@/components/ui'
 import { getSetting, setSetting } from '@/db'
 import { APP_VERSION } from './settings/lib'
+import { ed } from '@/lib/edition'
 
 interface Feature {
   icon: typeof Sparkles
@@ -91,11 +92,11 @@ const RELEASES: Release[] = [
     version: '2.21.0',
     label: 'Goal coach + right calories',
     date: '21 October 2026',
-    summary: '85 kg by 14 January: calories change by themselves every day, weigh-in every morning, walking and at-home ways to burn extra, a 4:00 km plan — and scanned calories fixed.',
+    summary: ed('85 kg by 14 January: calories change by themselves every day, weigh-in every morning, walking and at-home ways to burn extra, a 4:00 km plan — and scanned calories fixed.', 'A goal coach for your goal weight, daily weigh-ins, walking and at-home ways to burn extra, a 4:00 km plan — and scanned calories fixed.'),
     features: [
-      { icon: HeartPulse, title: 'Goal coach on Today', body: 'Works out what 85 kg by 14 Jan needs from your 7-day average weight and moves your calories every day — down or up, at most 150 a day, never below 1,500, never faster than 1% of bodyweight a week. Each change shows with Undo. Change the goal or turn it off in Goal settings.', where: 'Today', to: '/' },
+      { icon: HeartPulse, title: 'Goal coach on Today', body: ed('Works out what 85 kg by 14 Jan needs from your 7-day average weight and moves your calories every day — down or up, at most 150 a day, never below 1,500, never faster than 1% of bodyweight a week. Each change shows with Undo. Change the goal or turn it off in Goal settings.', 'Works out what your goal weight needs from your 7-day average weight and can move your calories each day — down or up, at most 150 a day, never below 1,500, never faster than 1% of bodyweight a week. Each change shows with Undo. Set the goal or switch automatic changes on in Goal settings.'), where: 'Today', to: '/' },
       { icon: HeartPulse, title: 'Weigh in every day', body: 'A “Log your weight today” box sits at the top of Today until you do it, and it tells you if you missed yesterday.', where: 'Today', to: '/' },
-      { icon: HeartPulse, title: 'Burn it without the gym', body: 'Walk together with your wife, brisk walk, hills, bike ride, home circuit, skipping, shadow boxing, dancing, yard work — minutes worked out for what you need today (goal + anything you went over + a missed session).', where: 'Today and Food', to: '/' },
+      { icon: HeartPulse, title: 'Burn it without the gym', body: ed('Walk together with your wife, brisk walk, hills, bike ride, home circuit, skipping, shadow boxing, dancing, yard work — minutes worked out for what you need today (goal + anything you went over + a missed session).', 'Walk together with a partner or friend, brisk walk, hills, bike ride, home circuit, skipping, shadow boxing, dancing, yard work — minutes worked out for what you need today (goal + anything you went over + a missed session).'), where: 'Today and Food', to: '/' },
       { icon: HeartPulse, title: 'Missed the gym?', body: 'Training day and it’s getting late, or you missed yesterday: it tells you exactly what to do instead today.', where: 'Today', to: '/' },
       { icon: HeartPulse, title: '4:00 km plan', body: 'Tracks your best 1 km pace and gives you intervals, tempo, easy run and a time trial every 2 weeks, with your paces worked out.', where: 'Today → Training', to: '/' },
       { icon: HeartPulse, title: 'Scanner calories fixed', body: 'When the food database’s calories are too low for its own protein, carbs and fat (like Yo Pro banana: 71 instead of ~89 for 150 g), the app now recalculates and tells you. Products you scanned before are corrected too.', where: 'Food → Barcode', to: '/food' },
@@ -157,7 +158,7 @@ const RELEASES: Release[] = [
     date: '15 October 2026',
     summary: 'Drinks count toward food, muscles show your tape and photos, nutrition insights, next block evolves, compare photos by body region.',
     features: [
-      { icon: HeartPulse, title: 'Drinks with calories go into food', body: 'Saved drinks can have calories and protein. Tap one on the Water screen and it counts toward water AND appears in your food log (undo removes both). Monster Ultra Peachy Keen is already saved.', where: 'More → Water', to: '/hydration' },
+      { icon: HeartPulse, title: 'Drinks with calories go into food', body: ed('Saved drinks can have calories and protein. Tap one on the Water screen and it counts toward water AND appears in your food log (undo removes both). Monster Ultra Peachy Keen is already saved.', 'Saved drinks can have calories and protein. Tap one on the Water screen and it counts toward water AND appears in your food log (undo removes both).'), where: 'More → Water', to: '/hydration' },
       { icon: HeartPulse, title: 'Muscle growth in one place', body: 'Tap a muscle in Body anatomy to see training sets, your tape measurement trend for that body part, and links to measurements and photo comparison.', where: 'More → Body anatomy', to: '/anatomy' },
       { icon: HeartPulse, title: 'Nutrition insights', body: 'From your last 4 weeks: weekends vs weekdays, protein target hit rate, meals light on protein, late-night eating, top calorie sources, fibre, and half-logged days.', where: 'Food → Nutrition chart', to: '/nutrition-week' },
       { icon: HeartPulse, title: 'Next block evolves', body: 'When the 12 weeks finish, accessories that stalled (under 2% gain) are swapped for a same-muscle alternative in the next block. Main lifts stay; untick any swap.', where: 'Program → 12 weeks complete', to: '/program' },
@@ -190,7 +191,7 @@ const RELEASES: Release[] = [
       { icon: HeartPulse, title: 'Pound machines in 10s', body: 'In the weight sheet, “This machine’s weights” has one-tap presets like “lb · goes up in 10s”. Suggestions then only use those numbers.', where: 'Workout → tap a weight', to: '/workout' },
       { icon: HeartPulse, title: 'Supersets too far apart', body: 'Tap “Machines too far apart” in a superset and those two are never paired again — straight sets instead.', where: 'Workout → superset', to: '/workout' },
       { icon: HeartPulse, title: 'Drop sets where they help', body: 'On the last set of machine, cable and dumbbell isolation lifts you get a one-tap drop-set suggestion.', where: 'Workout', to: '/workout' },
-      { icon: HeartPulse, title: 'Fast-food guide + Monster', body: 'What to order and what to take out at Maccas, KFC, Subway, GYG, Nando’s and more, with a swaps calculator. Monster Ultra Peachy Keen (12 kcal) is pinned at the top of your favourites.', where: 'Food', to: '/fast-food' },
+      { icon: HeartPulse, title: ed('Fast-food guide + Monster', 'Fast-food guide'), body: ed('What to order and what to take out at Maccas, KFC, Subway, GYG, Nando’s and more, with a swaps calculator. Monster Ultra Peachy Keen (12 kcal) is pinned at the top of your favourites.', 'What to order and what to take out at Maccas, KFC, Subway, GYG, Nando’s and more, with a swaps calculator.'), where: 'Food', to: '/fast-food' },
     ],
   },
   {
@@ -515,7 +516,7 @@ const RELEASES: Release[] = [
       {
         icon: Layers,
         title: 'Equipment profiles',
-        body: 'Home and Flex 24/7 kept separately, with their own bars, plates, dumbbells and stack steps. Every suggested load stays buildable from the profile you are on.',
+        body: ed('Home and Flex 24/7 kept separately, with their own bars, plates, dumbbells and stack steps. Every suggested load stays buildable from the profile you are on.', 'Home and Gym kept separately, with their own bars, plates, dumbbells and stack steps. Every suggested load stays buildable from the profile you are on.'),
         where: 'Workout → equipment profile',
         to: '/workout',
       },

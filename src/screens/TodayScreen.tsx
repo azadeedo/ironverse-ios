@@ -33,6 +33,7 @@ import { GoalCoachCard, RunGoalCard } from './today/GoalCoachCard'
 import { MissedSessionCard } from './today/MissedSessionCard'
 import { goalSettings } from '@/lib/calorieTarget'
 import { targetForDateWith } from './food/helpers'
+import { ed } from '@/lib/edition'
 
 export default function TodayScreen() {
   const programPlanId = useLiveQuery(async () => (await getProgramPlan())?.id ?? null, [])
@@ -138,7 +139,7 @@ export default function TodayScreen() {
         </div>
         <h1 className="shout mt-5 text-[36px] leading-none text-ink">Ironverse</h1>
         <p className="mt-2 max-w-[280px] text-[14px] leading-relaxed text-ink2">
-          Your garage gym, planned. Training, food, water and progress — all offline, all yours.
+          {ed("Your garage gym, planned.", "Your training, planned.")} Training, food, water and progress — all offline, all yours.
         </p>
         <div className="mt-7 w-full max-w-[320px] space-y-2.5 text-left">
           {[

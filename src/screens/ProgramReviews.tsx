@@ -21,6 +21,7 @@ import { FEEL_LABEL, exName, programReview, recommendFor, weekSummary, type Week
 import type { Plan } from '@/db/types'
 import { applyBlockChanges, nextBlockChanges, type ChangeKind } from '@/lib/nextBlock'
 import { getCurrentProfile } from '@/lib/equipment'
+import { ed } from '@/lib/edition'
 
 function useAll() {
   const logs = useLiveQuery(() => db.workoutLogs.toArray(), [])
@@ -179,7 +180,7 @@ export function ProgramCompleteScreen() {
           <div className="grid grid-cols-3 gap-2">
             <Stat label="Start" value={r.startKg ? `${r.startKg} kg` : '—'} />
             <Stat label="Now" value={r.currentKg ? `${r.currentKg} kg` : '—'} />
-            <Stat label="Change" value={r.startKg && r.currentKg ? `${(r.currentKg - r.startKg).toFixed(1)} kg` : '—'} sub="goal ~85 kg" />
+            <Stat label="Change" value={r.startKg && r.currentKg ? `${(r.currentKg - r.startKg).toFixed(1)} kg` : '—'} sub={ed("goal ~85 kg", "since week 1")} />
             {r.waist && <Stat label="Waist" value={r.waist.now ? `${r.waist.now} cm` : '—'} sub={r.waist.start ? `from ${r.waist.start} cm` : undefined} />}
           </div>
         </Section>

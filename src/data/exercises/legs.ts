@@ -5,6 +5,7 @@
 // (0 standing, 90 seated); knee + = heel back; y + = hip sinks down.
 
 import type { Exercise } from '@/db/types'
+import { ed } from '@/lib/edition'
 
 export const LEGS_CORE_CARDIO: Exercise[] = [
   // ============================== LEGS ==============================
@@ -72,7 +73,7 @@ export const LEGS_CORE_CARDIO: Exercise[] = [
     tempo: '3-0-1 — three seconds down, no bounce, drive up',
     hardestPoint: 'Coming out of the hole, the first third above parallel.',
     classicNote: 'Squats were the centrepiece of every serious leg day for a reason — depth, control and honest weight built more than any machine ever could.',
-    safetyNote: 'Training alone in the garage: the rack safeties go just below your bottom position every single set, and practise dumping the bar back onto them before you go heavy.',
+    safetyNote: ed('Training alone in the garage', 'Training alone') + ': the rack safeties go just below your bottom position every single set, and practise dumping the bar back onto them before you go heavy.',
     substitutes: ['smith-squat', 'front-squat', 'barbell-lunge', 'smith-split-squat', 'smith-lunge'],
   },
   {

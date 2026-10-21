@@ -15,6 +15,7 @@ import type {
 import { equipmentLabel } from '@/db/types'
 import { byId, EXERCISES } from '@/data/exercises'
 import { nowIso } from './id'
+import { ed } from './edition'
 
 export const HOME_PROFILE_ID = 'home'
 export const GYM_PROFILE_ID = 'flex'
@@ -73,7 +74,7 @@ export function builtInProfiles(p?: Profile | null): EquipmentProfile[] {
       }
   const gym: EquipmentProfile = {
     id: GYM_PROFILE_ID,
-    name: 'Flex 24/7',
+    name: ed('Flex 24/7', 'Gym'),
     builtIn: true,
     equipment: GYM_EQUIPMENT,
     barbellKg: 20,

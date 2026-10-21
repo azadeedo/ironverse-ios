@@ -10,6 +10,7 @@ import { dayForDate } from '@/lib/plangen'
 import { dayIdFor, programDayOn, programWeekFor } from '@/lib/program12'
 import { addMinutes, minutesOf, todayTimeline, type TimelineItem } from '@/lib/schedule'
 import { cancelKey, ensurePermission, scheduleAt } from '@/lib/notify'
+import { ed } from '@/lib/edition'
 
 // ---------- plan day for a calendar date ----------
 
@@ -77,7 +78,7 @@ function copyFor(item: TimelineItem, p: Profile, dayTitle?: string): [string, st
     case 'creatine':
       return ['Creatine', `${p.creatineGrams} g scoop — same time every day works best.`]
     case 'workout':
-      return ['Workout time', `${dayTitle ?? 'Training'} — the garage is waiting.`]
+      return ['Workout time', `${dayTitle ?? 'Training'} — ${ed('the garage is waiting.', 'time to train.')}`]
     case 'work-start':
       return ['Work starts', 'Head down — training comes later.']
     case 'work-end':

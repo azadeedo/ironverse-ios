@@ -15,6 +15,7 @@
 import dayjs from 'dayjs'
 import type { CardioLog, Profile, WeighIn } from '@/db/types'
 import { adaptiveTdee, metCalories, tdeeFormula } from './nutrition'
+import { ed } from './edition'
 
 export const DEFAULT_GOAL_DATE = '2027-01-14'
 export const KCAL_PER_KG = 7700
@@ -137,11 +138,11 @@ export function nextTarget(currentTarget: number, plan: GoalPlan): number {
 // ---------- ways to burn it that aren't the gym ----------
 export interface Activity { key: string; label: string; detail: string; met: number; where: 'home' | 'outside' | 'gym'; together?: boolean; kind: CardioLog['kind'] }
 export const ACTIVITIES: Activity[] = [
-  { key: 'walk-wife', label: 'Walk together', detail: 'an easy walk outside with your wife — talking pace', met: 3.5, where: 'outside', together: true, kind: 'walk' },
+  { key: 'walk-wife', label: 'Walk together', detail: ed('an easy walk outside with your wife — talking pace', 'an easy walk outside with a partner, friend or family — talking pace'), met: 3.5, where: 'outside', together: true, kind: 'walk' },
   { key: 'brisk-walk', label: 'Brisk walk', detail: 'about 5.5 km/h, arms swinging', met: 4.3, where: 'outside', kind: 'walk' },
   { key: 'hill-walk', label: 'Hills or stairs walk', detail: 'pick a hilly street or a set of stairs', met: 6, where: 'outside', kind: 'walk' },
   { key: 'bike-together', label: 'Bike ride together', detail: 'steady ride around the area', met: 6.8, where: 'outside', together: true, kind: 'bike' },
-  { key: 'home-gym', label: 'Home gym circuit', detail: 'your garage: squats, rows, presses, step-ups — 40 s on, 20 s off, keep moving', met: 7, where: 'home', kind: 'walk' },
+  { key: 'home-gym', label: 'Home gym circuit', detail: ed('your garage: squats, rows, presses, step-ups — 40 s on, 20 s off, keep moving', 'your home setup: squats, rows, presses, step-ups — 40 s on, 20 s off, keep moving'), met: 7, where: 'home', kind: 'walk' },
   { key: 'home-circuit', label: 'Home circuit', detail: 'squats, push-ups, lunges, plank, burpees — 40 s on, 20 s off', met: 8, where: 'home', kind: 'walk' },
   { key: 'skip', label: 'Skipping', detail: 'rope, steady rhythm — driveway works', met: 11, where: 'home', kind: 'jump-rope' },
   { key: 'shadow-box', label: 'Shadow boxing', detail: 'rounds of 3 min, keep moving', met: 5.5, where: 'home', kind: 'walk' },

@@ -30,7 +30,7 @@ import {
 } from './settings/lib'
 import { Stepper } from './settings/Stepper'
 import { useTour } from '@/components/Tour'
-import { isAppStoreEdition } from '@/lib/edition'
+import { isAppStoreEdition, ed } from '@/lib/edition'
 import { AiKeyCard } from './settings/AiKeyCard'
 import { AdaptiveCaloriesCard } from './settings/AdaptiveCaloriesCard'
 import { FoodPrefsCard } from './settings/FoodPrefsCard'
@@ -525,7 +525,7 @@ export default function SettingsScreen() {
           <ListRow
             leading={<Database size={19} className="text-ink2" />}
             title="Ironverse"
-            subtitle="Built for your garage — works fully offline"
+            subtitle={ed("Built for your garage — works fully offline", "Built for your equipment — works fully offline")}
             right={<span className="text-[13px] text-ink3">v{APP_VERSION}</span>}
             chevron={false}
           />

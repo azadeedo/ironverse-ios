@@ -213,3 +213,14 @@ describe('goal coach in the App Store build', () => {
     expect((await db.profile.get('me'))?.calorieTarget).toBe(me!.calorieTarget)
   })
 })
+
+describe('App Store build wording is neutral', () => {
+  it('no Flex 24/7, wife or garage in built-in profile, activities or safety notes', async () => {
+    const { builtInProfiles } = await import('@/lib/equipment')
+    expect(builtInProfiles()[1].name).toBe('Gym')
+    const { ACTIVITIES } = await import('@/lib/goalCoach')
+    expect(ACTIVITIES.map((a) => a.detail).join(' ')).not.toMatch(/wife|garage/)
+    const { byId } = await import('@/data/exercises')
+    expect(byId.get('barbell-squat')?.safetyNote).toMatch(/^Training alone: the rack safeties/)
+  })
+})

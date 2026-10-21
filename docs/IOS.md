@@ -57,7 +57,8 @@ The source tree is shared. The build is selected by `VITE_EDITION=ios` (`.env.io
    - New fields: SHA-256 `checksum`, `schema`, `edition`.
    - A damaged or edited file is refused before anything is written.
    - Older web backups without a checksum still import after a row-count check.
-8. **No service worker.** The App Store delivers updates, and every file, including all exercise media, is bundled.
+8. **Neutral wording** (`ed(web, ios)`): no Flex 24/7, 85 kg, garage, "his rack", wife or Monster defaults in the App Store build. The web text is unchanged.
+9. **No service worker.** The App Store delivers updates, and every file, including all exercise media, is bundled.
 
 ## 4. Your data: the rules that must never be broken
 - The app's IndexedDB belongs to the `capacitor://localhost` origin. **Never change** `appId`, `server.iosScheme` or `server.hostname` after the first TestFlight build, or an update would open an empty database.
