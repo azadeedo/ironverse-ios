@@ -3,7 +3,10 @@
 import { chromium } from 'playwright'
 import { mkdirSync, readFileSync } from 'node:fs'
 
-const OUT = 'store/screenshots-final'
+// App Store Connect (2026) iPhone slot = 'iPhone with Dynamic Island (medium display)': 1206 x 2622.
+// The layout is designed at 1290 wide and scaled, so both sizes come from one template.
+const SIZE = process.env.IV_SIZE === '6.9' ? { w: 1290, h: 2796 } : { w: 1206, h: 2622 }
+const OUT = process.env.IV_SIZE === '6.9' ? 'store/screenshots-final' : 'store/screenshots-6.3'
 mkdirSync(OUT, { recursive: true })
 
 // order = App Store order (the first three decide most installs)
@@ -27,7 +30,7 @@ function html(s, img) {
   const lines = s.head.map((t, i) => `<div class="${i === s.hi ? 'hi' : ''}">${t}</div>`).join('')
   return `<!doctype html><html><head><meta charset="utf-8"><style>
   *{margin:0;box-sizing:border-box}
-  body{width:1290px;height:2796px;overflow:hidden;background:#0a0f19;font-family:-apple-system,"SF Pro Display","Segoe UI",Roboto,Arial,sans-serif;color:#f4f6fb;position:relative}
+  body{width:1290px;height:100vh;overflow:hidden;background:#0a0f19;font-family:-apple-system,"SF Pro Display","Segoe UI",Roboto,Arial,sans-serif;color:#f4f6fb;position:relative}
   .glow{position:absolute;inset:-300px -200px auto -200px;height:1500px;background:radial-gradient(closest-side,rgba(251,191,36,.38),rgba(251,191,36,0) 70%);filter:blur(10px)}
   .grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 2px,transparent 2px),linear-gradient(90deg,rgba(255,255,255,.035) 2px,transparent 2px);background-size:86px 86px;mask-image:linear-gradient(#000,transparent 55%)}
   .top{position:absolute;top:150px;left:0;right:0;text-align:center;padding:0 70px}
@@ -50,7 +53,8 @@ function html(s, img) {
 }
 
 const browser = await chromium.launch()
-const page = await browser.newPage({ viewport: { width: 1290, height: 2796 }, deviceScaleFactor: 1 })
+const scale = SIZE.w / 1290
+const page = await browser.newPage({ viewport: { width: 1290, height: Math.round(SIZE.h / scale) }, deviceScaleFactor: scale })
 for (const [i, s] of SLIDES.entries()) {
   const img = readFileSync(`store/raw/${s.raw}.png`).toString('base64')
   await page.setContent(html(s, img), { waitUntil: 'load' })
