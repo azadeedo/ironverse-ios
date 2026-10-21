@@ -1,0 +1,10 @@
+iv-body.bin — 3D anatomy used by Ironverse (More -> Body anatomy -> Real 3D model)
+
+Source: BodyParts3D, (c) The Database Center for Life Science licensed under
+CC Attribution-Share Alike 2.1 Japan. https://dbarchive.biosciencedbc.jp/en/bodyparts3d/
+License: https://creativecommons.org/licenses/by-sa/2.1/jp/deed.en
+
+This file is an adaptation: meshes were simplified (vertex clustering), packed and,
+for rectus abdominis and latissimus dorsi (not in BodyParts3D 4.0), shaped over the
+BodyParts3D skin surface. The adaptation is shared under the same license
+(CC BY-SA 2.1 JP). Build script: tools/bp3d_build.py in the project.

@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Ironverse is dark-first (training-app aesthetic). Light mode exists but dark is default. */
+:root {
+  --ink: #eef1f7;
+  --ink2: #9aa3b5;
+  --ink3: #626c80;
+  --surface: #0c111c;
+  --surface2: #141b2b;
+  --surface3: #1d2537;
+  --line: #273046;
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  color-scheme: dark;
+}
+
+html.light {
+  --ink: #131722;
+  --ink2: #5a6376;
+  --ink3: #8d94a6;
+  --surface: #f2f4f8;
+  --surface2: #ffffff;
+  --surface3: #e7eaf1;
+  --line: #dde1ea;
+  color-scheme: light;
+}
+
+html, body, #root { height: 100%; }
+
+body {
+  @apply bg-surface text-ink font-sans antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
+  text-rendering: optimizeLegibility;
+}
+
+input, textarea, [contenteditable] { -webkit-user-select: text; user-select: text; }
+.scroll-y { overflow-y: auto; -webkit-overflow-scrolling: touch; }
+input, select, textarea { font-size: 16px; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+
+.pressable { transition: transform 0.12s ease, opacity 0.12s ease; }
+.pressable:active { transform: scale(0.97); opacity: 0.85; }
+
+@keyframes page-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.page-in { animation: page-in 0.22s ease both; }
+@keyframes sheet-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.sheet-up { animation: sheet-up 0.28s cubic-bezier(0.32, 0.72, 0, 1) both; }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+.fade-in { animation: fade-in 0.2s ease both; }
+@keyframes scale-in { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
+.scale-in { animation: scale-in 0.18s ease both; }
+@keyframes toast-in { from { opacity: 0; transform: translateY(-12px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.toast-in { animation: toast-in 0.25s cubic-bezier(0.32, 0.72, 0, 1) both; }
+@keyframes pulse-ring { 0% { transform: scale(0.95); opacity: 0.8; } 70% { transform: scale(1.12); opacity: 0; } 100% { opacity: 0; } }
+.pulse-ring { animation: pulse-ring 1.6s cubic-bezier(0.2, 0.6, 0.3, 1) infinite; }
+
+.check { @apply h-5 w-5 rounded-md border-2 border-line accent-brand; }
+
+.pt-safe { padding-top: var(--sat); }
+.pb-safe { padding-bottom: var(--sab); }
+
+/* big stat number style (Gymverse-like) */
+.big-num { font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+
+/* workout heading style */
+.shout {
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+/* IV-06.19 accessibility: respect "Reduce motion" (iOS Settings → Accessibility → Motion) */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+/* keyboard / switch-control users can see where focus is */
+:focus-visible { outline: 2px solid #fbbf24; outline-offset: 2px; }
