@@ -59,6 +59,10 @@ export const CUISINE_LABELS: Record<Cuisine, string> = {
   american: 'American',
 }
 export const CUISINES = Object.keys(CUISINE_LABELS) as Cuisine[]
+export const CUISINE_FLAG: Record<Cuisine, string> = {
+  australian: '🇦🇺', 'middle-eastern': '🧆', turkish: '🇹🇷', greek: '🇬🇷', italian: '🇮🇹', mexican: '🇲🇽', indian: '🇮🇳',
+  chinese: '🇨🇳', japanese: '🇯🇵', korean: '🇰🇷', thai: '🇹🇭', vietnamese: '🇻🇳', filipino: '🇵🇭', african: '🌍', american: '🇺🇸',
+}
 
 /** Extra, optional detail for a seed food. */
 export interface FoodOpts {

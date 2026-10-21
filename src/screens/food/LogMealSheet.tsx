@@ -6,7 +6,7 @@ import { useMemo, useState } from 'react'
 import { ChevronRight, Plus, ScanBarcode, Star } from 'lucide-react'
 import { db } from '@/db'
 import { Button, Input, Sheet } from '@/components/ui'
-import type { FoodCategory } from '@/data/foods'
+import { CUISINES, CUISINE_FLAG, CUISINE_LABELS, type Cuisine, type FoodCategory } from '@/data/foods'
 import type { MealKey } from '@/db/types'
 import { newId, nowIso } from '@/lib/id'
 import { useUI } from '@/lib/store'
@@ -15,7 +15,7 @@ import { touchFood, useCatalog, useRecents, type RecentItem } from './useFoodDat
 
 const MEAL_ICON: Record<MealKey, string> = { breakfast: '🥣', lunch: '🥗', dinner: '🍗', snacks: '🍎' }
 const CAT_ICON: Record<FoodCategory, string> = { protein: '🍗', carbs: '🍚', 'fruit-veg': '🥦', fats: '🥑', meals: '🍲', snacks: '🍫', drinks: '🥤', 'middle-eastern': '🧆', supplements: '💊' }
-const icon = (f?: CatalogFood) => (f?.category ? CAT_ICON[f.category] : '🍽️')
+const icon = (f?: CatalogFood) => (f?.cuisine && f.category === 'meals' ? CUISINE_FLAG[f.cuisine] : f?.category ? CAT_ICON[f.category] : '🍽️')
 
 export function LogMealSheet({ open, onClose, date, initialMeal, onMoreOptions, onBarcode }: {
   open: boolean; onClose: () => void; date: string; initialMeal: MealKey; onMoreOptions: (meal: MealKey) => void; onBarcode: (meal: MealKey) => void
@@ -23,6 +23,8 @@ export function LogMealSheet({ open, onClose, date, initialMeal, onMoreOptions, 
   const { toast } = useUI()
   const [meal, setMeal] = useState<MealKey>(initialMeal)
   const [q, setQ] = useState('')
+  // v9: browse world foods by cuisine (works with or without a search term)
+  const [cuisine, setCuisine] = useState<Cuisine | null>(null)
   const [pick, setPick] = useState<{ food?: CatalogFood; recent?: RecentItem } | null>(null)
   const [grams, setGrams] = useState('100')
   const catalog = useCatalog()
@@ -31,10 +33,10 @@ export function LogMealSheet({ open, onClose, date, initialMeal, onMoreOptions, 
   const favs = catalog.filter((f) => f.favourite).slice(0, 8)
   const hits = useMemo(() => {
     const s = q.trim().toLowerCase()
-    if (!s) return []
-    return catalog.filter((f) => f.name.toLowerCase().includes(s) || (f.brand ?? '').toLowerCase().includes(s))
-      .sort((a, b) => (b.useCount ?? 0) - (a.useCount ?? 0) || a.name.localeCompare(b.name)).slice(0, 40)
-  }, [q, catalog])
+    if (!s && !cuisine) return []
+    return catalog.filter((f) => (!cuisine || f.cuisine === cuisine) && (!s || f.name.toLowerCase().includes(s) || (f.brand ?? '').toLowerCase().includes(s)))
+      .sort((a, b) => (b.useCount ?? 0) - (a.useCount ?? 0) || a.name.localeCompare(b.name)).slice(0, cuisine ? 80 : 40)
+  }, [q, catalog, cuisine])
   const serve = (f: CatalogFood) => f.servingGrams ?? 100
 
   async function logFood(f: CatalogFood, g: number) {
@@ -80,6 +82,14 @@ export function LogMealSheet({ open, onClose, date, initialMeal, onMoreOptions, 
             </button>
           ))}
         </div>
+        <div className="no-scrollbar -mx-1 mt-2 flex gap-1.5 overflow-x-auto px-1" aria-label="Cuisine">
+          {([null, ...CUISINES] as (Cuisine | null)[]).map((c) => (
+            <button key={String(c)} type="button" onClick={() => setCuisine(c)}
+              className={`pressable shrink-0 rounded-full px-3 py-1.5 text-[12px] font-semibold ${cuisine === c ? 'bg-brand text-black' : 'bg-surface3 text-ink2'}`}>
+              {c === null ? 'All cuisines' : `${CUISINE_FLAG[c]} ${CUISINE_LABELS[c]}`}
+            </button>
+          ))}
+        </div>
       </div>
 
       {pick ? (
@@ -91,7 +101,7 @@ export function LogMealSheet({ open, onClose, date, initialMeal, onMoreOptions, 
           <Button full onClick={confirmPick}>Log to {meal}</Button>
           <Button full variant="ghost" onClick={() => setPick(null)}>Back</Button>
         </div>
-      ) : q.trim() ? (
+      ) : q.trim() || cuisine ? (
         <div className="overflow-hidden rounded-2xl bg-surface3/40">
           {hits.map((f) => { const g = serve(f), m = scaledMacros(f, g); return row(f.id, icon(f), f.name, `${f.servingName ? `1 ${f.servingName}, ` : ''}${g} g`, m.kcal, () => void logFood(f, g), () => { setPick({ food: f }); setGrams(String(g)) }, `P ${m.protein}g C ${m.carbs}g F ${m.fat}g`) })}
           {hits.length === 0 && <div className="p-4 text-center text-[13px] text-ink3">Nothing found. Try More options to add a custom food or quick calories.</div>}

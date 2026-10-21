@@ -118,6 +118,11 @@ export async function loadProducts(): Promise<StoreProduct[]> {
 
 /** Ask the App Store what this Apple Account is entitled to and remember it. */
 export async function syncEntitlement(): Promise<Entitlement> {
+  // outside the iOS app there is no App Store to ask — keep whatever is stored
+  if (!isNativeApp()) {
+    await usePro.getState().refresh()
+    return (await getSetting<Entitlement | null>(KEYS.entitlement, null)) ?? { active: false, checkedAt: new Date().toISOString() }
+  }
   const checkedAt = new Date().toISOString()
   let ent: Entitlement = { active: false, checkedAt }
   if (isNativeApp()) {

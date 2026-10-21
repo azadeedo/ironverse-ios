@@ -1,113 +1,179 @@
-# Ironverse 1.0.0: App Store Connect listing (draft)
+# Ironverse 1.0.0: App Store Connect listing
 
-Every claim below was checked against the code in this repository on 21 Oct 2026. All owner details were filled in on 21 Oct 2026. The legal pages are live on the separate Netlify site `ironverse-legal` (it is not the app's site).
+Every claim below was checked against the app's code. The final review was on 21 Oct 2026.
+
+**Owner details:**
+- Seller (Individual): Nouri Khalil
+- Support email: azade@live.com.au
+- Legal pages are on the separate Netlify site `ironverse-legal`. It is not the app's site.
 
 ## App information
 | Field | Value |
 |---|---|
-| Name (max 30) | **Ironverse**. If the name is taken: `Ironverse: Gym & Food Log` |
-| Subtitle (max 30) | **Workouts, food and progress** (27) |
-| Bundle ID | `com.nouriapps.ironverse` |
-| SKU | `ironverse-ios-001` |
+| **Name** (30 max) | `Ironverse: Gym Workout Planner` (30) |
+| **Subtitle** (30 max) | `Calorie Counter & Food Scanner` (30) |
+| Bundle ID / SKU | `com.nouriapps.ironverse` / `ironverse-ios-001` |
 | Primary category | Health & Fitness |
-| Secondary category | Food & Drink (optional) |
-| Price | Free. There are no in-app purchases, no ads and no subscriptions. |
-| Version | 1.0.0 |
+| Secondary category | Food & Drink |
+| Price | Free download with in-app subscriptions (Ironverse Pro) |
 | Copyright | `2026 Nouri Khalil` |
 | Support URL | https://ironverse-legal.netlify.app/support.html |
+| Marketing URL | https://ironverse-legal.netlify.app |
 | Privacy Policy URL | https://ironverse-legal.netlify.app/privacy-policy.html |
-| Support email | azade@live.com.au |
-| Seller (Individual) | Nouri Khalil |
-| Marketing URL (optional) | https://ironverse-legal.netlify.app |
 
-## Promotional text (max 170, can be changed without a new build)
-Plan training for the equipment you actually have, log every set, track food and water, and see your progress. No account needed. Your data stays on your iPhone.
+**Why this name:**
+- The Australian top-25 Health & Fitness apps (checked 21 Oct 2026) follow a "Brand: what it does" pattern. Examples: *Hevy – Workout Tracker Gym Log*, *Lyfta: Gym & Workout Planner*, *MyFitnessPal: Calorie Counter*, *Cal AI – Calorie Tracker*.
+- Apple's search reads the name and subtitle most strongly. These two lines cover both of Ironverse's halves:
+  - gym, workout, planner;
+  - calorie, counter, food, scanner.
 
-## Description (max 4000)
-Ironverse is a training and nutrition log built around the equipment you actually have, whether that's a full gym or a home setup.
+**Alternatives** if the name is taken or you prefer a different one:
+- `Ironverse: Gym & Calorie Coach` (30)
+- `Ironverse: Workout & Calories` (29)
 
-PLAN
-• A training plan built for your gym or your home equipment, from 1 to 7 days a week, that rotates accessory exercises between training blocks.
-• The Ironverse 12-week program: 48 individually written workouts with a squat, bench and deadlift focus.
-• Swap Gym and Home in one tap. Exercises are replaced with the best option that location has.
+## Promotional text (170 max, can be changed without a new build)
+Train, eat and track in one app. 194 animated exercises, 400+ foods from 15 cuisines, and a 12-week program. Australian made. Try every Premium feature free for 7 days.
+(168)
+
+## Description
+Ironverse is the all-in-one gym and nutrition app: plan your training, log every set, count calories and watch your body change, all in one place. Australian made, and used every day by its developer in his own training.
 
 TRAIN
-• A library of 194 exercises with animated demonstrations, muscle maps and setup tips.
-• Log weight, reps and effort for every set, with rest timers, warm-up sets, supersets, and drop, rest-pause, myo and AMRAP sets.
-• Target weights you can actually load. The plate calculator only suggests weights you can build with your plates.
-• Automatic personal records, estimated one-rep maxes, history and workout replays.
-• Cardio: outdoor run and walk tracking with GPS, treadmill runs with pace and splits, and a jump-rope timer.
+• Plans built around YOUR equipment: a full gym or a home setup. Switch Gym/Home and the exercises adapt.
+• The Ironverse 12-week program: 48 individually written workouts with squat, bench and deadlift progression.
+• 194 exercises with animated demos, muscles worked, form cues and setup tips.
+• Log weight, reps and effort in seconds, with rest timer, warm-ups, supersets, drop sets, rest-pause, myo-reps and AMRAP.
+• Weights you can actually load: the plate calculator only suggests weights your plates can build.
+• Personal records and estimated one-rep max, spotted automatically.
 
 EAT
-• Log food from 302 built-in foods, your own foods and recipes, or by scanning a barcode (product data from Open Food Facts).
-• Daily calorie, protein and water targets, with a weekly calorie view and trend-based suggestions you approve.
-• Optional meal-photo estimates using your own Anthropic (Claude) API key.
-• Halal food filter and Ramadan and prayer-time awareness, all optional.
+• Count calories and protein from 400+ foods across 15 cuisines: Australian, Middle Eastern, Turkish, Greek, Italian, Mexican, Indian, Chinese, Japanese, Korean, Thai, Vietnamese, Filipino, African and American.
+• Barcode scanner with a food health score (Pro), using the Open Food Facts database.
+• Meal photo calorie estimates using your own Anthropic (Claude) key (Pro, optional).
+• Smart calorie targets that only change with your OK, plus macro, water and supplement tracking.
+• Halal food filter, plus Ramadan and prayer-time awareness, all optional.
 
 PROGRESS
-• Weight trend, body measurements, strength charts, weekly reviews and progress photos with side-by-side compare.
-• An interactive anatomy muscle map with origins, insertions and a quiz.
+• Weight trend, body measurements, strength charts and weekly reviews.
+• Progress photos with side-by-side compare.
+• Interactive anatomy map and a 3D body explorer.
+• Trophies, streaks, levels and challenges.
 
 PRIVATE BY DESIGN
-• No account or sign-up.
-• Everything is stored on your iPhone and works offline.
-• No ads, no analytics and no tracking.
-• Full backup and restore to a file you control, with optional encryption and an integrity check.
+• No account needed. Your data stays on your iPhone and works offline.
+• No ads, no analytics, no tracking.
+• Full backup and restore to a file you control.
+• Suggest a feature or report a bug right inside the app. It goes straight to the developer.
+
+IRONVERSE PRO
+Every new user gets the full Premium experience free for 7 days, with no card required. After that the core app stays free: workout logging, the exercise library, food logging, water, weigh-ins and your full history. Pro unlocks:
+• the 12-week program
+• advanced progress and reviews
+• the barcode scanner
+• meal photo estimates
+• the goal coach
+• photo compare
+• the 3D body
+• meal plans
+
+Ironverse Pro: A$12.99 per month or A$79.99 per year (prices vary by country).
+• Payment is charged to your Apple Account at confirmation of purchase.
+• The subscription renews automatically unless it is cancelled at least 24 hours before the end of the current period.
+• Your account is charged for renewal within 24 hours before the end of the current period.
+• Manage or cancel in your Apple Account settings.
+
+Terms of Use: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+Privacy Policy: https://ironverse-legal.netlify.app/privacy-policy.html
 
 Ironverse gives general fitness and nutrition guidance, not medical advice. Check with a doctor before starting a new training or diet plan.
 
-## Keywords (max 100 characters, comma-separated, no spaces)
-`workout,gym,strength,training,log,calorie,protein,macro,tracker,1rm,plan,lifting,weight,home,barcode`
-(100 characters — the limit. The app name and category are not repeated because Apple already indexes them.)
+## Keywords (100 max; never repeat words already in the name or subtitle)
+`tracker,log,lifting,strength,macro,protein,diet,weight,loss,progress,photo,barcode,1rm,fitness,meal`
+(99)
 
 ## What's New (1.0.0)
-First release of Ironverse for iPhone. If you used the Ironverse web app, export a backup there and choose "restore a backup" on the first screen. All your workouts, food logs and plans come across.
+First release of Ironverse for iPhone. Already using the Ironverse web app? Export a backup there, then tap "restore a backup" on the first screen. Every workout, meal and plan comes across.
 
-## Age rating questionnaire (Apple's 2025 questionnaire), suggested answers
-- Violence, sexual content, profanity, horror, gambling, contests, alcohol, tobacco or drug use: **None**.
-  - The halal filter hides alcohol foods. Alcohol is never promoted.
-- Medical or treatment information: **Infrequent**.
-  - The app gives calorie, protein and creatine-dose guidance, and has a "not medical advice" disclaimer.
-- Health or wellness topics: **Yes**. This is a fitness and nutrition app.
-- User-generated content shared with others, messaging or chat: **No**.
-- Unrestricted web access: **No**. The app has no browser. Its only network calls are Open Food Facts and, optionally, Anthropic.
-- In-app purchases or ads: **No**.
-- Expected result: a low age band (4+ or 9+). Apple computes the rating from your answers.
+## Screenshots: `store/screenshots-final/` (10 images, 1290 × 2796, iPhone 6.9")
+These are real captures of the App Store build, using a clearly fictional demo user ("Alex"), in a branded frame. Upload them in this order:
 
-## App privacy ("nutrition label")
-Based on a code audit:
-- No analytics, ads, crash-reporting or tracking SDKs.
-- The app has no server and no accounts.
-
-| Data | Leaves the device? | Recommendation |
+| # | File | Headline |
 |---|---|---|
-| Workouts, food logs, body data, photos, settings | No. Stored on the device (IndexedDB) and in backup files the user exports themselves. | Not "collected" |
-| Barcode number | Yes, to Open Food Facts, only when the user scans an unknown product | A product code is not personal data. No declaration needed. |
-| Meal photo | Yes, to Anthropic, **only** if the user adds their own API key, accepts the consent prompt and takes a meal photo | **Declare "Photos or Videos"**, Purpose: App Functionality, Linked to user: No, Tracking: No. This is the conservative choice, because Anthropic may keep API inputs for a limited time under its own policy. |
-| Location (GPS run tracker) | No. It stays on the device. | Not collected |
+| 1 | `01-today` | YOUR GYM. YOUR FOOD. ONE APP. (with the Australian Made badge) |
+| 2 | `02-food-cuisines` | COUNT CALORIES FROM 400+ FOODS |
+| 3 | `03-session` | LOG EVERY SET IN SECONDS |
+| 4 | `04-program-day` | KNOW EXACTLY WHAT TO LIFT |
+| 5 | `05-progress` | WATCH YOUR BODY CHANGE |
+| 6 | `06-exercise` | 194 EXERCISES, ANIMATED |
+| 7 | `07-records` | SMASH YOUR PERSONAL RECORDS |
+| 8 | `08-program-detail` | 12-WEEK PROGRAM WRITTEN FOR YOU |
+| 9 | `09-anatomy` | LEARN EVERY MUSCLE |
+| 10 | `10-hub` | LEVEL UP AS YOU TRAIN |
 
-- **Tracking (ATT):** No.
-- **Encryption export compliance:** `ITSAppUsesNonExemptEncryption = NO` is set in Info.plist. The app uses only Apple's built-in encryption: HTTPS, and WebCrypto AES-GCM for the user's own backup file.
+To rebuild them: run `npm run dev:ios`, then `node tools/store-media/capture.mjs`, then `node tools/store-media/compose.mjs`.
 
-## App Review notes (paste into "Notes")
-> Ironverse needs no login. On first launch, tap Get started and answer the setup questions. Every question can be skipped. Then tap "Show me around" for a tour of the app.
->
-> To try the main features: Workout tab → Start this workout → enter weight and reps → tick a set. Food tab → + → search "rice" → add. Progress tab shows charts once a few entries exist.
->
-> All data is stored on the device. There are no accounts, servers, ads or analytics.
->
-> Optional feature: meal-photo calorie estimates use the user's OWN Anthropic API key, entered in Settings. It is not needed to use the app; food can always be logged manually or by barcode. Before the first photo is sent, the app asks for explicit consent.
->
-> Barcode lookups use the public Open Food Facts database. Location is used only while the user tracks an outdoor run or walk.
+## App previews: `store/previews/` (886 × 1920, H.264, 30 fps, stereo AAC; real app footage only, per Apple 2.3.4)
+1. `ironverse-preview-main.mp4` (23.9 s), with the coolest moments first:
+   - the 3D body spinning
+   - an animated squat demo
+   - plan, then set logging
+   - 400+ foods with cuisine flags
+   - weight trend, then personal records
+   - end card
+2. `ironverse-preview-food.mp4` (20.0 s):
+   - calorie dashboard
+   - cuisines from Australian to Middle Eastern
+   - smart targets
+   - weekly chart
+   - water and supplements
+3. `ironverse-preview-train.mp4` (18.1 s):
+   - 12-week program
+   - a written workout with coaching
+   - exercise library
+   - deadlift demo
+   - levels and trophies
+   - anatomy
 
-## Screenshots
-- Required: iPhone **6.9-inch** set, 1290 × 2796 (Apple scales them for smaller iPhones). Up to 10 images.
-- The real captures from this build are in `store/screenshots/`. They come from the App Store build rendered at the iPhone 6.9-inch size with clearly fictional demo data, and contain no personal data.
-- Recommended order: 1 Today dashboard · 2 Workout · 3 Exercise library · 4 Food · 5 Progress · 6 Welcome.
-- Before submitting, replace them with screenshots from your own iPhone running the TestFlight build if you prefer a real status bar.
+To rebuild them: run `node tools/store-media/video.mjs main|food|train` (needs ffmpeg).
 
-## Hosting plan for the privacy policy and support pages
-Apple needs two public URLs. Three options, none of which touch the live Netlify app:
-1. **Recommended:** a new, separate Netlify site, for example `ironverse-legal.netlify.app`, containing only `store/privacy-policy.html` and `store/support.html`. It's free and can be deployed with the Netlify CLI you already use, but **only with your OK**.
-2. GitHub Pages on the new private repository. This needs a public repository or a paid GitHub plan.
-3. Your own domain, if you have one.
+## Age rating answers
+- Violence, sexual content, profanity, horror, gambling, alcohol, tobacco and drugs: **None**.
+- Medical or treatment information: **Infrequent**. The app includes calorie, protein and creatine guidance and a "not medical advice" note.
+- Health or wellness topics: **Yes**.
+- User-generated content shared with other users, messaging or chat: **No**. Feedback goes privately to the developer.
+- Unrestricted web access: **No**. In-app purchases: **Yes** (subscriptions). Ads: **No**.
+
+## App privacy ("nutrition label"), from a code audit on 21 Oct 2026
+The app has no analytics, ads, crash reporting or tracking SDKs, no server and no accounts.
+
+| Data type | When it leaves the device | Declare as |
+|---|---|---|
+| Photos | Only with the user's own Anthropic key and consent, for a meal estimate | Photos or Videos · App Functionality · Not linked · No tracking |
+| Email address | Only if typed into Suggest & report | Contact Info → Email · Customer Support · Linked to user · No tracking |
+| Feedback message and optional screenshot | Only when the user taps Send | User Content → Customer Support · Customer Support · Linked if an email is given · No tracking |
+| Device and app version | Sent with feedback | Diagnostics → Other Diagnostic Data · Customer Support · Not linked · No tracking |
+| Purchases | Handled entirely by Apple (StoreKit); Ironverse never sees card details | Purchases → Purchase History · App Functionality · Not linked (on-device entitlement check only) |
+
+Everything else stays on the iPhone and is not "collected": workouts, food, body data, location for runs, and backups.
+
+**Encryption:** `ITSAppUsesNonExemptEncryption = NO`. The app uses only Apple's built-in HTTPS and WebCrypto.
+
+## App Review notes
+> Ironverse needs no login. On first launch, tap Get started (every question can be skipped), then "Show me around" for a guided tour.
+>
+> SUBSCRIPTIONS: New installs get every Premium feature free for 7 days. This is an app-side trial with no StoreKit offer. After that the core app stays free, and Pro (monthly com.nouriapps.ironverse.pro.monthly / yearly com.nouriapps.ironverse.pro.yearly) unlocks the 12-week program, advanced progress, barcode scanner, meal-photo estimates, goal coach, photo compare, 3D body and meal plans. The paywall is at More → Ironverse Pro, with Restore Purchases and Terms/Privacy links.
+>
+> TO TRY: Workout tab → Start this workout → log a set. Food tab → + → pick a cuisine chip (e.g. Thai) → tap + on a dish. Progress tab shows charts after a few entries. More → Suggest & report sends feedback to the developer.
+>
+> Data is stored on the device. The optional meal-photo feature uses the user's OWN Anthropic API key and asks for consent before sending. Barcode lookups use the public Open Food Facts database. Location is used only while tracking an outdoor run.
+
+## Ideas to grow Ironverse into a top fitness app
+These are not built yet; they're ordered by likely impact per effort.
+1. **Apple Health sync** (steps, workouts, weight). It's a top-requested feature in fitness reviews. A plan already exists in `docs/HEALTHKIT.md`.
+2. **Ask for a rating after a new PR or a finished week**, using Apple's review prompt. Ratings are the biggest App Store ranking factor.
+3. **Home-screen widgets and Live Activities** for rest timer, calories left and today's workout. Hevy features these heavily.
+4. **Apple Watch** set logging.
+5. **Custom Product Pages** in App Store Connect: separate store pages for "calorie counter" and "gym planner" ads, each with its own screenshots.
+6. **Localise the listing** (en-GB, en-US, en-CA, en-NZ) with the same text. This adds more searchable keyword slots at no cost.
+7. **Launch content:** short TikTok and Reels clips cut from the preview videos; posts in r/fitnessAU, r/GYM and Australian gym Facebook groups; and an offer code for local PTs.
+8. **In-app events** on the App Store (for example "New Year 12-week challenge").
