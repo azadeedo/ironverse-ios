@@ -33,8 +33,17 @@ Data is stored on the device. The optional meal-photo feature uses the user's OW
 failures = []
 
 
+def pem_key():
+    # Codemagic may hand the .p8 over with literal "\n", stray quotes or no PEM armour
+    raw = os.environ['APP_STORE_CONNECT_PRIVATE_KEY'].strip().strip('"').strip("'").replace(chr(92) + 'n', ' ')
+    raw = raw.replace('-----BEGIN PRIVATE KEY-----', ' ').replace('-----END PRIVATE KEY-----', ' ')
+    body = ''.join(raw.split())
+    lines = [body[i:i + 64] for i in range(0, len(body), 64)]
+    return '-----BEGIN PRIVATE KEY-----\n' + '\n'.join(lines) + '\n-----END PRIVATE KEY-----\n'
+
+
 def token():
-    key = os.environ['APP_STORE_CONNECT_PRIVATE_KEY']
+    key = pem_key()
     now = int(time.time())
     return jwt.encode({'iss': os.environ['APP_STORE_CONNECT_ISSUER_ID'], 'iat': now, 'exp': now + 900, 'aud': 'appstoreconnect-v1'},
                       key, algorithm='ES256', headers={'kid': os.environ['APP_STORE_CONNECT_KEY_IDENTIFIER'], 'typ': 'JWT'})
