@@ -19,12 +19,12 @@
 | 10 | Capacitor setup | **DONE** | Capacitor 8.5.3 with 8 plugins (app, filesystem, share, local-notifications, haptics, status-bar, splash-screen, keyboard). Swift Package Manager project. |
 | 11 | iOS configuration | **DONE (not compiled yet)** | Bundle `com.nouriapps.ironverse`, name Ironverse, version 1.0.0, iPhone only, portrait. Icon at 1024 and splash at 2732. Camera, photo, location and encryption keys in Info.plist. |
 | 12 | Tool installation | **DONE** | Node 24.21, npm 11.19 and Git 2.56 were already present. Added Capacitor CLI and plugins plus Playwright with Chromium (dev only, for screenshots). Nothing else installed. |
-| 13 | Codemagic setup | **PARTIALLY DONE: USER ACTION REQUIRED** | `codemagic.yaml` is written and validated. It needs a GitHub (or GitLab or Bitbucket) repository and a Codemagic account, both of which require you to sign in. |
+| 13 | Codemagic setup | **DONE** | Repo github.com/azadeedo/ironverse-ios (private) is connected to Codemagic and `codemagic.yaml` is detected. |
 | 14 | Apple Developer enrollment | **BLOCKED: USER ACTION REQUIRED** | Sign-in, identity check and payment must be done by you. |
 | 15 | Apple signing | **BLOCKED** | Needs membership and an App Store Connect API key. Codemagic then creates the certificate and profile automatically. |
 | 16 | App Store Connect | **BLOCKED** | The app record must be created in the App Store Connect web interface after enrollment. |
 | 17 | App Store listing | **PARTIALLY DONE** | `store/APP_STORE_LISTING.md` covers name, subtitle, description, keywords, category, age rating, privacy label, review notes and release notes. `store/privacy-policy.html` and `support.html` are drafts. Seven real 1290×2796 screenshots are in `store/screenshots/`. Still needed: support email, legal or seller name, and a public URL for the policy. |
-| 18 | Cloud build results | **NOT DONE** | Waits on item 13. The compile-check workflow needs no Apple account. |
+| 18 | Cloud build results | **DONE (unsigned)** | 21 Oct 2026, Codemagic Mac mini M2, build 6ad8657e: npm ci, the 170 unit tests on macOS, the iOS-edition bundle and its checks, cap sync and an `xcodebuild` iOS Simulator compile all succeeded ("Build Succeeded", about 2.5 min in total). A signed build waits on Apple. |
 | 19 | TestFlight | **NOT DONE** | Waits on items 14 to 16. |
 | 20 | Submission readiness | **NOT DONE** | Blocked. Nothing will be submitted without your approval. |
 | 21 | Tests completed | **DONE (local only)** | 168 tests (156 original and 12 new), typecheck, `verify:ios`, browser walkthrough of the setup and tour. |
