@@ -257,6 +257,9 @@ export default function FirstRunScreen() {
             {d.prefilledFromBackup && (
               <Card className="flex gap-2.5 p-3.5 text-[12.5px] text-ink2"><ShieldCheck size={16} className="mt-0.5 shrink-0 text-good" />Prefilled from your restored backup. Your history, logs and current plan are kept exactly as they are.</Card>
             )}
+            <p className="text-[11.5px] leading-relaxed text-ink3">
+              Ironverse gives general fitness and nutrition guidance, not medical advice. Targets are estimates. Check with a doctor before starting a new training or diet plan, especially if you are pregnant, have a medical condition or take medication.
+            </p>
             <Button full onClick={() => void apply()} disabled={busy}>{busy ? 'Setting up…' : 'Set up Ironverse'} <ArrowRight size={18} /></Button>
           </StepBody>
         )}

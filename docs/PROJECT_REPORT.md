@@ -1,0 +1,51 @@
+# Ironverse iOS: project report (21 Oct 2026)
+
+**What the testing covered:**
+- **Local unit tests:** Vitest, Node, fake IndexedDB.
+- **Browser checks:** the App Store build at iPhone size in Chromium. This is not Safari or WebKit.
+- **Not done yet:** cloud build, iOS Simulator and physical iPhone. These have not happened, and nothing below is marked as passed on them.
+
+| # | Item | Status | Evidence / note |
+|---|---|---|---|
+| 1 | Original app protection | **DONE** | All 740 original files (including dist) are SHA-256 identical before and after. Git HEAD is `7905a90`, the working tree is clean, and live `version.json` is the unchanged build `2.24.0+7905a90.202610210445`. Nothing was deployed. |
+| 2 | Independent copy | **DONE** | `BUSINESS IDEAS/Ironverse-iOS` has its own git repository (`main`). It has no remote, no `.netlify` link and no deploy script. |
+| 3 | Feature inventory | **DONE** | `docs/FEATURE_INVENTORY.md`: 49 original routes, 194 exercises, 302 foods, 22 DB tables, all libs. |
+| 4 | Feature preservation | **PARTIALLY DONE** | `npm run check:preserve`: 0 of 434 files missing, and 11 lines rewritten to sit inside edition checks. The 156 original tests pass. On-device checks of camera, GPS, WebGL 3D and notifications are still to do in TestFlight. |
+| 5 | Onboarding | **DONE (local)** | 8 screens at `/welcome`. Verified in the browser: resume after reload, imperial conversion, skip, apply, no repeat after finishing. Covered by unit tests. |
+| 6 | Strength assessment | **DONE (local)** | Known 1RM, an Epley estimate from 1–12 reps, or "later". The approximation note is shown and no max attempt is ever asked for. Checked: 225 lb × 5 → 263 lb. Invalid sets are never stored. |
+| 7 | Interactive tutorial | **DONE (local)** | All 8 steps found their real control in the browser. It has Next, Back, Skip and Finish, and can be replayed from Settings. |
+| 8 | Backup and restore | **DONE (local)** | SHA-256 and row-count integrity checks. A tampered file is refused and older backups still import. Round-trip of every table, including photo blobs, passed. Native save goes through the share sheet (not yet tested on a device). |
+| 9 | Data migration | **DONE (local), BLOCKED on device** | Export from the web app, then "restore a backup" on the iOS first screen. Merge never overwrites newer rows, and a restored profile skips setup. No web patch is needed because the web app already exports full backups. |
+| 10 | Capacitor setup | **DONE** | Capacitor 8.5.3 with 8 plugins (app, filesystem, share, local-notifications, haptics, status-bar, splash-screen, keyboard). Swift Package Manager project. |
+| 11 | iOS configuration | **DONE (not compiled yet)** | Bundle `com.nouriapps.ironverse`, name Ironverse, version 1.0.0, iPhone only, portrait. Icon at 1024 and splash at 2732. Camera, photo, location and encryption keys in Info.plist. |
+| 12 | Tool installation | **DONE** | Node 24.21, npm 11.19 and Git 2.56 were already present. Added Capacitor CLI and plugins plus Playwright with Chromium (dev only, for screenshots). Nothing else installed. |
+| 13 | Codemagic setup | **PARTIALLY DONE: USER ACTION REQUIRED** | `codemagic.yaml` is written and validated. It needs a GitHub (or GitLab or Bitbucket) repository and a Codemagic account, both of which require you to sign in. |
+| 14 | Apple Developer enrollment | **BLOCKED: USER ACTION REQUIRED** | Sign-in, identity check and payment must be done by you. |
+| 15 | Apple signing | **BLOCKED** | Needs membership and an App Store Connect API key. Codemagic then creates the certificate and profile automatically. |
+| 16 | App Store Connect | **BLOCKED** | The app record must be created in the App Store Connect web interface after enrollment. |
+| 17 | App Store listing | **PARTIALLY DONE** | `store/APP_STORE_LISTING.md` covers name, subtitle, description, keywords, category, age rating, privacy label, review notes and release notes. `store/privacy-policy.html` and `support.html` are drafts. Seven real 1290×2796 screenshots are in `store/screenshots/`. Still needed: support email, legal or seller name, and a public URL for the policy. |
+| 18 | Cloud build results | **NOT DONE** | Waits on item 13. The compile-check workflow needs no Apple account. |
+| 19 | TestFlight | **NOT DONE** | Waits on items 14 to 16. |
+| 20 | Submission readiness | **NOT DONE** | Blocked. Nothing will be submitted without your approval. |
+| 21 | Tests completed | **DONE (local only)** | 168 tests (156 original and 12 new), typecheck, `verify:ios`, browser walkthrough of the setup and tour. |
+| 22 | Unresolved issues | see below | |
+| 23 | Costs | **None spent** | Apple: US$99 a year, charged in local currency at checkout. Australian users report A$149, so confirm on the payment screen. Codemagic free plan: 500 macOS minutes a month. |
+| 24 | Remaining user actions | see below | |
+| 25 | Next steps | see below | |
+
+## Unresolved issues and review risks
+1. **Owner-personal wording is still in some screens.** Examples: "Flex 24/7", "85 kg", "his rack" and "garage" in Plan, Program and What's New, and the "4:00 km goal" card. These are copy only. Their behaviour is already safe in the App Store build: the gym row is renamed "Gym", and the goal coach uses the user's own goal. The copy was left untouched because the brief says nothing is to be removed or changed without approval. **Decision needed:** should the App Store build show neutral wording for these, while the web build keeps the current wording?
+2. **Imperial units are used for setup input only.** The rest of the app (logging and charts) still shows kg, as it always has. Adding a full lb display would be a larger change across many screens.
+3. **iOS cannot re-check reminders in the background.** Background reminders are handed to iOS at the time they were scheduled, so a water reminder can still arrive after you have already logged the water.
+4. **App Review 4.2 / 5.1.1 risk is low.** The app has substantial native-feeling functionality, works offline and needs no login. The AI photo feature needs the user's own API key; it is optional, and the review notes say so.
+5. **The name "Ironverse" may already be taken** on the App Store. This can only be checked once the app record is created. A fallback name is in the listing.
+
+## Remaining user actions (in order)
+1. **Apple Developer Program.** Sign in at https://developer.apple.com/programs/enroll/ and enroll as an **Individual** (recommended), then pay. You do this yourself.
+2. **Code hosting.** Create a free private GitHub repository called `ironverse-ios` and sign in to https://codemagic.io with GitHub. Then tell me, and I will push and connect it.
+3. **Details for the listing.** Send a support email address and your legal name (the seller name). Also say yes or no to hosting the privacy and support pages on a **new, separate** Netlify site.
+4. **App Store Connect, after membership is active.**
+   - Create the app record with Bundle ID `com.nouriapps.ironverse`.
+   - Create an App Store Connect API key (Users and Access → Integrations → Team Keys, role App Manager).
+   - Upload the `.p8` file to Codemagic under the name "Ironverse ASC key".
+5. **TestFlight.** Install TestFlight on your iPhone, accept the invite, and test using the checklist in docs/IOS.md §4 and the inventory's 🔍 items.
