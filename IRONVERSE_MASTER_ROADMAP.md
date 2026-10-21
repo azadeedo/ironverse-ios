@@ -30,9 +30,9 @@ The status labels used below are DONE, IN PROGRESS, BLOCKED, NOT STARTED and FAI
 | 0.5 | Update the app's fallback price label and "Save %" maths to match (A$9.99 gives "Save 33%") | DONE in code (ships in build 4) | — |
 | 0.6 | Sign the Paid Apps Agreement, banking, tax (individual tax form) and the EU DSA trader status | BLOCKED | **Owner** |
 | 0.7 | Join the App Store Small Business Program (15% commission) | BLOCKED | **Owner** |
-| 0.8 | Add a review screenshot of the paywall to each subscription | NOT STARTED | — |
+| 0.8 | Add a review screenshot of the paywall to each subscription | DONE 22 Oct 2026 (both subscriptions now *Ready to Submit*) | — |
 | 0.9 | Version 1.0.0 listing: description, keywords, promo text, URLs, copyright, version 1.0.0, 10 screenshots (1206 × 2622), 3 previews | DONE: saved 21 Oct 2026; Apple is still processing the previews | Approved 21 Oct |
-| 0.10 | Version 1.0: copyright, What's New, reviewer notes, contact, attach build 3 and both subscriptions | NOT STARTED | Contact phone from owner |
+| 0.10 | Version 1.0: copyright, What's New, reviewer notes, contact, attach build 3 and both subscriptions | IN PROGRESS: build 3 attached 22 Oct 2026; notes ready in tools/asc/listing.py, waiting for the phone | Contact phone from owner |
 | 0.11 | App Privacy answers (see store/APP_STORE_LISTING.md) | NOT STARTED | Publishing them is a public statement, so it needs a final OK |
 | 0.12 | Subscription tests in sandbox and TestFlight (SUBSCRIPTION_TEST_PLAN.md) | BLOCKED | Needs 0.6 |
 | 0.13 | Device test pass on the owner's iPhone (RELEASE_CHECKLIST.md) | IN PROGRESS | Owner testing |

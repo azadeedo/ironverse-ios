@@ -37,9 +37,9 @@ Fill this in for every release candidate. Labels: PASS, FAIL, BLOCKED, NOT TESTE
 | Age rating (9+) and medical-device declaration (no) | DONE |
 | Screenshots (10, 1206 × 2622) and previews (3) | Screenshots DONE, in order; previews processing at Apple |
 | Description, keywords, promo text, URLs, copyright, version 1.0.0 | DONE (saved) |
-| Copyright, What's New, review notes, contact | NOT STARTED |
-| App Privacy | NOT STARTED |
-| Build attached, subscriptions attached | NOT STARTED |
-| Subscriptions' review screenshots | NOT STARTED |
+| Copyright, What's New, review notes, contact | Copyright DONE. What's New: not shown for a first version. Review notes + contact: BLOCKED on the owner's phone number (Apple requires +country format) |
+| App Privacy | NOT STARTED: not settable via the API; needs the owner signed in to App Store Connect |
+| Build attached, subscriptions attached | Build 3 attached 22 Oct 2026 (API, verified). Subscriptions are Ready to Submit; they are added on the version page at submission time |
+| Subscriptions' review screenshots | DONE 22 Oct 2026: store/review/paywall-*.png uploaded, both COMPLETE; both subscriptions READY_TO_SUBMIT |
 | Paid Apps Agreement, tax and bank | BLOCKED (owner) |
 | Owner approval to submit | NOT GIVEN |
