@@ -1,6 +1,6 @@
 # Ironverse 1.0.0: App Store Connect listing (draft)
 
-Every claim below was checked against the code in this repository on 21 Oct 2026. Items marked **[YOU]** need information only you can give.
+Every claim below was checked against the code in this repository on 21 Oct 2026. All owner details were filled in on 21 Oct 2026. The legal pages are live on the separate Netlify site `ironverse-legal` (it is not the app's site).
 
 ## App information
 | Field | Value |
@@ -13,10 +13,12 @@ Every claim below was checked against the code in this repository on 21 Oct 2026
 | Secondary category | Food & Drink (optional) |
 | Price | Free. There are no in-app purchases, no ads and no subscriptions. |
 | Version | 1.0.0 |
-| Copyright | `2026 [YOU: your legal name or company]` |
-| Support URL | **[YOU]** a public page. A draft is in `store/support.html` (hosting plan below). |
-| Privacy Policy URL | **[YOU]** a public page. A draft is in `store/privacy-policy.html`. |
-| Support email | **[YOU]**. It appears in the privacy policy and on the support page. |
+| Copyright | `2026 Nouri Khalil` |
+| Support URL | https://ironverse-legal.netlify.app/support.html |
+| Privacy Policy URL | https://ironverse-legal.netlify.app/privacy-policy.html |
+| Support email | azade@live.com.au |
+| Seller (Individual) | Nouri Khalil |
+| Marketing URL (optional) | https://ironverse-legal.netlify.app |
 
 ## Promotional text (max 170, can be changed without a new build)
 Plan training for the equipment you actually have, log every set, track food and water, and see your progress. No account needed. Your data stays on your iPhone.
