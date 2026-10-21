@@ -76,3 +76,25 @@ workflows:
         auth: integration
         submit_to_testflight: true
         submit_to_app_store: false   # App Store review only after the owner approves it
+
+  # 3) Listing chores through the App Store Connect API (manual start only):
+  #    attach a build to version 1.0.0, App Review contact/notes, subscription review
+  #    screenshots. Never submits for review, never changes prices. See tools/asc/listing.py.
+  asc-listing:
+    name: Ironverse — App Store Connect listing (API)
+    instance_type: mac_mini_m2
+    max_build_duration: 15
+    integrations:
+      app_store_connect: Ironverse ASC key
+    environment:
+      vars:
+        APP_STORE_APPLE_ID: 6825232233
+        IV_BUILD: 3
+    scripts:
+      - name: Listing via App Store Connect API
+        script: |
+          for v in APP_STORE_CONNECT_ISSUER_ID APP_STORE_CONNECT_KEY_IDENTIFIER APP_STORE_CONNECT_PRIVATE_KEY; do
+            if [ -n "${!v}" ]; then echo "$v present"; else echo "$v MISSING"; fi
+          done
+          python3 -m pip install --quiet --user pyjwt cryptography requests
+          python3 tools/asc/listing.py
