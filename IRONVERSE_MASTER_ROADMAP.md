@@ -13,7 +13,7 @@ The status labels used below are DONE, IN PROGRESS, BLOCKED, NOT STARTED and FAI
 | App Store Connect app | Apple ID 6825232233. Name "Ironverse: Gym Workout Planner", subtitle "Calorie Counter & Food Scanner". Version 1.0 is in *Prepare for Submission*. | yes |
 | Signing | Apple Distribution certificate and "Ironverse App Store" profile, both expiring 21 Oct 2027. API key "Ironverse ASC key" (App Manager role) is held in Codemagic only. | yes |
 | Builds | TestFlight build 1 (installed on the owner's iPhone) and build 2 are *Ready to Submit*. **Build 3** (commit 2e5add3) is *Ready to Submit*, compiled with Xcode 26.6. Codemagic reports "post-processing failed", but that is only its optional TestFlight-submission step; all three builds reached TestFlight. | yes |
-| Subscriptions | Group "Ironverse Pro" (22499474): Yearly `com.nouriapps.ironverse.pro.yearly` at **A$79.99**, Monthly `com.nouriapps.ironverse.pro.monthly` at **A$12.99** (pending change to A$9.99). Both are *Prepare for Submission* and have no review screenshot yet. | yes |
+| Subscriptions | Group "Ironverse Pro" (22499474): Yearly `com.nouriapps.ironverse.pro.yearly` at **A$79.99**, Monthly `com.nouriapps.ironverse.pro.monthly` at **A$9.99** (changed from A$12.99 on 22 Oct 2026; US$5.99). Both are *Prepare for Submission* and have no review screenshot yet. | yes |
 | Paid Apps Agreement | **Not signed.** It is still "New" in Business, so no subscription can be sold or sandbox-tested until it is signed. | yes |
 | Accounts | **None.** The app has no sign-up or login, so Apple's account-deletion rule (5.1.1(v)) does not apply. Settings → *Erase all data* already exists. | yes |
 | Data | Local only (IndexedDB) on the device. Backups have a checksum and an integrity check. There is no server database. | yes |
@@ -25,9 +25,9 @@ The status labels used below are DONE, IN PROGRESS, BLOCKED, NOT STARTED and FAI
 |---|---|---|---|
 | 0.1 | Audit the source, versions, signing and App Store Connect | DONE | — |
 | 0.2 | Confirm build 3 finished processing in TestFlight | DONE: build 3 *Ready to Submit*, group Nouri (verified 21 Oct 2026) | — |
-| 0.3 | Change monthly Pro from A$12.99 to **A$9.99** (Australian base price; Apple recalculates other storefronts) | NOT STARTED | **Approval needed** (see DECISIONS_AND_APPROVALS.md, D-007) |
+| 0.3 | Change monthly Pro from A$12.99 to **A$9.99** (Australian base price; Apple recalculates other storefronts) | DONE 22 Oct 2026 (verified in App Store Connect) | Approved (D-007) |
 | 0.4 | Keep yearly at A$79.99 | DONE | — |
-| 0.5 | Update the app's fallback price label and "Save %" maths to match (A$9.99 gives "Save 33%") | NOT STARTED | Follows 0.3 |
+| 0.5 | Update the app's fallback price label and "Save %" maths to match (A$9.99 gives "Save 33%") | DONE in code (ships in build 4) | — |
 | 0.6 | Sign the Paid Apps Agreement, banking, tax (individual tax form) and the EU DSA trader status | BLOCKED | **Owner** |
 | 0.7 | Join the App Store Small Business Program (15% commission) | BLOCKED | **Owner** |
 | 0.8 | Add a review screenshot of the paywall to each subscription | NOT STARTED | — |

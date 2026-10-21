@@ -76,7 +76,7 @@ Every new user gets the full Premium experience free for 7 days, with no card re
 • the 3D body
 • meal plans
 
-Ironverse Pro: A$12.99 per month or A$79.99 per year (prices vary by country).
+Ironverse Pro: A$9.99 per month or A$79.99 per year (prices vary by country).
 • Payment is charged to your Apple Account at confirmation of purchase.
 • The subscription renews automatically unless it is cancelled at least 24 hours before the end of the current period.
 • Your account is charged for renewal within 24 hours before the end of the current period.

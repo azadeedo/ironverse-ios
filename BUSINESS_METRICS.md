@@ -5,8 +5,7 @@
 ## Prices (Australia)
 | Plan | Customer price | Ex-GST (÷1.1) | Owner proceeds (15% SBP) | Owner proceeds (30%) | Normalised monthly (gross) |
 |---|---|---|---|---|---|
-| Monthly (proposed, D-007) | A$9.99 | A$9.08 | A$7.72 | A$6.36 | A$9.99 |
-| Monthly (current in App Store Connect) | A$12.99 | A$11.81 | A$10.04 | A$8.27 | A$12.99 |
+| Monthly (live in App Store Connect since 22 Oct 2026) | A$9.99 | A$9.08 | A$7.72 | A$6.36 | A$9.99 |
 | Yearly | A$79.99 | A$72.72 | A$61.81 / yr | A$50.90 / yr | A$6.67 |
 
 **Gross MRR** = (monthly subscribers × A$9.99) + (yearly subscribers × A$79.99 ÷ 12). It counts paid, active subscriptions only. The free preview, refunds and lapsed subscriptions are excluded.

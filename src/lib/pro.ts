@@ -22,8 +22,8 @@ export const PRODUCTS = {
   yearly: 'com.nouriapps.ironverse.pro.yearly',
 } as const
 /** shown when the App Store can't be reached (store prices always win) */
-export const FALLBACK_PRICES = { monthly: 'A$12.99', yearly: 'A$79.99' }
-export const FALLBACK_AMOUNTS = { monthly: 12.99, yearly: 79.99 }
+export const FALLBACK_PRICES = { monthly: 'A$9.99', yearly: 'A$79.99' }
+export const FALLBACK_AMOUNTS = { monthly: 9.99, yearly: 79.99 }
 
 /** yearly saving vs paying monthly for 12 months, whole percent (floored, never overstated) */
 export function yearlySavingPct(monthly: number, yearly: number): number {

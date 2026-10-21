@@ -6,6 +6,7 @@ The App Store version (Xcode `MARKETING_VERSION`) is separate from the web base 
 Web base 2.24.0 (`iron-verse@7905a90`).
 
 **Builds**
+- **Next build (4):** the paywall's fallback price is A$9.99/month (matches App Store Connect since 22 Oct 2026); yearly shows "Save 33%".
 - **Build 3** (commit 2e5add3, 21 Oct 2026):
   - 100 world dishes across 15 cuisines, with cuisine chips and flags in Log meal and Add food.
   - The run pace goal is now set by each user (the owner's 4:00 is web-only).

@@ -20,6 +20,7 @@ describe('Ironverse Pro tiers', () => {
   it('yearly saving is never overstated', async () => {
     const { yearlySavingPct } = await import('@/lib/pro')
     expect(yearlySavingPct(12.99, 79.99)).toBe(48)
+    expect(yearlySavingPct(9.99, 79.99)).toBe(33)
     expect(yearlySavingPct(0, 79.99)).toBe(0)
   })
 
