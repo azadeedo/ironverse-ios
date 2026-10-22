@@ -6,7 +6,7 @@ The App Store version (Xcode `MARKETING_VERSION`) is separate from the web base 
 Web base 2.24.0 (`iron-verse@7905a90`).
 
 **Builds**
-- **Build 4** (22 Oct 2026): 152 more world dishes, so every cuisine chip lists 20+ (Filipino 3 → 21, Korean 6 → 20, African 6 → 21), including laksa, udon, tempura, kofte, doner, paratha and sinigang. The paywall's fallback price is A$9.99/month and yearly shows "Save 33%". New tests cover the food data; tools/smoke-ios.mjs sweeps 39 screens × 3 user types.
+- **Build 4** (22 Oct 2026): 159 more world dishes, so every cuisine chip lists at least 20 (Filipino was 3, Korean and African 6), including laksa, udon, tempura, kofte, doner, paratha and sinigang. The paywall's fallback price is A$9.99/month and yearly shows "Save 33%". New tests cover the food data; tools/smoke-ios.mjs sweeps 39 screens × 3 user types.
 - **Build 3** (commit 2e5add3, 21 Oct 2026):
   - 100 world dishes across 15 cuisines, with cuisine chips and flags in Log meal and Add food.
   - The run pace goal is now set by each user (the owner's 4:00 is web-only).

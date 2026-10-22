@@ -17,3 +17,4 @@ dev-dist
 AuthKey_*.p8
 ios/App/App/public
 store/video-tmp-*
+store/smoke/
