@@ -48,6 +48,7 @@ workflows:
       ios_signing:
         provisioning_profiles:
           - ironverse_app_store_healthkit
+          - ironverse_watch_app_store
         certificates:
           - ironverse_distribution
       vars:
@@ -64,6 +65,10 @@ workflows:
         script: npm run build:ios && node tools/verify-ios-build.mjs
       - name: Sync native project
         script: npx cap sync ios
+      - name: Add the Apple Watch app
+        script: |
+          gem list -i xcodeproj >/dev/null || gem install xcodeproj --user-install
+          ruby tools/watch/add_watch_target.rb
       - name: Signing profiles
         script: xcode-project use-profiles
       - name: Build number (one higher than the latest TestFlight build)
