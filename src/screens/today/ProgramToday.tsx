@@ -7,7 +7,8 @@ import dayjs from 'dayjs'
 import { ChevronRight, Footprints, Scale, Trophy, User } from 'lucide-react'
 import { Button, Card, Input } from '@/components/ui'
 import { LineChart } from '@/components/charts'
-import { db } from '@/db'
+import { db, getSetting } from '@/db'
+import { HEALTH_KEYS, syncAppleHealth, type HealthToday } from '@/native/health'
 import type { Profile } from '@/db/types'
 import { DAY_LABEL, PHASES } from '@/data/program12'
 import { cardioText, schemeText } from '@/screens/ProgramScreen'
@@ -16,7 +17,7 @@ import { dateOfDay, dayIdFor, mondayBefore, programDayOn, programWeekFor, weight
 import { getProgramPlan, getCheckin, saveCheckin } from '@/lib/programStore'
 import { todayStr } from '@/lib/id'
 import { useUI } from '@/lib/store'
-import { ed } from '@/lib/edition'
+import { ed, isNativeApp } from '@/lib/edition'
 
 export function ProgramTodayCard() {
   const navigate = useNavigate()
@@ -107,7 +108,30 @@ export function StepsCard({ profile }: { profile: Profile }) {
         <Input inputMode="numeric" placeholder="Steps so far" aria-label="Steps today" value={v} onChange={(e) => setV(e.target.value)} />
         <Button small onClick={() => { const n = parseInt(v.replace(/[,\s]/g, ''), 10); if (!(n >= 0)) return; void saveCheckin({ date: today, steps: n }).then(() => { setV(''); toast('Steps saved') }) }}>Save</Button>
       </div>
-      <div className="mt-1.5 text-[11.5px] text-ink3">Copy it from your phone's Health app. A web app can't read Apple Health directly.</div>
+      {isNativeApp()
+        ? <HealthStepsNote />
+        : <div className="mt-1.5 text-[11.5px] text-ink3">Copy it from your phone's Health app. A web app can't read Apple Health directly.</div>}
     </Card>
+  )
+}
+
+/** App Store build: steps come from Apple Health once it's connected */
+function HealthStepsNote() {
+  const navigate = useNavigate()
+  const connected = useLiveQuery(() => getSetting<boolean>(HEALTH_KEYS.connected, false), [])
+  const h = useLiveQuery(() => getSetting<HealthToday | null>(HEALTH_KEYS.today, null), [])
+  const fresh = h && h.date === todayStr()
+  if (connected) {
+    return (
+      <div className="mt-1.5 flex items-center gap-2 text-[11.5px] text-ink3">
+        <span className="flex-1">❤️ From Apple Health{fresh && h.activeKcal ? ` · ${h.activeKcal} active kcal` : ''}{fresh && h.restingHr ? ` · resting ${h.restingHr} bpm` : ''}. Typing a number overrides it.</span>
+        <button type="button" className="font-semibold text-brand" onClick={() => void syncAppleHealth(3)}>Sync</button>
+      </div>
+    )
+  }
+  return (
+    <button type="button" onClick={() => navigate('/devices')} className="pressable mt-1.5 w-full rounded-xl bg-surface3 px-3 py-2 text-left text-[12px] text-ink2">
+      ❤️ <b>Connect Apple Health</b> — steps, Apple Watch workouts and smart-scale weigh-ins fill in automatically.
+    </button>
   )
 }

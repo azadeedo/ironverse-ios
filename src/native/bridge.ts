@@ -39,6 +39,21 @@ export async function initNative(): Promise<void> {
     await App.addListener('pause', () => { void n.handOffPendingToIOS() })
     await App.addListener('resume', () => { void n.reclaimFromIOS() })
   } catch { /* reminders still fire while the app is open */ }
+
+  // Apple Health: refresh on launch and every time the app comes back to the front
+  try {
+    const { App } = await import('@capacitor/app')
+    const h = await import('./health')
+    void h.syncAppleHealth(3)
+    await App.addListener('resume', () => { void h.syncAppleHealth(3) })
+    // weigh-ins typed in Ironverse → Apple Health (only when that switch is on)
+    const { db } = await import('@/db')
+    const send = (w?: { id?: string; date?: string; weightKg?: number }) => {
+      if (w?.weightKg && !String(w.id ?? '').startsWith('hk-')) setTimeout(() => { void h.saveWeighInToHealth(w.weightKg!, w.date ? new Date(`${w.date}T08:00:00`).toISOString() : undefined) }, 0)
+    }
+    db.weighIns.hook('creating', (_pk, obj) => { send(obj) })
+    db.weighIns.hook('updating', (mods, _pk, obj) => { send({ ...obj, ...(mods as object) }) })
+  } catch { /* Health unavailable — steps/weigh-ins stay manual */ }
 }
 
 /** navigator.vibrate(pattern) → a Taptic tap per pulse (best effort). */

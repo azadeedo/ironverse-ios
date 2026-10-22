@@ -43,9 +43,13 @@ workflows:
     environment:
       node: 22
       xcode: latest
+      # pinned (23 Oct 2026): the HealthKit profile — the older ironverse_app_store
+      # profile is INVALID since HealthKit was switched on for the App ID
       ios_signing:
-        distribution_type: app_store
-        bundle_identifier: com.nouriapps.ironverse
+        provisioning_profiles:
+          - ironverse_app_store_healthkit
+        certificates:
+          - ironverse_distribution
       vars:
         XCODE_PROJECT: ios/App/App.xcodeproj
         XCODE_SCHEME: App
