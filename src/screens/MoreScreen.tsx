@@ -57,7 +57,7 @@ const TILES = [
   { label: 'Exercise Library', sub: 'Your full arsenal', icon: BookOpen, to: '/exercises', tint: 'text-violet-400', bg: 'bg-violet-400/12' },
   { label: 'Plan settings', sub: 'Weeks & rebuild', icon: CalendarRange, to: '/plan', tint: 'text-brand', bg: 'bg-brand/12' },
   { label: 'Progress', sub: 'Weight & strength', icon: TrendingUp, to: '/progress', tint: 'text-emerald-400', bg: 'bg-emerald-400/12' },
-  { label: 'Coach programs', sub: 'CBum & Nippard', icon: ClipboardList, to: '/programs', tint: 'text-amber-400', bg: 'bg-amber-400/12' },
+  { label: 'Coach programs', sub: 'Inspired by Bumstead, Nippard, Arnold, Mentzer, Yates', icon: ClipboardList, to: '/programs', tint: 'text-amber-400', bg: 'bg-amber-400/12' },
   { label: 'Weekly review', sub: 'How the week went', icon: CalendarCheck, to: '/review', tint: 'text-cyan-400', bg: 'bg-cyan-400/12' },
   { label: 'Progress photos', sub: 'Side-by-side, on device', icon: Camera, to: '/photos', tint: 'text-fuchsia-400', bg: 'bg-fuchsia-400/12' },
   { label: 'Achievements', sub: 'Earned from your log', icon: Award, to: '/achievements', tint: 'text-amber-300', bg: 'bg-amber-300/12' },

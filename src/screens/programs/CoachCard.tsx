@@ -30,6 +30,7 @@ export default function CoachCard({ coach, active, applicable = true, onPicks, o
         <div className="min-w-0">
           <div className="shout text-[11.5px] text-brand">Coach style</div>
           <h2 className="mt-0.5 text-[20px] font-bold leading-tight">{coach.name}</h2>
+          {coach.inspiredBy && <div className="mt-0.5 text-[13px] font-semibold text-amber-300">Inspired by {coach.inspiredBy}</div>}
         </div>
         {active && <Badge tone="green">In effect</Badge>}
       </div>

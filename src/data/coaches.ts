@@ -9,8 +9,11 @@
 //   · 'nippard'        — evidence-based, high-effort hypertrophy practice
 //   · 'classic-volume' — a classic body-part split at high weekly volume
 //   · 'machine-day'    — a machine-focused hypertrophy day for a commercial gym
-// Credit an influence plainly and generally; never name a person as the author
-// of anything here, never imply endorsement, and invent nothing.
+// Credit an influence plainly; never name a person as the author of anything
+// here, never imply endorsement, and invent nothing.
+// v10 (owner request, 23 Oct 2026): each style may show "Inspired by <name>"
+// (ProgramArchetype.inspiredBy) — always with the not-affiliated wording in
+// `influence`, which the card shows underneath.
 //
 // Everything is a rule of thumb. Rep ranges and volume landmarks are starting
 // points drawn from common practice, not measurements — individual response
@@ -130,6 +133,11 @@ export interface ProgramArchetype {
   id: string
   /** the style, not the person */
   name: string
+  /**
+   * v10 (owner, 23 Oct 2026): the coach this style is inspired by, shown as
+   * 'Inspired by …' with a not-affiliated note. Optional.
+   */
+  inspiredBy?: string
   /** plain-language credit for the influence */
   influence: string
   /** one short provenance line — goes on generated plans (Plan.sourceLabel) */
@@ -175,7 +183,8 @@ export interface Coach extends ProgramArchetype {
 const CBUM: Coach = {
   id: 'cbum',
   name: 'Classic Physique',
-  influence: 'Written in the spirit of classic high-volume bodybuilding practice. Our own words, not anybody’s program, and not endorsed by anyone.',
+  inspiredBy: 'Chris Bumstead',
+  influence: 'Inspired by the publicly known classic-physique training style of Chris Bumstead: high-volume bodybuilding practice. Our own words — not his program, and not affiliated with or endorsed by him.',
   shortCredit: 'Classic high-volume bodybuilding practice',
   tagline: 'Volume, control and the squeeze. Build the shape, not just the numbers.',
   principles: [
@@ -345,7 +354,8 @@ const CBUM: Coach = {
 const NIPPARD: Coach = {
   id: 'nippard',
   name: 'Evidence-Based',
-  influence: 'Written in the spirit of evidence-based, high-effort hypertrophy training. Our own words, not anybody’s program, and not endorsed by anyone.',
+  inspiredBy: 'Jeff Nippard',
+  influence: 'Inspired by the evidence-based, high-effort hypertrophy approach Jeff Nippard teaches publicly. Our own words — not his program, and not affiliated with or endorsed by him.',
   shortCredit: 'Evidence-based, high-effort hypertrophy practice',
   tagline: 'Load the stretch, leave 0-3 in the tank, and add a rep or a kilo every week.',
   principles: [
@@ -513,7 +523,8 @@ const NIPPARD: Coach = {
 const CLASSIC_VOLUME: ProgramArchetype = {
   id: 'classic-volume',
   name: 'Classic Volume Split',
-  influence: 'A body-part split in the spirit of classic gym-floor bodybuilding: free weights first, plenty of sets, one or two muscles a day. Our own words, not anybody’s program.',
+  inspiredBy: 'Arnold Schwarzenegger',
+  influence: 'Inspired by the golden-era body-part training Arnold Schwarzenegger made famous: free weights first, plenty of sets, one or two muscles a day. Our own words — not his program, and not affiliated with or endorsed by him.',
   shortCredit: 'Classic body-part split, high weekly volume',
   tagline: 'One or two muscles a day, hit from several angles, and hit again next week.',
   principles: [
@@ -849,6 +860,211 @@ const MACHINE_DAY: ProgramArchetype = {
 
 // ---------- registry ----------
 
+// ============================================================
+// HEAVY DUTY — one all-out set, long rest, infrequent training (v10)
+// ============================================================
+
+const HEAVY_DUTY: ProgramArchetype = {
+  id: 'heavy-duty',
+  name: 'Heavy Duty HIT',
+  inspiredBy: 'Mike Mentzer',
+  influence: 'Inspired by the publicly known high-intensity training ideas Mike Mentzer taught: very few sets, each one taken all the way, with plenty of rest. Our own words — not his program, and not affiliated with or endorsed by his estate.',
+  shortCredit: 'High-intensity training: one hard set, long recovery',
+  tagline: 'One set to true failure. Then go home and grow.',
+  principles: [
+    'After one or two warm-ups, each exercise gets ONE working set taken to genuine failure.',
+    'Effort replaces volume: if the set could have had another rep, it did not count.',
+    'Train each muscle roughly every 4-7 days — recovery is where the result happens, so the sessions are short and rare.',
+    'Pre-exhaust is common: an isolation movement straight into a compound for the same muscle, no rest between.',
+    'Slow, strict reps: about 4 seconds down, a brief pause, no momentum anywhere.',
+    'Progress is simple to read — the log shows one number per exercise, and it must go up.',
+  ],
+  bestFor: [
+    'You have very little time: sessions are 30-40 minutes.',
+    'You can push a set to real failure without someone shouting at you.',
+    'Higher-volume programs leave you run down rather than growing.',
+  ],
+  tradeoffs: [
+    'Very low volume is not enough for everyone — research generally favours more sets for growth.',
+    'True failure on compounds needs a safe setup (machines, a spotter or safety pins).',
+    'Missing a session costs a lot when there are so few of them.',
+  ],
+  weeklySets: '4-8 all-out sets per muscle group per week',
+  intensity: 'Every working set to momentary failure (0 reps in reserve)',
+  tempo: 'About 4 seconds down, a pause, 2 seconds up',
+  exerciseBias: 'Machines and safe-to-fail lifts, often paired as pre-exhaust',
+  deload: 'Add rest days instead of deload weeks — when strength stalls, train less often.',
+  picks: {
+    chest: [
+      { id: 'dumbbell-fly', why: 'Pre-exhaust the chest before the press so it fails first, not the triceps.', role: 'isolation' },
+      { id: 'incline-dumbbell-press', why: 'The compound straight after the fly — safe to take to failure.', role: 'compound' },
+      { id: 'chest-dip', why: 'Bodyweight or belt-loaded, a hard single set finishes the job.', role: 'compound' },
+    ],
+    back: [
+      { id: 'dumbbell-pullover', why: 'Lats without the arms as the weak link — the classic pre-exhaust.', role: 'isolation' },
+      { id: 'lat-pulldown', why: 'Straight from the pullover; easy to take to true failure safely.', role: 'compound' },
+      { id: 'dumbbell-row', why: 'One heavy, strict set for thickness.', role: 'compound' },
+      { id: 'barbell-shrug', why: 'Short, heavy, one set with a hold at the top.', role: 'isolation' },
+    ],
+    shoulders: [
+      { id: 'dumbbell-lateral-raise', why: 'Side delts first, slow and strict, to failure.', role: 'isolation' },
+      { id: 'dumbbell-shoulder-press', why: 'Into the press with the delts already pre-tired.', role: 'compound' },
+      { id: 'dumbbell-rear-delt-fly', why: 'One set for the back of the shoulder.', role: 'isolation' },
+    ],
+    biceps: [
+      { id: 'preacher-curl', why: 'Arm locked in place, nothing to cheat with — perfect for one set.', role: 'isolation' },
+      { id: 'dumbbell-curl', why: 'A second angle if recovery allows.', role: 'isolation' },
+    ],
+    triceps: [
+      { id: 'rope-pushdown', why: 'Pre-exhaust before dips or presses.', role: 'isolation' },
+      { id: 'triceps-dip', why: 'The heavy compound for triceps, straight after.', role: 'compound' },
+    ],
+    quads: [
+      { id: 'leg-extension', why: 'Pre-exhaust the quads so the press works them, not the lower back.', role: 'isolation' },
+      { id: 'leg-press', why: 'Straight from the extensions — safe to push to failure.', role: 'compound' },
+      { id: 'barbell-squat', why: 'For lifters with safety pins and the nerve for a true all-out set.', role: 'compound' },
+    ],
+    hamstrings: [
+      { id: 'lying-leg-curl', why: 'One slow, strict set to failure.', role: 'isolation' },
+      { id: 'barbell-rdl', why: 'Heavy hinge, stopped a rep short of form breaking.', role: 'compound' },
+    ],
+    glutes: [
+      { id: 'barbell-hip-thrust', why: 'Hardest at full squeeze — hold the last rep.', role: 'compound' },
+      { id: 'dumbbell-walking-lunge', why: 'One long set when the legs can take it.', role: 'compound' },
+    ],
+    calves: [
+      { id: 'standing-calf-raise-machine', why: 'Pause in the stretch, then go to failure.', role: 'isolation' },
+      { id: 'seated-calf-raise-machine', why: 'Bent-knee calf work, one set.', role: 'isolation' },
+    ],
+    abs: [
+      { id: 'cable-crunch', why: 'Loaded and progressible, one hard set.', role: 'isolation' },
+      { id: 'hanging-leg-raise', why: 'Slow, no swinging, to failure.', role: 'isolation' },
+    ],
+    forearms: [
+      { id: 'wrist-curl', why: 'One high-rep set at the end of an arm day.', role: 'isolation' },
+      { id: 'reverse-curl', why: 'Top of the forearm and brachialis together.', role: 'isolation' },
+    ],
+  },
+  prescription: {
+    compound: { sets: 1, reps: [6, 10], restSec: 180, note: 'After warm-ups: ONE set to true failure. Slow negatives.' },
+    isolation: { sets: 1, reps: [8, 12], restSec: 120, note: 'One set to failure. Pre-exhaust: go straight into the compound.' },
+    core: { sets: 1, reps: [10, 20], restSec: 90, note: 'One strict set to failure.' },
+  },
+  sampleDay: {
+    title: 'Sample chest & back day (about 35 minutes)',
+    lines: [
+      'Dumbbell fly — 1 × 8-12 to failure, then straight into…',
+      'Incline dumbbell press — 1 × 6-10 to failure',
+      'Dumbbell pullover — 1 × 8-12 to failure, then straight into…',
+      'Lat pulldown — 1 × 6-10 to failure',
+      'Dumbbell row — 1 × 6-10 to failure',
+    ],
+  },
+}
+
+// ============================================================
+// BLOOD & GUTS — low volume, very heavy, one top set per exercise (v10)
+// ============================================================
+
+const BLOOD_AND_GUTS: ProgramArchetype = {
+  id: 'blood-and-guts',
+  name: 'Blood & Guts',
+  inspiredBy: 'Dorian Yates',
+  influence: 'Inspired by the publicly known training style of Dorian Yates: a body-part split, warm-up sets that build to one all-out top set, heavy and strict. Our own words — not his program, and not affiliated with or endorsed by him.',
+  shortCredit: 'Low-volume, high-intensity body-part split',
+  tagline: 'Build up, then one top set that leaves nothing in the tank.',
+  principles: [
+    'A 4-day body-part split, each muscle once a week with a full week to recover.',
+    'Two or three ramping warm-up sets, then ONE top set to failure — that set is the workout.',
+    'Heavy, but strict: a controlled 3-second negative on every rep, no bouncing, no jerking.',
+    'Machines and cables are used freely — they let you fail safely and keep tension on the muscle.',
+    'Forced reps or a short rest-pause are allowed on the top set of the last exercise, not on every set.',
+    'Log every top set — beating last week’s weight or reps is the only goal.',
+  ],
+  bestFor: [
+    'You like heavy training but want short, focused sessions (45-60 minutes).',
+    'You recover slowly from high volume.',
+    'You enjoy a body-part split.',
+  ],
+  tradeoffs: [
+    'One top set per exercise leaves less room for error — a bad day is a lost week for that muscle.',
+    'Training to failure with heavy loads needs good technique and safe equipment.',
+    'Once-a-week frequency suits some people better than others.',
+  ],
+  weeklySets: '1 top set per exercise, 3-4 exercises per muscle (plus warm-ups)',
+  intensity: 'Top set to failure; warm-ups stop well short',
+  tempo: 'About 3 seconds down, 1-2 seconds up, strict',
+  exerciseBias: 'Heavy free weights plus machines; supported rows and presses for safety',
+  deload: 'A lighter week every 8-10 weeks, or when top sets stop improving two weeks running.',
+  picks: {
+    chest: [
+      { id: 'incline-barbell-bench-press', why: 'Heavy incline first — the upper chest leads.', role: 'compound' },
+      { id: 'barbell-bench-press', why: 'The flat press for one heavy top set.', role: 'compound' },
+      { id: 'cable-fly-mid', why: 'Constant tension to finish.', role: 'isolation' },
+    ],
+    back: [
+      { id: 'pull-up', why: 'Width first, weighted when you can.', role: 'compound' },
+      { id: 'barbell-bent-over-row', why: 'Underhand, heavy and strict — the signature thickness lift.', role: 'compound' },
+      { id: 't-bar-row', why: 'Another heavy row angle, supported.', role: 'compound' },
+      { id: 'seated-row-wide', why: 'Upper-back finisher.', role: 'compound' },
+    ],
+    shoulders: [
+      { id: 'dumbbell-shoulder-press', why: 'Heavy pressing with a natural path.', role: 'compound' },
+      { id: 'dumbbell-lateral-raise', why: 'One strict top set for width.', role: 'isolation' },
+      { id: 'dumbbell-rear-delt-fly', why: 'Rear delts trained on back or shoulder day.', role: 'isolation' },
+    ],
+    biceps: [
+      { id: 'curl-bar-curl', why: 'One heavy, strict top set.', role: 'isolation' },
+      { id: 'concentration-curl', why: 'Full squeeze to finish.', role: 'isolation' },
+    ],
+    triceps: [
+      { id: 'rope-pushdown', why: 'Warm the elbows, then a hard top set.', role: 'isolation' },
+      { id: 'skull-crusher', why: 'The heavy stretch for the long head.', role: 'isolation' },
+      { id: 'close-grip-bench-press', why: 'Heavy compound for the whole triceps.', role: 'compound' },
+    ],
+    quads: [
+      { id: 'leg-extension', why: 'Warm-up and pre-fatigue before the heavy work.', role: 'isolation' },
+      { id: 'leg-press', why: 'Heavy top set, safe to take to failure.', role: 'compound' },
+      { id: 'barbell-squat', why: 'With safety pins, one heavy top set.', role: 'compound' },
+    ],
+    hamstrings: [
+      { id: 'lying-leg-curl', why: 'Hamstrings first on leg day.', role: 'isolation' },
+      { id: 'barbell-rdl', why: 'Heavy hinge, strict and controlled.', role: 'compound' },
+    ],
+    glutes: [
+      { id: 'barbell-hip-thrust', why: 'Heavy glute work with a hold at the top.', role: 'compound' },
+      { id: 'dumbbell-walking-lunge', why: 'A long, tough set to finish legs.', role: 'compound' },
+    ],
+    calves: [
+      { id: 'standing-calf-raise-machine', why: 'Heavy, with a full stretch and pause.', role: 'isolation' },
+      { id: 'seated-calf-raise-machine', why: 'Bent-knee calves.', role: 'isolation' },
+    ],
+    abs: [
+      { id: 'cable-crunch', why: 'Loaded, progressive ab work.', role: 'isolation' },
+      { id: 'hanging-leg-raise', why: 'Strict, no swing.', role: 'isolation' },
+    ],
+    forearms: [
+      { id: 'reverse-curl', why: 'Forearms and brachialis on arm day.', role: 'isolation' },
+      { id: 'farmers-carry', why: 'Grip that holds up under heavy rows.', role: 'compound' },
+    ],
+  },
+  prescription: {
+    compound: { sets: 1, reps: [6, 8], restSec: 180, note: '2-3 ramping warm-ups, then ONE top set to failure.' },
+    isolation: { sets: 1, reps: [8, 12], restSec: 120, note: 'One warm-up, then one top set to failure. Strict.' },
+    core: { sets: 2, reps: [10, 15], restSec: 60, note: 'Controlled, loaded once it gets easy.' },
+  },
+  sampleDay: {
+    title: 'Sample back day',
+    lines: [
+      'Pull-up — warm-ups, then 1 top set to failure',
+      'Underhand barbell row — 2 warm-ups, 1 × 6-8 to failure',
+      'T-bar row — 1 warm-up, 1 × 6-8 to failure',
+      'Wide seated row — 1 × 8-10 to failure',
+      'Barbell shrug — 1 × 8-12 to failure, hold the top',
+    ],
+  },
+}
+
 export const COACHES: Record<CoachId, Coach> = { cbum: CBUM, nippard: NIPPARD }
 export const COACH_LIST: Coach[] = [CBUM, NIPPARD]
 export const COACH_IDS: CoachId[] = ['cbum', 'nippard']
@@ -858,7 +1074,7 @@ export const COACH_IDS: CoachId[] = ['cbum', 'nippard']
  * wired into plan generation (their ids are not CoachId, and the generator only
  * builds blocks from COACHES). Nothing in the UI may offer to apply these.
  */
-export const EXTRA_PROGRAMS: ProgramArchetype[] = [CLASSIC_VOLUME, MACHINE_DAY]
+export const EXTRA_PROGRAMS: ProgramArchetype[] = [CLASSIC_VOLUME, MACHINE_DAY, HEAVY_DUTY, BLOOD_AND_GUTS]
 
 /** Every archetype, applicable ones first. */
 export const PROGRAM_LIST: ProgramArchetype[] = [...COACH_LIST, ...EXTRA_PROGRAMS]

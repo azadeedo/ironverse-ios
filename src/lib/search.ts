@@ -98,7 +98,7 @@ const SCREEN_TARGETS: { title: string; subtitle: string; keywords: string; to: s
   { title: 'Backup', subtitle: 'Export, restore and snapshots', keywords: 'backup export restore snapshot json safety', to: '/backup' },
   { title: 'Progress photos', subtitle: 'Side-by-side, stored on this device', keywords: 'photos progress camera pictures front side back', to: '/photos' },
   { title: 'Weekly review', subtitle: 'How the week actually went', keywords: 'weekly review week summary recap', to: '/review' },
-  { title: 'Coach programs', subtitle: 'CBum and Nippard blocks', keywords: 'coach programs cbum chris bumstead nippard jeff block', to: '/programs' },
+  { title: 'Coach programs', subtitle: 'Inspired by Bumstead, Nippard, Arnold, Mentzer, Yates', keywords: 'coach programs cbum chris bumstead nippard jeff arnold schwarzenegger mike mentzer heavy duty dorian yates blood guts hit block', to: '/programs' },
   { title: 'Cardio', subtitle: 'Runs, walks and rope', keywords: 'cardio run walk jump rope treadmill steps', to: '/cardio' },
   { title: 'Water & creatine', subtitle: 'Logs and reminders', keywords: 'water hydration creatine drink litres supplement', to: '/hydration' },
   { title: 'Exercise library', subtitle: 'Every exercise, with form cues', keywords: 'exercise library list arsenal movements', to: '/exercises' },
