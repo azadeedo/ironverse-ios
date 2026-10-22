@@ -1,6 +1,7 @@
 // MORE — launcher hub: profile card, feature tiles, today's mini timeline,
 // one-tap backup. Everything mirrors the Today screen's visual language.
 
+import { QuickLogButton } from '@/components/QuickLog'
 import { AppVersionCard } from '@/components/UpdatePrompt'
 import { AthleteCard } from './more/AthleteCard'
 import { useEffect, useMemo, useState } from 'react'
@@ -65,7 +66,7 @@ const TILES = [
   { label: 'Achievements', sub: 'Earned from your log', icon: Award, to: '/achievements', tint: 'text-amber-300', bg: 'bg-amber-300/12' },
   { label: 'What’s new', sub: 'Every feature, and where', icon: Layers, to: '/whats-new', tint: 'text-sky-400', bg: 'bg-sky-400/12' },
   { label: 'Backup', sub: 'Export & restore', icon: DatabaseBackup, to: '/backup', tint: 'text-emerald-400', bg: 'bg-emerald-400/12' },
-  { label: 'Connected devices', sub: 'Apple Health, Watch, scales', icon: Watch, to: '/devices', tint: 'text-rose-300', bg: 'bg-rose-300/12' },
+  { label: 'Connected devices', sub: 'Watch, WHOOP, Oura, Garmin, scales', icon: Watch, to: '/devices', tint: 'text-rose-300', bg: 'bg-rose-300/12' },
   { label: 'Calorie centre', sub: 'Target, proposals, undo', icon: Flame, to: '/calories', tint: 'text-orange-400', bg: 'bg-orange-400/12' },
   { label: 'Progress hub', sub: 'Trophies, XP, muscles', icon: Trophy, to: '/hub', tint: 'text-amber-400', bg: 'bg-amber-400/12' },
   { label: 'Pill box', sub: 'Supplements & stock', icon: HeartPulse, to: '/pill-box', tint: 'text-violet-300', bg: 'bg-violet-300/12' },
@@ -180,7 +181,7 @@ export default function MoreScreen() {
 
   return (
     <div className="mx-auto max-w-lg pb-8">
-      <PageHeader title="More" />
+      <PageHeader title="More" actions={<QuickLogButton />} />
 
       {/* ---------- global search (v4) ---------- */}
       <div className="px-4 pb-3">

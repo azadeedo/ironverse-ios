@@ -32,6 +32,8 @@ import { GoalWeightCard, ProgramTodayCard, StepsCard } from './today/ProgramToda
 import { GoalCoachCard, RunGoalCard } from './today/GoalCoachCard'
 import { MissedSessionCard } from './today/MissedSessionCard'
 import { SleepRecoveryCard } from './today/SleepRecoveryCard'
+import { QuickLogButton } from '@/components/QuickLog'
+import { Fold } from '@/components/Fold'
 import { goalSettings } from '@/lib/calorieTarget'
 import { targetForDateWith } from './food/helpers'
 import { ed } from '@/lib/edition'
@@ -173,6 +175,7 @@ export default function TodayScreen() {
             <p className="mt-1.5 text-[13px] font-medium text-ink2">{dayjs(today).format('dddd, D MMMM')}</p>
           </div>
           <div className="flex items-center gap-2">
+            <QuickLogButton />
             {latestWeigh && (
               <button
                 type="button"
@@ -274,6 +277,7 @@ export default function TodayScreen() {
           today={today}
         />
         )}
+        <Fold id="today-week" title="This week">
         <WeekGlance profile={profile} />
         <button type="button" onClick={() => navigate('/cardio?start=tm10')} className="pressable flex w-full items-center gap-3 rounded-2xl bg-surface2 px-4 py-3 text-left shadow-card">
           <span className="text-[22px]">🏃</span>
@@ -282,11 +286,14 @@ export default function TodayScreen() {
         <RunGoalCard />
         <StreakCard target={profile.daysPerWeek || 4} />
         <FaithCard profile={profile} slot={slot} isTrainingDay={Boolean(dayInfo)} />
-        <div className="px-1 pt-3 text-[11px] font-semibold uppercase tracking-wider text-ink3">Body &amp; progress</div>
+        </Fold>
+        <Fold id="today-body" title="Body & progress">
         <GoalWeightCard profile={profile} />
-        <div className="px-1 pt-3 text-[11px] font-semibold uppercase tracking-wider text-ink3">Your day</div>
+        </Fold>
+        <Fold id="today-day" title="Your day">
         <StreaksCard profile={profile} plan={plan} today={today} />
         <TimelineCard items={timeline} nowMin={nowMin} />
+        </Fold>
       </div>
     </div>
   )

@@ -1,7 +1,7 @@
 // ============================================================
 // Native extras (v10, 23 Oct 2026) — App Store build only, no-ops in a browser.
 //   • Home-screen quick actions: long-press the app icon → Start workout,
-//     Log food, Sleep check-in, Health scanner.
+//     Quick log, Log food, Sleep check-in (iOS shows four).
 //   • App Store rating prompt: Apple's own sheet, asked after the 3rd, 10th
 //     and 30th finished workout (iOS also limits it to 3 times a year).
 //   • Face ID / Touch ID app lock (Settings → Privacy), off by default.
@@ -16,7 +16,7 @@ const SHORTCUTS = [
   { id: '/workout', title: 'Start workout', description: 'Today’s session' },
   { id: '/food', title: 'Log food', description: 'Add a meal or scan a barcode' },
   { id: '/sleep', title: 'Sleep check-in', description: 'How did you sleep?' },
-  { id: '/health-scan', title: 'Health scanner', description: 'Score a product' },
+  { id: '/?quick=1', title: 'Quick log', description: 'Water, weight, sleep, creatine' },
 ]
 
 export async function initQuickActions(go: (path: string) => void): Promise<void> {

@@ -12,6 +12,7 @@ import { db, getSetting, setSetting } from '@/db'
 import { isNativeApp } from '@/lib/edition'
 import { useUI } from '@/lib/store'
 import { dayjs } from '@/lib/fmt'
+import { DeviceGuides } from './devices/DeviceGuides'
 import { HEALTH_KEYS, connectAppleHealth, disconnectAppleHealth, healthAvailable, syncAppleHealth, type HealthToday } from '@/native/health'
 
 type Row = { name: string; status: 'works' | 'manual' | 'not-possible'; what: string; how?: string; to?: string; cta?: string }
@@ -37,8 +38,9 @@ export default function DevicesScreen() {
   const label = { works: 'Works now', manual: 'Manual entry', 'not-possible': 'Not possible in a web app' }
   return (
     <div className="pb-8">
-      <PageHeader title="Connected devices" back subtitle={native ? 'Apple Health, Apple Watch, smart scales and more.' : 'What connects, what you enter by hand, and what an iPhone web app can’t do.'} />
+      <PageHeader title="Connected devices" back subtitle={native ? 'Apple Watch, WHOOP, Oura, Garmin, smart scales and more — all through Apple Health.' : 'What connects, what you enter by hand, and what an iPhone web app can’t do.'} />
       {native && <AppleHealthSection />}
+      {native && <DeviceGuides />}
       <Section title={native ? 'Also on this iPhone' : undefined}>
         <div className="space-y-2.5">
           {rows.map((r) => (
