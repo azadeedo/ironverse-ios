@@ -71,9 +71,11 @@
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Ironverse can save a workout share card to your Photos when you ask it to.</string>
 	<key>NSHealthShareUsageDescription</key>
-	<string>Ironverse reads your steps, active calories, heart rate, workouts (including Apple Watch) and weight from Apple Health so your Today screen, cardio and weigh-ins fill in automatically. Health data stays on your iPhone and is never sent anywhere.</string>
+	<string>Ironverse reads your steps, active calories, heart rate, resting heart rate, heart-rate variability, sleep, workouts (including Apple Watch) and weight from Apple Health so your Today screen, sleep, recovery score, cardio and weigh-ins fill in automatically. Health data stays on your iPhone and is never sent anywhere.</string>
 	<key>NSHealthUpdateUsageDescription</key>
-	<string>Ironverse saves the weigh-ins you log to Apple Health, only if you turn this on.</string>
+	<string>Ironverse saves the weigh-ins, water and food calories you log to Apple Health, only for the switches you turn on.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Ironverse can lock the app with Face ID so only you can open your training, food, weight and progress photos. It is off unless you turn it on.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Ironverse uses your location only while you track an outdoor run or walk, to measure distance and pace. It is stored on your iPhone and never sent anywhere.</string>
 	<key>UIFileSharingEnabled</key>

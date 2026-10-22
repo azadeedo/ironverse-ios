@@ -41,7 +41,7 @@ if (!cap.includes("appId: 'com.nouriapps.ironverse'")) bad('bundle id changed â€
 else ok('bundle id com.nouriapps.ironverse')
 
 const plist = readFileSync('ios/App/App/Info.plist', 'utf8')
-for (const k of ['NSCameraUsageDescription', 'NSLocationWhenInUseUsageDescription', 'NSPhotoLibraryAddUsageDescription', 'ITSAppUsesNonExemptEncryption']) {
+for (const k of ['NSCameraUsageDescription', 'NSLocationWhenInUseUsageDescription', 'NSPhotoLibraryAddUsageDescription', 'ITSAppUsesNonExemptEncryption', 'NSHealthShareUsageDescription', 'NSHealthUpdateUsageDescription', 'NSFaceIDUsageDescription']) {
   if (!plist.includes(k)) bad('Info.plist missing ' + k)
 }
 ok('Info.plist permission strings present')

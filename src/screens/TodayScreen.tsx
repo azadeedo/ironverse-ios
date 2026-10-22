@@ -31,6 +31,7 @@ import { AdaptiveTargetCard } from './today/AdaptiveTargetCard'
 import { GoalWeightCard, ProgramTodayCard, StepsCard } from './today/ProgramToday'
 import { GoalCoachCard, RunGoalCard } from './today/GoalCoachCard'
 import { MissedSessionCard } from './today/MissedSessionCard'
+import { SleepRecoveryCard } from './today/SleepRecoveryCard'
 import { goalSettings } from '@/lib/calorieTarget'
 import { targetForDateWith } from './food/helpers'
 import { ed } from '@/lib/edition'
@@ -214,6 +215,7 @@ export default function TodayScreen() {
 
         <TrialBanner />
         {/* owner's order (23 Oct 2026): daily habits, then nutrition, then Move today, then training */}
+        <SleepRecoveryCard />
         <div className="px-1 pt-1 text-[11px] font-semibold uppercase tracking-wider text-ink3">Daily habits</div>
         <div className="grid grid-cols-2 gap-3">
           <WaterCard today={today} totalMl={waterMl ?? 0} targetMl={profile.waterTargetMl} />

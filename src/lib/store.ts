@@ -23,6 +23,14 @@ export const useUI = create<UIState>((set) => ({
   dismissToast: (id) => set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) })),
   restEndsAt: null,
   restTotalSec: 0,
-  startRest: (sec) => set({ restEndsAt: Date.now() + sec * 1000, restTotalSec: sec }),
-  clearRest: () => set({ restEndsAt: null, restTotalSec: 0 }),
+  startRest: (sec) => {
+    const at = Date.now() + sec * 1000
+    set({ restEndsAt: at, restTotalSec: sec })
+    // v10: if you leave the app mid-rest, iOS still taps you when it's time (App Store build)
+    void import('@/native/notifications').then((n) => n.trackPending({ key: 'rest-timer', at, title: 'Rest over 💪', body: 'Time for your next set.' })).catch(() => {})
+  },
+  clearRest: () => {
+    set({ restEndsAt: null, restTotalSec: 0 })
+    void import('@/native/notifications').then((n) => n.untrackPending('rest-timer')).catch(() => {})
+  },
 }))

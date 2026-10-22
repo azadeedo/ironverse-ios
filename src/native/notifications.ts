@@ -73,3 +73,36 @@ export async function reclaimFromIOS(): Promise<void> {
   } catch { /* already delivered */ }
   handedOff.clear()
 }
+
+/** v10: a repeating daily local notification (bedtime, morning sleep check-in). */
+export async function scheduleDaily(key: string, hour: number, minute: number, title: string, body: string): Promise<boolean> {
+  if (!(await nativePermission(true))) return false
+  try {
+    const ln = await plugin()
+    await ln.cancel({ notifications: [{ id: idFor(`daily:${key}`) }] })
+    await ln.schedule({ notifications: [{ id: idFor(`daily:${key}`), title, body, schedule: { on: { hour, minute }, allowWhileIdle: true } }] })
+    return true
+  } catch { return false }
+}
+
+export async function cancelDaily(key: string): Promise<void> {
+  if (!isNativeApp()) return
+  try { await (await plugin()).cancel({ notifications: [{ id: idFor(`daily:${key}`) }] }) } catch { /* not scheduled */ }
+}
+
+/** v10: a one-off local notification at a set time (e.g. fasting goal reached). */
+export async function scheduleAt(key: string, at: Date, title: string, body: string): Promise<boolean> {
+  if (!(await nativePermission(true))) return false
+  try {
+    const ln = await plugin()
+    await ln.cancel({ notifications: [{ id: idFor(`at:${key}`) }] })
+    if (at.getTime() <= Date.now()) return true
+    await ln.schedule({ notifications: [{ id: idFor(`at:${key}`), title, body, schedule: { at, allowWhileIdle: true } }] })
+    return true
+  } catch { return false }
+}
+
+export async function cancelAt(key: string): Promise<void> {
+  if (!isNativeApp()) return
+  try { await (await plugin()).cancel({ notifications: [{ id: idFor(`at:${key}`) }] }) } catch { /* not scheduled */ }
+}

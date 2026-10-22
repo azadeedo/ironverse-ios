@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useState, type ReactNode } from 'react'
+import AppLock from '@/components/AppLock'
 import { createBrowserRouter, Outlet, RouterProvider, useLocation, useNavigate } from 'react-router-dom'
 import { Apple, Dumbbell, House, LayoutGrid, TrendingUp } from 'lucide-react'
 import { seedIfNeeded } from './db/seed'
@@ -28,6 +29,8 @@ const CardioScreen = lazy(() => import('@/screens/CardioScreen'))
 const HydrationScreen = lazy(() => import('@/screens/HydrationScreen'))
 const PlanScreen = lazy(() => import('@/screens/PlanScreen'))
 const BuildProgramScreen = lazy(() => import('@/screens/workout/BuildProgramScreen'))
+const SleepScreen = lazy(() => import('@/screens/SleepScreen'))
+const FastingScreen = lazy(() => import('@/screens/FastingScreen'))
 const BackupScreen = lazy(() => import('@/screens/BackupScreen'))
 const ProgramsScreen = lazy(() => import('@/screens/ProgramsScreen'))
 const ReviewScreen = lazy(() => import('@/screens/ReviewScreen'))
@@ -99,6 +102,8 @@ function Shell() {
       }
     }).catch(() => {})
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  // v10: long-press-the-icon quick actions (App Store build)
+  useEffect(() => { void import('./native/extras').then((x) => x.initQuickActions((p) => navigate(p))) }, []) // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <div className="flex h-full flex-col">
       <div key={location.pathname} className="page-in scroll-y flex-1" style={{ paddingBottom: hideNav ? 0 : 'calc(var(--sab) + 78px)' }}>
@@ -126,6 +131,7 @@ function Shell() {
       <TourOverlay />
       <UpdatePrompt />
       <LaunchStatus />
+      <AppLock />
     </div>
   )
 }
@@ -143,6 +149,8 @@ const router = createBrowserRouter([
       { path: 'workout', element: <S><WorkoutScreen /></S> },
       { path: 'plan', element: <S><PlanScreen /></S> },
       { path: 'plan/build', element: <S><BuildProgramScreen /></S> },
+      { path: 'sleep', element: <S><SleepScreen /></S> },
+      { path: 'fasting', element: <S><FastingScreen /></S> },
       { path: 'session/:logId', element: <S><SessionScreen /></S> },
       { path: 'exercises', element: <S><ExercisesScreen /></S> },
       { path: 'exercise/:id', element: <S><ExerciseDetailScreen /></S> },

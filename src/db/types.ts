@@ -259,7 +259,24 @@ export interface CustomExercise {
 export interface DailyCheckin {
   date: string
   steps?: number
+  /** 1-5 sleep rating for the night that ENDED this morning */
   sleep?: number
+  // ---- v10 sleep & recovery (all optional; same table, no schema change) ----
+  /** hours asleep (typed, from bed/wake times, or Apple Health) */
+  sleepHours?: number
+  /** 'HH:mm' */
+  bedTime?: string
+  wakeTime?: string
+  /** see SLEEP_FACTORS in lib/sleep */
+  sleepFactors?: string[]
+  sleepNote?: string
+  /** where the hours came from */
+  sleepSource?: 'manual' | 'health'
+  /** Apple Health sleep stages, minutes */
+  sleepStages?: { deep?: number; rem?: number; core?: number; awake?: number }
+  /** Apple Health, that morning */
+  restingHr?: number
+  hrv?: number
   energy?: number
   soreness?: number
   readiness?: number

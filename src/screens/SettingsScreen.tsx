@@ -1,6 +1,7 @@
 // SETTINGS — grouped controls for profile, targets, schedule, equipment and data.
 // Inline editors autosave; sheet editors save explicitly. Weight edits log a weigh-in.
 
+import { PrivacyCard } from './settings/PrivacyCard'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
@@ -30,7 +31,7 @@ import {
 } from './settings/lib'
 import { Stepper } from './settings/Stepper'
 import { useTour } from '@/components/Tour'
-import { isAppStoreEdition, ed } from '@/lib/edition'
+import { isAppStoreEdition, isNativeApp, ed } from '@/lib/edition'
 import { AiKeyCard } from './settings/AiKeyCard'
 import { AdaptiveCaloriesCard } from './settings/AdaptiveCaloriesCard'
 import { FoodPrefsCard } from './settings/FoodPrefsCard'
@@ -439,6 +440,14 @@ export default function SettingsScreen() {
         <Section title="Photo calorie estimate">
           <AiKeyCard />
         </Section>
+      </AnchorSection>
+      )}
+
+      {isNativeApp() && show('privacy') && (
+      <AnchorSection id="privacy" highlight={highlight === 'privacy'}>
+      <Section title="Privacy">
+        <PrivacyCard />
+      </Section>
       </AnchorSection>
       )}
 

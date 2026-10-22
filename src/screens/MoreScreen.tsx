@@ -25,7 +25,7 @@ import { dayForDate } from '@/lib/plangen'
 import { minutesOf, todayTimeline, type TimelineItem } from '@/lib/schedule'
 import { useUI } from '@/lib/store'
 import { APP_VERSION, GOAL_META, fmt12, nowMinutes, parseNumber, upsertTodayWeighIn } from './settings/lib'
-import { Crown, MessageSquarePlus } from 'lucide-react'
+import { Crown, MessageSquarePlus, Moon, Timer } from 'lucide-react'
 import { isAppStoreEdition } from '@/lib/edition'
 
 const TIMELINE_ICONS: Record<TimelineItem['kind'], typeof Droplets> = {
@@ -47,9 +47,9 @@ const TIMELINE_TONES: Record<TimelineItem['kind'], string> = {
 /** which group each shortcut lives in on More */
 // v10 order (owner, 23 Oct 2026): the showpieces first, housekeeping last — nothing removed
 const TILE_GROUPS: [string, string[]][] = [
-  ['Your progress', ['/hub', '/photos', '/anatomy', '/review', '/progress', '/achievements']],
+  ['Your progress', ['/hub', '/sleep', '/photos', '/anatomy', '/review', '/progress', '/achievements']],
   ['Training', ['/programs', '/plan', '/exercises', '/cardio']],
-  ['Food & health', ['/health-scan', '/meal-plan', '/nutrition-week', '/calories', '/hydration', '/pill-box']],
+  ['Food & health', ['/health-scan', '/fasting', '/meal-plan', '/nutrition-week', '/calories', '/hydration', '/pill-box']],
   ['Connect', ['/devices']],
   ['App', [...(isAppStoreEdition() ? ['/pro'] : []), '/feedback', '/whats-new', '/backup', '/settings']],
 ]
@@ -73,6 +73,8 @@ const TILES = [
   { label: 'Health scanner', sub: 'Food score out of 100', icon: HeartPulse, to: '/health-scan', tint: 'text-emerald-400', bg: 'bg-emerald-400/12' },
   { label: 'Nutrition chart', sub: '7 / 14 / 30 days', icon: TrendingUp, to: '/nutrition-week', tint: 'text-orange-300', bg: 'bg-orange-300/12' },
   { label: 'Meal planner', sub: 'Plan the next 7 days', icon: CalendarRange, to: '/meal-plan', tint: 'text-lime-400', bg: 'bg-lime-400/12' },
+  { label: 'Sleep & recovery', sub: 'Rate nights, Watch sleep, score', icon: Moon, to: '/sleep', tint: 'text-indigo-300', bg: 'bg-indigo-300/12' },
+  { label: 'Fasting timer', sub: '16:8 and more, with alerts', icon: Timer, to: '/fasting', tint: 'text-amber-300', bg: 'bg-amber-300/12' },
   { label: 'Settings', sub: 'Profile & data', icon: Settings, to: '/settings', tint: 'text-ink2', bg: 'bg-surface3' },
   { label: 'Suggest & report', sub: 'Ideas, bugs, fixes', icon: MessageSquarePlus, to: '/feedback', tint: 'text-brand', bg: 'bg-brand/12' },
   { label: 'Ironverse Pro', sub: 'Plans & subscription', icon: Crown, to: '/pro', tint: 'text-brand', bg: 'bg-brand/12' },

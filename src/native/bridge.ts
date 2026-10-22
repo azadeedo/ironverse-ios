@@ -53,6 +53,9 @@ export async function initNative(): Promise<void> {
     }
     db.weighIns.hook('creating', (_pk, obj) => { send(obj) })
     db.weighIns.hook('updating', (mods, _pk, obj) => { send({ ...obj, ...(mods as object) }) })
+    // v10: water and food energy → Apple Health (each behind its own switch)
+    db.waterLog.hook('creating', (_pk, w) => { if (w?.ml > 0) setTimeout(() => { void h.saveWaterToHealth(w.ml, w.at) }, 0) })
+    db.foodLog.hook('creating', (_pk, f) => { if (f?.kcal > 0) setTimeout(() => { void h.saveFoodEnergyToHealth(f.kcal, f.createdAt) }, 0) })
   } catch { /* Health unavailable — steps/weigh-ins stay manual */ }
 }
 

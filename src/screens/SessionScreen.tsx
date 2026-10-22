@@ -892,6 +892,8 @@ export default function SessionScreen() {
     setSummary({ log: finished, durationSec, volumeKg, calories, prs: computePRs(finished, history) })
     buzz([80, 40, 80, 40, 160])
     toast('Workout saved')
+    // v10: Apple's rating sheet after the 3rd / 10th / 30th finished workout (App Store build only)
+    void import('@/native/extras').then((x) => x.maybeAskForReview())
   }
 
   const discard = async () => {

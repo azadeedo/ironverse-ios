@@ -226,7 +226,7 @@ export default function FoodScreen() {
           <div>
             <div className="mb-1.5 px-1 text-[11px] font-semibold uppercase tracking-wider text-ink3">Food tools</div>
             <div className="grid grid-cols-3 gap-2">
-              {([['🧪', 'Health scanner', '/health-scan'], ['📅', 'Meal planner', '/meal-plan'], ['📊', 'Nutrition chart', '/nutrition-week'], ['🍔', 'Fast-food guide', '/fast-food'], ['📸', 'Photo diary', '/food-photos'], ['💊', 'Pill box', '/pill-box']] as const).map(([i, l, to]) => (
+              {([['🧪', 'Health scanner', '/health-scan'], ['⏱️', 'Fasting timer', '/fasting'], ['📅', 'Meal planner', '/meal-plan'], ['📊', 'Nutrition chart', '/nutrition-week'], ['🍔', 'Fast-food guide', '/fast-food'], ['📸', 'Photo diary', '/food-photos'], ['💊', 'Pill box', '/pill-box']] as const).map(([i, l, to]) => (
                 <button key={to} type="button" onClick={() => navigate(to)} className="pressable flex min-h-[70px] flex-col items-center justify-center gap-1 rounded-2xl bg-surface2 px-1 text-center text-[11.5px] font-semibold shadow-card"><span className="text-[20px]">{i}</span>{l}</button>
               ))}
             </div>

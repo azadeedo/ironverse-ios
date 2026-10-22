@@ -63,6 +63,8 @@ function AppleHealthSection() {
   const lastSync = useLiveQuery(() => getSetting<string | null>(HEALTH_KEYS.lastSync, null), [])
   const today = useLiveQuery(() => getSetting<HealthToday | null>(HEALTH_KEYS.today, null), [])
   const writeWeight = useLiveQuery(() => getSetting<boolean>(HEALTH_KEYS.writeWeight, false), [])
+  const writeWater = useLiveQuery(() => getSetting<boolean>(HEALTH_KEYS.writeWater, false), [])
+  const writeFood = useLiveQuery(() => getSetting<boolean>(HEALTH_KEYS.writeFood, false), [])
   const fromHealth = useLiveQuery(async () => ({
     workouts: await db.cardioLog.filter((c) => c.id.startsWith('hk-')).count(),
     weighIns: await db.weighIns.filter((w) => w.id.startsWith('hk-')).count(),
@@ -82,6 +84,7 @@ function AppleHealthSection() {
   const items: { name: string; what: string }[] = [
     { name: 'Apple Watch', what: 'Runs, walks, rides and other cardio you record on the Watch land in Cardio with time, distance and calories. Active calories and resting heart rate show on Today.' },
     { name: 'Steps', what: 'Your daily steps fill in on Today automatically — no more copying them across.' },
+    { name: 'Sleep, HRV & resting heart rate', what: 'Sleep from your Apple Watch (or any sleep app that saves to Health), heart-rate variability and resting heart rate feed the Sleep screen and your daily recovery score.' },
     { name: 'Smart scales', what: 'Withings, Eufy, Renpho, Garmin and other scales that save to Apple Health become weigh-ins here. A weigh-in you typed is never overwritten.' },
     { name: 'Heart-rate straps', what: 'Straps paired with your Apple Watch or a fitness app that saves to Apple Health (Polar, Wahoo, Garmin…) come through the same way.' },
   ]
@@ -116,6 +119,18 @@ function AppleHealthSection() {
           <div className="mt-3 flex items-center gap-3 border-t border-line pt-3">
             <div className="flex-1"><div className="font-semibold">Save weigh-ins to Apple Health</div><div className="text-[12px] text-ink3">Weigh-ins you log in Ironverse also go to Health.</div></div>
             <Toggle checked={!!writeWeight} label="Save weigh-ins to Apple Health" onChange={(v) => void setSetting(HEALTH_KEYS.writeWeight, v)} />
+          </div>
+        )}
+        {connected && (
+          <div className="mt-3 flex items-center gap-3">
+            <div className="flex-1"><div className="font-semibold">Save water to Apple Health</div><div className="text-[12px] text-ink3">Each drink you log counts in Health’s water total.</div></div>
+            <Toggle checked={!!writeWater} label="Save water to Apple Health" onChange={(v) => void setSetting(HEALTH_KEYS.writeWater, v)} />
+          </div>
+        )}
+        {connected && (
+          <div className="mt-3 flex items-center gap-3">
+            <div className="flex-1"><div className="font-semibold">Save calories eaten to Apple Health</div><div className="text-[12px] text-ink3">Food energy from what you log (Health’s Nutrition section).</div></div>
+            <Toggle checked={!!writeFood} label="Save calories eaten to Apple Health" onChange={(v) => void setSetting(HEALTH_KEYS.writeFood, v)} />
           </div>
         )}
         {connected && fromHealth && <div className="mt-2 text-[12px] text-ink3">From Apple Health so far: {fromHealth.workouts} cardio workout{fromHealth.workouts === 1 ? '' : 's'}, {fromHealth.weighIns} weigh-in{fromHealth.weighIns === 1 ? '' : 's'}.</div>}

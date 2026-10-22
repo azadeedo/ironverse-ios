@@ -20,13 +20,17 @@ export const HEALTH_KEYS = {
   connected: 'health:connected',
   lastSync: 'health:lastSync',
   writeWeight: 'health:writeWeight',
+  writeWater: 'health:writeWater',
+  writeFood: 'health:writeFood',
   today: 'health:today',
 } as const
 
 export interface HealthToday { date: string; activeKcal?: number; restingHr?: number; steps?: number }
 export interface SyncResult { steps: number; weighIns: number; workouts: number; activeKcal?: number }
 
-const READ: HealthDataType[] = ['steps', 'calories', 'heartRate', 'restingHeartRate', 'weight', 'workouts', 'distance']
+const READ: HealthDataType[] = ['steps', 'calories', 'heartRate', 'restingHeartRate', 'weight', 'workouts', 'distance', 'sleep', 'heartRateVariability']
+// v10: optional write-back of water and food energy (own switches)
+const WRITE_EXTRA: HealthDataType[] = ['dietaryWater', 'dietaryEnergyConsumed']
 const WRITE: HealthDataType[] = ['weight']
 
 async function plugin() {
@@ -45,7 +49,7 @@ export async function healthConnected(): Promise<boolean> {
 /** Shows Apple's Health permission sheet, then pulls the last 14 days. */
 export async function connectAppleHealth(): Promise<SyncResult> {
   const Health = await plugin()
-  await Health.requestAuthorization({ read: READ, write: WRITE })
+  await Health.requestAuthorization({ read: READ, write: [...WRITE, ...WRITE_EXTRA] })
   await setSetting(HEALTH_KEYS.connected, true)
   return syncAppleHealth(14)
 }
@@ -117,6 +121,44 @@ export async function syncAppleHealth(days = 7): Promise<SyncResult> {
     }
   } catch { /* workouts not shared */ }
 
+  // v10: sleep (Apple Watch / iPhone / sleep apps) per morning, plus HRV and resting HR
+  try {
+    const { samples } = await Health.readSamples({ dataType: 'sleep', startDate: iso(start.subtract(1, 'day')), endDate: iso(end), limit: 500, ascending: true })
+    const byMorning = new Map<string, { asleep: number; deep: number; rem: number; core: number; awake: number; bed?: string; wake?: string }>()
+    for (const sm of samples) {
+      const day = dayjs(sm.endDate).format('YYYY-MM-DD')
+      const b = byMorning.get(day) ?? { asleep: 0, deep: 0, rem: 0, core: 0, awake: 0 }
+      const add = (stage: string | undefined, mins: number) => {
+        if (stage === 'deep') { b.deep += mins; b.asleep += mins }
+        else if (stage === 'rem') { b.rem += mins; b.asleep += mins }
+        else if (stage === 'light' || stage === 'asleep') { b.core += mins; b.asleep += mins }
+        else if (stage === 'awake') b.awake += mins
+      }
+      if (sm.stages?.length) for (const st of sm.stages) add(st.stage, st.durationMinutes)
+      else add(sm.sleepState, (new Date(sm.endDate).getTime() - new Date(sm.startDate).getTime()) / 60000)
+      if (!b.bed || sm.startDate < b.bed) b.bed = sm.startDate
+      if (!b.wake || sm.endDate > b.wake) b.wake = sm.endDate
+      byMorning.set(day, b)
+    }
+    for (const [date, b] of byMorning) {
+      if (b.asleep < 60) continue
+      const prev = await db.checkins.get(date)
+      if (prev?.sleepSource === 'manual' && prev.sleepHours) continue // never overwrite what you typed
+      await saveCheckin({ date, sleepHours: Math.round((b.asleep / 60) * 10) / 10, sleepSource: 'health',
+        bedTime: b.bed ? dayjs(b.bed).format('HH:mm') : prev?.bedTime, wakeTime: b.wake ? dayjs(b.wake).format('HH:mm') : prev?.wakeTime,
+        sleepStages: { deep: Math.round(b.deep), rem: Math.round(b.rem), core: Math.round(b.core), awake: Math.round(b.awake) } })
+    }
+  } catch { /* sleep not shared */ }
+  for (const [type, key] of [['restingHeartRate', 'restingHr'], ['heartRateVariability', 'hrv']] as const) {
+    try {
+      const { samples } = await Health.queryAggregated({ dataType: type, startDate: iso(start), endDate: iso(end), bucket: 'day', aggregation: 'average' })
+      for (const s2 of samples) {
+        const v = Math.round(s2.values.average ?? s2.value ?? 0)
+        if (v > 0) await saveCheckin({ date: dayjs(s2.startDate).format('YYYY-MM-DD'), [key]: v })
+      }
+    } catch { /* not shared */ }
+  }
+
   // today's active calories + latest resting heart rate for the Today screen
   const today: HealthToday = { date: dayjs().format('YYYY-MM-DD') }
   try {
@@ -140,4 +182,16 @@ export async function saveWeighInToHealth(kg: number, dateIso?: string): Promise
   if (!isNativeApp() || !(await healthConnected())) return
   if (!(await getSetting<boolean>(HEALTH_KEYS.writeWeight, false))) return
   try { await (await plugin()).saveSample({ dataType: 'weight', value: kg, unit: 'kilogram', startDate: dateIso, endDate: dateIso }) } catch { /* write not allowed */ }
+}
+
+/** v10: a water log saved in Ironverse → Apple Health (only when that switch is on) */
+export async function saveWaterToHealth(ml: number, atIso?: string): Promise<void> {
+  if (!isNativeApp() || !(await healthConnected()) || !(await getSetting<boolean>(HEALTH_KEYS.writeWater, false))) return
+  try { await (await plugin()).saveSample({ dataType: 'dietaryWater', value: ml / 1000, unit: 'liter', startDate: atIso, endDate: atIso }) } catch { /* not allowed */ }
+}
+
+/** v10: food energy logged in Ironverse → Apple Health (only when that switch is on) */
+export async function saveFoodEnergyToHealth(kcal: number, atIso?: string): Promise<void> {
+  if (!isNativeApp() || !(await healthConnected()) || !(await getSetting<boolean>(HEALTH_KEYS.writeFood, false))) return
+  try { await (await plugin()).saveSample({ dataType: 'dietaryEnergyConsumed', value: kcal, unit: 'kilocalorie', startDate: atIso, endDate: atIso }) } catch { /* not allowed */ }
 }
