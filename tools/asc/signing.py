@@ -49,4 +49,23 @@ else:
           'relationships': {'bundleId': {'data': {'type': 'bundleIds', 'id': BID}},
                             'certificates': {'data': [{'type': 'certificates', 'id': c['id']} for c in certs]}}}})['data']
     print(f'created profile {res["attributes"]["name"]}: {res["attributes"].get("profileState")}, expires {res["attributes"].get("expirationDate", "")[:10]}')
+
+# ---- v10: Apple Watch companion app (com.nouriapps.ironverse.watchkitapp) ----
+WATCH = BUNDLE + '.watchkitapp'
+WATCH_PROFILE = 'ironverse_watch_app_store'
+wb = [x for x in call('GET', f'/v1/bundleIds?filter[identifier]={WATCH}&limit=5')['data'] if x['attributes']['identifier'] == WATCH]
+if wb:
+    WID = wb[0]['id']
+    print(f'watch bundle id {WATCH}: {WID} (exists)')
+else:
+    WID = call('POST', '/v1/bundleIds', {'data': {'type': 'bundleIds', 'attributes': {'identifier': WATCH, 'name': 'Ironverse Watch', 'platform': 'IOS'}}})['data']['id']
+    print(f'created watch bundle id {WATCH}: {WID}')
+wprofiles = get(f'/v1/bundleIds/{WID}/profiles').get('data') or []
+if any(p['attributes'].get('name') == WATCH_PROFILE and p['attributes'].get('profileState') == 'ACTIVE' for p in wprofiles):
+    print(f'{WATCH_PROFILE} already ACTIVE — kept')
+else:
+    r = call('POST', '/v1/profiles', {'data': {'type': 'profiles', 'attributes': {'name': WATCH_PROFILE, 'profileType': 'IOS_APP_STORE'},
+          'relationships': {'bundleId': {'data': {'type': 'bundleIds', 'id': WID}},
+                            'certificates': {'data': [{'type': 'certificates', 'id': c['id']} for c in certs]}}}})['data']
+    print(f'created profile {r["attributes"]["name"]}: {r["attributes"].get("profileState")}')
 print('SUMMARY: signing OK')

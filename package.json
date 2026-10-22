@@ -32,6 +32,7 @@
     "@capawesome/capacitor-app-shortcuts": "^8.0.3",
     "@capgo/capacitor-health": "^8.11.12",
     "@capgo/capacitor-native-biometric": "^8.9.1",
+    "@capgo/capacitor-watch": "^8.1.17",
     "@capgo/native-purchases": "^8.9.6",
     "@types/three": "^0.180.0",
     "@zxing/library": "^0.21.3",

@@ -117,3 +117,30 @@ workflows:
         script: |
           python3 -m pip install --quiet --user pyjwt cryptography requests
           python3 tools/asc/signing.py
+
+  # 5) Apple Watch app compile check (manual, unsigned, simulator) — proves the
+  #    watchOS target and Swift sources build before a signed TestFlight run.
+  watch-compile-check:
+    name: Ironverse — Apple Watch compile check (no signing)
+    instance_type: mac_mini_m2
+    max_build_duration: 45
+    environment:
+      node: 22
+      xcode: latest
+    scripts:
+      - name: Install
+        script: npm ci
+      - name: Build web bundle (iOS edition)
+        script: npm run build:ios
+      - name: Sync native project
+        script: npx cap sync ios
+      - name: Add the Apple Watch target
+        script: |
+          gem list -i xcodeproj >/dev/null || gem install xcodeproj --user-install
+          ruby tools/watch/add_watch_target.rb
+      - name: Compile iPhone + Watch for the simulator (unsigned)
+        script: |
+          xcodebuild -project ios/App/App.xcodeproj -scheme App \
+            -configuration Debug -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO build | xcpretty || exit ${PIPESTATUS[0]}

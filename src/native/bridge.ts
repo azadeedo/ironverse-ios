@@ -57,6 +57,14 @@ export async function initNative(): Promise<void> {
     db.waterLog.hook('creating', (_pk, w) => { if (w?.ml > 0) setTimeout(() => { void h.saveWaterToHealth(w.ml, w.at) }, 0) })
     db.foodLog.hook('creating', (_pk, f) => { if (f?.kcal > 0) setTimeout(() => { void h.saveFoodEnergyToHealth(f.kcal, f.createdAt) }, 0) })
   } catch { /* Health unavailable — steps/weigh-ins stay manual */ }
+
+  // v10: Apple Watch companion app — snapshot out, actions in
+  try {
+    const w = await import('./watch')
+    await w.initWatch()
+    const { App } = await import('@capacitor/app')
+    await App.addListener('resume', () => { w.schedulePush() })
+  } catch { /* no watch support */ }
 }
 
 /** navigator.vibrate(pattern) → a Taptic tap per pulse (best effort). */
