@@ -45,11 +45,13 @@ const TIMELINE_TONES: Record<TimelineItem['kind'], string> = {
 }
 
 /** which group each shortcut lives in on More */
+// v10 order (owner, 23 Oct 2026): the showpieces first, housekeeping last — nothing removed
 const TILE_GROUPS: [string, string[]][] = [
-  ['Training', ['/plan', '/exercises', '/programs', '/review', '/cardio']],
-  ['Body & progress', ['/progress', '/hub', '/photos', '/anatomy', '/achievements']],
-  ['Food & health', ['/calories', '/nutrition-week', '/meal-plan', '/health-scan', '/hydration', '/pill-box']],
-  ['App', [...(isAppStoreEdition() ? ['/pro'] : []), '/feedback', '/devices', '/backup', '/whats-new', '/settings']],
+  ['Your progress', ['/hub', '/photos', '/anatomy', '/review', '/progress', '/achievements']],
+  ['Training', ['/programs', '/plan', '/exercises', '/cardio']],
+  ['Food & health', ['/health-scan', '/meal-plan', '/nutrition-week', '/calories', '/hydration', '/pill-box']],
+  ['Connect', ['/devices']],
+  ['App', [...(isAppStoreEdition() ? ['/pro'] : []), '/feedback', '/whats-new', '/backup', '/settings']],
 ]
 const TILES = [
   { label: 'Cardio', sub: 'Runs, walks & rope', icon: HeartPulse, to: '/cardio', tint: 'text-rose-400', bg: 'bg-rose-400/12' },
@@ -63,7 +65,7 @@ const TILES = [
   { label: 'Achievements', sub: 'Earned from your log', icon: Award, to: '/achievements', tint: 'text-amber-300', bg: 'bg-amber-300/12' },
   { label: 'What’s new', sub: 'Every feature, and where', icon: Layers, to: '/whats-new', tint: 'text-sky-400', bg: 'bg-sky-400/12' },
   { label: 'Backup', sub: 'Export & restore', icon: DatabaseBackup, to: '/backup', tint: 'text-emerald-400', bg: 'bg-emerald-400/12' },
-  { label: 'Connected devices', sub: 'Watch, camera, honest status', icon: Watch, to: '/devices', tint: 'text-rose-300', bg: 'bg-rose-300/12' },
+  { label: 'Connected devices', sub: 'Apple Health, Watch, scales', icon: Watch, to: '/devices', tint: 'text-rose-300', bg: 'bg-rose-300/12' },
   { label: 'Calorie centre', sub: 'Target, proposals, undo', icon: Flame, to: '/calories', tint: 'text-orange-400', bg: 'bg-orange-400/12' },
   { label: 'Progress hub', sub: 'Trophies, XP, muscles', icon: Trophy, to: '/hub', tint: 'text-amber-400', bg: 'bg-amber-400/12' },
   { label: 'Pill box', sub: 'Supplements & stock', icon: HeartPulse, to: '/pill-box', tint: 'text-violet-300', bg: 'bg-violet-300/12' },

@@ -199,16 +199,7 @@ export default function FoodScreen() {
               </div>
             )
           })()}
-          <ProteinCoach date={date} profile={profile} byMeal={byMeal} />
-          <div>
-            <div className="mb-1.5 px-1 text-[11px] font-semibold uppercase tracking-wider text-ink3">Food tools</div>
-            <div className="grid grid-cols-3 gap-2">
-              {([['📅', 'Meal planner', '/meal-plan'], ['🧪', 'Health scanner', '/health-scan'], ['📊', 'Nutrition chart', '/nutrition-week'], ['🍔', 'Fast-food guide', '/fast-food'], ['📸', 'Photo diary', '/food-photos'], ['💊', 'Pill box', '/pill-box']] as const).map(([i, l, to]) => (
-                <button key={to} type="button" onClick={() => navigate(to)} className="pressable flex min-h-[70px] flex-col items-center justify-center gap-1 rounded-2xl bg-surface2 px-1 text-center text-[11.5px] font-semibold shadow-card"><span className="text-[20px]">{i}</span>{l}</button>
-              ))}
-            </div>
-          </div>
-          <FitsNow date={date} profile={profile} kcalLeft={targetForDateWith(date, profile, adjusts) - totals.kcal} proteinEaten={totals.protein} />
+          {/* v10 order (owner, 23 Oct 2026): alerts, then your meals, then coaching, then tools */}
           <OffChartCard kcal={totals.kcal} target={targetForDateWith(date, profile, adjusts)} protein={totals.protein} profile={profile} />
           <OverBudgetCard
             date={date}
@@ -217,7 +208,6 @@ export default function FoodScreen() {
             target={targetForDateWith(date, profile, adjusts)}
             adjusts={adjusts}
           />
-          <DeficitCard profile={profile} weighIns={weighIns} intakeMap={intakeMap} />
           {MEALS.map((m) => (
             <MealSection
               key={m.key}
@@ -231,6 +221,17 @@ export default function FoodScreen() {
               onEntryTap={setEditing}
             />
           ))}
+          <ProteinCoach date={date} profile={profile} byMeal={byMeal} />
+          <FitsNow date={date} profile={profile} kcalLeft={targetForDateWith(date, profile, adjusts) - totals.kcal} proteinEaten={totals.protein} />
+          <div>
+            <div className="mb-1.5 px-1 text-[11px] font-semibold uppercase tracking-wider text-ink3">Food tools</div>
+            <div className="grid grid-cols-3 gap-2">
+              {([['🧪', 'Health scanner', '/health-scan'], ['📅', 'Meal planner', '/meal-plan'], ['📊', 'Nutrition chart', '/nutrition-week'], ['🍔', 'Fast-food guide', '/fast-food'], ['📸', 'Photo diary', '/food-photos'], ['💊', 'Pill box', '/pill-box']] as const).map(([i, l, to]) => (
+                <button key={to} type="button" onClick={() => navigate(to)} className="pressable flex min-h-[70px] flex-col items-center justify-center gap-1 rounded-2xl bg-surface2 px-1 text-center text-[11.5px] font-semibold shadow-card"><span className="text-[20px]">{i}</span>{l}</button>
+              ))}
+            </div>
+          </div>
+          <DeficitCard profile={profile} weighIns={weighIns} intakeMap={intakeMap} />
         </div>
       ) : (
         <div className="space-y-3 px-4 pt-3">

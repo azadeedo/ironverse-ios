@@ -8,7 +8,7 @@ import { BASE, newPage, seedDemo } from './store-media/capture.mjs'
 
 const ROUTES = ['/', '/workout', '/food', '/progress', '/more', '/achievements', '/anatomy', '/backup', '/body', '/calories', '/cardio',
   '/devices', '/exercise/barbell-squat', '/exercises', '/fast-food', '/feedback', '/food-photos', '/health-scan', '/history', '/hub',
-  '/hydration', '/meal-plan', '/nutrition-week', '/photos', '/pill-box', '/plan', '/pr-quest', '/pro', '/program', '/programs', '/prs',
+  '/hydration', '/meal-plan', '/nutrition-week', '/photos', '/pill-box', '/plan', '/plan/build', '/pr-quest', '/pro', '/program', '/programs', '/prs',
   '/research', '/review', '/search', '/settings', '/skills', '/strength-journey', '/tools', '/whats-new']
 
 const browser = await chromium.launch()
