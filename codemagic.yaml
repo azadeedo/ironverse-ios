@@ -140,7 +140,9 @@ workflows:
           ruby tools/watch/add_watch_target.rb
       - name: Compile iPhone + Watch for the simulator (unsigned)
         script: |
+          set -o pipefail
+          # no -sdk flag: each target keeps its own SDK (the Watch app builds with watchOS)
           xcodebuild -project ios/App/App.xcodeproj -scheme App \
-            -configuration Debug -sdk iphonesimulator \
+            -configuration Debug \
             -destination 'generic/platform=iOS Simulator' \
-            CODE_SIGNING_ALLOWED=NO build | xcpretty || exit ${PIPESTATUS[0]}
+            CODE_SIGNING_ALLOWED=NO build | xcpretty
