@@ -83,7 +83,9 @@ workflows:
     publishing:
       app_store_connect:
         auth: integration
-        submit_to_testflight: true
+        # internal testers (group "Nouri") get every build automatically; external beta
+        # review needs public test info we do not use, so do not submit for it
+        submit_to_testflight: false
         submit_to_app_store: false   # App Store review only after the owner approves it
 
   # 3) Listing chores through the App Store Connect API (manual start only):
