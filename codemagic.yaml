@@ -151,3 +151,16 @@ workflows:
             -configuration Debug \
             -destination 'generic/platform=iOS Simulator' \
             CODE_SIGNING_ALLOWED=NO build | xcpretty
+
+  # 6) Read-only TestFlight status (manual): what Apple has done with recent uploads.
+  asc-status:
+    name: Ironverse — TestFlight status (read-only)
+    instance_type: mac_mini_m2
+    max_build_duration: 10
+    integrations:
+      app_store_connect: Ironverse ASC key
+    scripts:
+      - name: TestFlight builds
+        script: |
+          python3 -m pip install --quiet --user pyjwt cryptography requests
+          python3 tools/asc/status.py
