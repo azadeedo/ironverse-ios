@@ -10,7 +10,7 @@
 import { db } from '@/db'
 import { profileFromLegacy } from '@/db/defaults'
 import type {
-  AnyEquipment, EquipmentProfile, Exercise, PlanExercise, Profile,
+  AnyEquipment, EquipmentProfile, Exercise, PlanExercise, Profile, WorkoutLog,
 } from '@/db/types'
 import { equipmentLabel } from '@/db/types'
 import { byId, EXERCISES } from '@/data/exercises'
@@ -393,4 +393,20 @@ export function localiseSession(
   }
 
   return { exercises: out, swaps, dropped }
+}
+
+/**
+ * 23 Oct 2026 (owner): a program session started at a different location (e.g.
+ * Home instead of the gym) swaps only the exercises this room can't do. Sets,
+ * reps and RIR stay; loads on swapped lifts are cleared so they are re-chosen.
+ */
+export function localiseLogToProfile(log: WorkoutLog, profile: EquipmentProfile): { log: WorkoutLog; swapped: number } {
+  let swapped = 0
+  const exercises = log.exercises.map((le) => {
+    const r = bestSubstitute(le.exerciseId, profile)
+    if (!r || !r.swappedFrom) return le
+    swapped++
+    return { ...le, exerciseId: r.exercise.id, swappedFrom: le.exerciseId, sets: le.sets.map((s) => ({ ...s, weightKg: undefined })) }
+  })
+  return { log: { ...log, exercises, equipmentProfileId: profile.id, equipmentProfileName: profile.name }, swapped }
 }

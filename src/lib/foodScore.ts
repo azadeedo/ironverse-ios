@@ -254,6 +254,8 @@ export interface ScannedHealth {
   code: string; name: string; brand?: string; image?: string
   nut: Nut; nutriscore?: string; nova?: number; additives: string[]; organic: boolean; isDrink: boolean
   ingredients?: string; allergens: string[]; palmOil?: boolean; vegan?: boolean
+  /** Open Food Facts label tags (e.g. en:halal) — used by the halal check */
+  labels?: string[]
   scannedAt: string
 }
 
@@ -281,6 +283,7 @@ export function mapHealth(code: string, p: Record<string, unknown>): ScannedHeal
     allergens: arr('allergens_tags').map((a) => a.replace(/^[a-z]{2}:/, '').replace(/-/g, ' ')),
     palmOil: ana.includes('en:palm-oil') ? true : ana.includes('en:palm-oil-free') ? false : undefined,
     vegan: ana.includes('en:vegan') ? true : ana.includes('en:non-vegan') ? false : undefined,
+    labels,
     scannedAt: new Date().toISOString(),
   }
 }

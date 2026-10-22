@@ -14,7 +14,7 @@ import { db } from '@/db'
 import type { FoodLogEntry, MealKey, Profile, Recipe } from '@/db/types'
 import { energyUnit, halalMode } from '@/db/defaults'
 import {
-  CUISINES, CUISINE_LABELS, FOOD_CATEGORIES, FOOD_CATEGORY_LABELS, foodIdCandidates, type Cuisine, type FoodCategory,
+  CUISINES, CUISINE_FLAG, CUISINE_LABELS, FOOD_CATEGORIES, FOOD_CATEGORY_LABELS, foodIdCandidates, type Cuisine, type FoodCategory,
 } from '@/data/foods'
 import {
   autoDietTags, cautionReason, filterHalal, isHalalCaution, primaryTagLabel,
@@ -491,7 +491,8 @@ export function AddFoodSheet({
               autoFocus={false}
             />
             <div className="no-scrollbar -mx-4 mt-2 flex gap-2 overflow-x-auto px-4 py-1">
-              {([null, 'mine', ...FOOD_CATEGORIES] as Filter[]).map((c) => (
+              {/* Middle Eastern is browsed as a cuisine (row below), not as a food type */}
+              {([null, 'mine', ...FOOD_CATEGORIES.filter((k) => k !== 'middle-eastern')] as Filter[]).map((c) => (
                 <button
                   key={String(c)}
                   type="button"
@@ -507,7 +508,7 @@ export function AddFoodSheet({
               {([null, ...CUISINES] as (Cuisine | null)[]).map((c) => (
                 <button key={String(c)} type="button" onClick={() => setCuisine(c)}
                   className={`shrink-0 rounded-full px-3 py-1.5 text-[12.5px] font-semibold ${cuisine === c ? 'bg-brand text-black' : 'bg-surface2 text-ink2'}`}>
-                  {c === null ? 'Any' : CUISINE_LABELS[c]}
+                  {c === null ? 'Any' : `${CUISINE_FLAG[c]} ${CUISINE_LABELS[c]}`}
                 </button>
               ))}
             </div>
@@ -580,7 +581,7 @@ export function AddFoodSheet({
               </>
             )}
 
-            {(query.trim() || filter !== null) && (
+            {(query.trim() || filter !== null || cuisine !== null) && (
               results.length === 0 ? (
                 <EmptyState
                   title="No matches"

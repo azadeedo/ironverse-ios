@@ -3,6 +3,7 @@
 // week X/12, phase, the four days with status, missed-session handling,
 // readiness check-in, cardio + steps, weekly volume and links to everything else.
 
+import { getCurrentProfile, localiseLogToProfile } from '@/lib/equipment'
 import { useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
@@ -548,10 +549,18 @@ export function StartSheet({ plan, day, week, weekMonday, onClose }: { plan: Pla
         adjust: choice === 'reduce' ? 'reduce' : choice === 'drop-set' ? 'drop-set' : undefined,
         plannedFor,
       })
-      await db.workoutLogs.add(built.log)
-      toast(`${built.log.title} — let's go`)
+      // training somewhere other than the program's gym → swap only what this room can't do
+      let log = built.log
+      const here = await getCurrentProfile()
+      if (here && here.id !== (plan.equipmentProfileId ?? 'flex')) {
+        const r = localiseLogToProfile(log, here)
+        log = r.log
+        if (r.swapped) toast(`${r.swapped} exercise${r.swapped === 1 ? '' : 's'} swapped for ${here.name}`)
+      }
+      await db.workoutLogs.add(log)
+      toast(`${log.title} — let's go`)
       onClose()
-      navigate(`/session/${built.log.id}`)
+      navigate(`/session/${log.id}`)
     } catch (e) {
       toast(`Could not start: ${(e as Error).message}`, 'error')
     } finally { setBusy(false) }

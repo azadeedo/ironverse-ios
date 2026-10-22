@@ -17,7 +17,7 @@ import { coachingFor } from '@/data/coaching'
 import { MEDIA } from '@/data/media'
 import { DAY_LABEL, MAIN_LIFT_OF, PHASES, type DayKey } from '@/data/program12'
 import { MUSCLE_LABELS, type ExerciseMeta, type PlanExercise } from '@/db/types'
-import { getCurrentProfile } from '@/lib/equipment'
+import { bestSubstitute, getCurrentProfile } from '@/lib/equipment'
 import { warmupRamp } from '@/lib/training'
 import { dayIdFor, mondayBefore, pastSessions, prescribeAccessory, prescribeMain, programWeekFor, type Prescription } from '@/lib/program12'
 import { getProgramEquipment, getProgramPlan, getProgramSetup } from '@/lib/programStore'
@@ -39,6 +39,7 @@ export default function ProgramDayScreen() {
   const meta = useLiveQuery(async () => new Map<string, ExerciseMeta>((await db.exerciseMeta.toArray()).map((m) => [m.exerciseId, m])), [])
   const [start, setStart] = useState(false)
   const bw = useLiveQuery(async () => (await db.profile.get('me'))?.weightKg, [])
+  const here = useLiveQuery(() => getCurrentProfile(), [])
 
   const pd = plan?.weeks[week - 1]?.days.find((d) => d.id === dayIdFor(week, day))
   const rx = useMemo(() => {
@@ -83,6 +84,10 @@ export default function ProgramDayScreen() {
           </div>
           {pd.intent && <div className="mt-1 text-[13.5px] leading-snug">{pd.intent}</div>}
         </Card>
+        {here && here.id !== (plan.equipmentProfileId ?? 'flex') && (() => {
+          const swaps = pd.exercises.map((pe) => bestSubstitute(pe.exerciseId, here)).filter((r) => r?.swappedFrom)
+          return <Callout tone="neutral">Training at <b>{here.name}</b>{swaps.length ? `: ${swaps.map((r) => `${r!.swappedFrom!.name} → ${r!.exercise.name}`).join(', ')}. These swap automatically when you start.` : ' — everything here works with your kit.'}</Callout>
+        })()}
         {!isThisWeek && <Callout tone="neutral">This is week {week}. You are in week {pw.week}{pw.started ? '' : ' (not started yet)'} — loads shown are what the app would suggest today.</Callout>}
         {blocks.map((b, bi) => b.letter && b.items.length > 1 ? (
           <Card key={bi} className="border border-brand/25 p-3">

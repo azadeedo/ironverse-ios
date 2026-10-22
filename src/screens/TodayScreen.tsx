@@ -213,6 +213,30 @@ export default function TodayScreen() {
         )}
 
         <TrialBanner />
+        {/* owner's order (23 Oct 2026): daily habits, then nutrition, then Move today, then training */}
+        <div className="px-1 pt-1 text-[11px] font-semibold uppercase tracking-wider text-ink3">Daily habits</div>
+        <div className="grid grid-cols-2 gap-3">
+          <WaterCard today={today} totalMl={waterMl ?? 0} targetMl={profile.waterTargetMl} />
+          <CreatineCard
+            today={today}
+            log={creatine}
+            grams={creatineDoseFor(profile, today).grams}
+            loading={creatineDoseFor(profile, today).loading}
+            hintTime={reminders?.creatineEnabled ? reminders.creatineTime : undefined}
+          />
+        </div>
+        <StepsCard profile={profile} />
+        <div className="px-1 pt-3 text-[11px] font-semibold uppercase tracking-wider text-ink3">Nutrition</div>
+        <NutritionCard
+          kcal={food?.kcal ?? 0}
+          protein={food?.protein ?? 0}
+          kcalTarget={targetForDateWith(today, profile, todayAdjust ? new Map([[today, todayAdjust]]) : undefined)}
+          proteinTarget={profile.proteinTarget}
+        />
+        <ProteinTimingCard
+          pacing={proteinPacing(foodRows ?? [], profile.proteinTarget, nowMin)}
+        />
+        {!goalAuto && <AdaptiveTargetCard profile={profile} kcalToday={food?.kcal ?? 0} today={today} />}
         <ProGate feature="goalCoach"><GoalCoachCard
           profile={profile}
           plan={plan}
@@ -255,30 +279,7 @@ export default function TodayScreen() {
         </button>
         <RunGoalCard />
         <StreakCard target={profile.daysPerWeek || 4} />
-        <div className="px-1 pt-3 text-[11px] font-semibold uppercase tracking-wider text-ink3">Daily habits</div>
-        <div className="grid grid-cols-2 gap-3">
-          <WaterCard today={today} totalMl={waterMl ?? 0} targetMl={profile.waterTargetMl} />
-          <CreatineCard
-            today={today}
-            log={creatine}
-            grams={creatineDoseFor(profile, today).grams}
-            loading={creatineDoseFor(profile, today).loading}
-            hintTime={reminders?.creatineEnabled ? reminders.creatineTime : undefined}
-          />
-        </div>
-        <StepsCard profile={profile} />
         <FaithCard profile={profile} slot={slot} isTrainingDay={Boolean(dayInfo)} />
-        <div className="px-1 pt-3 text-[11px] font-semibold uppercase tracking-wider text-ink3">Nutrition</div>
-        <NutritionCard
-          kcal={food?.kcal ?? 0}
-          protein={food?.protein ?? 0}
-          kcalTarget={targetForDateWith(today, profile, todayAdjust ? new Map([[today, todayAdjust]]) : undefined)}
-          proteinTarget={profile.proteinTarget}
-        />
-        <ProteinTimingCard
-          pacing={proteinPacing(foodRows ?? [], profile.proteinTarget, nowMin)}
-        />
-        {!goalAuto && <AdaptiveTargetCard profile={profile} kcalToday={food?.kcal ?? 0} today={today} />}
         <div className="px-1 pt-3 text-[11px] font-semibold uppercase tracking-wider text-ink3">Body &amp; progress</div>
         <GoalWeightCard profile={profile} />
         <div className="px-1 pt-3 text-[11px] font-semibold uppercase tracking-wider text-ink3">Your day</div>

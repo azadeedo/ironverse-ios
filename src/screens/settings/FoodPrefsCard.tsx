@@ -29,6 +29,11 @@ export function FoodPrefsCard({ profile, onPatch }: {
               unclear still shows, flagged with a “check the label” note — the call
               stays yours.
             </p>
+            <p className="mt-1.5 text-[12px] leading-relaxed text-ink3">
+              Turning it on also adds: a halal check in the Health scanner (halal label,
+              pork, alcohol, gelatine and doubtful E-numbers), “not halal” badges on
+              scanned barcodes, and halal swaps when you search for something hidden.
+            </p>
           </div>
           <Toggle
             checked={halal}

@@ -5,6 +5,10 @@ import { useEffect, useRef, useState } from 'react'
 import { PageHeader, Section, Card, Button, Input, Spinner } from '@/components/ui'
 import { barcodeDetectorSupported, cameraSupported, detectBarcodeInImage, normaliseBarcode, isPlausibleBarcode, startLiveScan, type LiveScanHandle, NO_DETECTOR_NOTE } from '@/lib/barcode'
 import { compressImage } from './capture/compress'
+import { useLiveQuery } from 'dexie-react-hooks'
+import { getProfile } from '@/db'
+import { halalMode } from '@/db/defaults'
+import { HALAL_COLOUR, halalCheck } from '@/lib/halalCheck'
 import { betterOptions, healthHistory, lookupHealth, RISK_COLOUR, RISK_LABEL, scoreFood, trafficLight, type ScannedHealth } from '@/lib/foodScore'
 
 function Dial({ score, colour, band }: { score: number; colour: string; band: string }) {
@@ -30,6 +34,8 @@ export default function FoodScoreScreen() {
   const [alts, setAlts] = useState<ScannedHealth[] | null>(null)
   const [altBusy, setAltBusy] = useState(false)
   const [openAdd, setOpenAdd] = useState<string | null>(null)
+  // halal check shows only when Halal mode is on (Settings → Food)
+  const halal = useLiveQuery(async () => halalMode(await getProfile()), [])
   useEffect(() => () => { scanRef.current?.stop() }, [])
 
   const look = async (raw: string) => {
@@ -55,7 +61,7 @@ export default function FoodScoreScreen() {
 
   return (
     <div className="pb-12">
-      <PageHeader title="Health scanner" back subtitle="Scan food — get a score out of 100 and what’s in it." />
+      <PageHeader title="Health scanner" back subtitle={halal ? "Scan food — score out of 100, what’s in it, and a halal check." : "Scan food — get a score out of 100 and what’s in it."} />
       <div className="mx-4 space-y-2">
         {live ? (
           <Card className="overflow-hidden p-0"><video ref={videoRef} playsInline muted className="h-[260px] w-full bg-black object-cover" /><button type="button" onClick={() => { scanRef.current?.stop(); setLive(false) }} className="pressable w-full py-3 text-[13px] font-semibold">Stop</button></Card>
@@ -89,6 +95,17 @@ export default function FoodScoreScreen() {
               <div><div className="mb-1 font-bold text-emerald-400">Positives</div>{r.reasons.good.length ? r.reasons.good.map((x) => <div key={x} className="mb-1">✓ {x}</div>) : <div className="text-ink3">None</div>}</div>
             </div>
           </Card>
+
+          {halal && (() => {
+            const h = halalCheck(item)
+            return (
+              <Card className="mt-2 p-4 text-[13px]" >
+                <div className="flex items-center gap-2"><i className="inline-block h-3 w-3 shrink-0 rounded-full" style={{ background: HALAL_COLOUR[h.verdict] }} /><b className="text-[15px]" style={{ color: HALAL_COLOUR[h.verdict] }}>Halal check: {h.title}</b></div>
+                <div className="mt-1.5 space-y-0.5 text-ink2">{h.reasons.map((x) => <div key={x}>• {x}</div>)}</div>
+                <div className="mt-2 text-[11.5px] text-ink3">From the label and ingredients in Open Food Facts. A guide, not a certification — the halal logo on the pack is what counts.</div>
+              </Card>
+            )
+          })()}
 
           <Card className="mt-2 p-4 text-[13px]">
             <b>Per 100 g</b>

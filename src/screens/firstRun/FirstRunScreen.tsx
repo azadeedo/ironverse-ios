@@ -251,7 +251,7 @@ export default function FirstRunScreen() {
               )}
             </Card>
             <Card className="space-y-3 p-4">
-              <Row label="Halal food filter" hint="Hides pork and alcohol, flags unclear items"><Toggle checked={d.halalMode} onChange={(v) => patch({ halalMode: v })} /></Row>
+              {/* 23 Oct 2026 (owner): setup never mentions halal — it is switched on in Settings → Food */}
               <Row label="Workout & water reminders" hint="Local notifications on this iPhone"><Toggle checked={d.reminders} onChange={(v) => patch({ reminders: v })} /></Row>
             </Card>
             {d.prefilledFromBackup && (

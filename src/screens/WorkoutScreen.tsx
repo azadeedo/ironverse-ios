@@ -75,7 +75,8 @@ export default function WorkoutScreen() {
 
   // --- where he's training right now
   // the 12-week program is a Flex 24/7 program: its loads always use the gym profile
-  const currentEqId = plan?.program === 'p12' ? (plan.equipmentProfileId ?? 'flex') : profile?.equipmentProfileId ?? HOME_PROFILE_ID
+  // 23 Oct 2026 (owner): gym and home must train differently, so the program follows the chosen location too
+  const currentEqId = profile?.equipmentProfileId ?? (plan?.program === 'p12' ? plan.equipmentProfileId ?? 'flex' : HOME_PROFILE_ID)
   const currentEq = eqProfiles
     ? eqProfiles.find((p) => p.id === currentEqId) ?? eqProfiles[0] ?? null
     : null
@@ -87,7 +88,8 @@ export default function WorkoutScreen() {
   // The 12-week program's exercises are fixed by design — never "upgraded" by location.
   const isProgram = plan?.program === 'p12'
   const adapt = useMemo(
-    () => (day && currentEq ? (isProgram ? { exercises: day.exercises, swaps: [], dropped: [] } as unknown as ReturnType<typeof localiseSession> : localiseSession(day.exercises, currentEq)) : null),
+    // programs: only what this room can't do is swapped (never "upgraded")
+    () => (day && currentEq ? localiseSession(day.exercises, currentEq, { upgrade: !isProgram }) : null),
     [day, currentEq, isProgram],
   )
   const bodyweight = profile?.weightKg ?? 80
