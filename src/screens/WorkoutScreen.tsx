@@ -214,7 +214,7 @@ export default function WorkoutScreen() {
       {plan?.program === 'p12' && (
         <div className="px-4 pb-2">
           <button type="button" onClick={() => navigate('/program')} className="pressable flex w-full items-center justify-between rounded-xl2 border border-brand/30 bg-brand/10 px-3.5 py-3 text-left">
-            <span><span className="block text-[13.5px] font-semibold text-brand">12-week program dashboard</span><span className="block text-[12px] text-ink2">Week overview, check-in, cardio, steps, PR Quest — exercises here stay fixed wherever you train</span></span>
+            <span><span className="block text-[13.5px] font-semibold text-brand">12-week program dashboard</span><span className="block text-[12px] text-ink2">Week overview, check-in, cardio, steps, PR Quest — at home, anything your kit can’t do swaps automatically</span></span>
             <ChevronRight size={18} className="text-brand" />
           </button>
         </div>
@@ -228,6 +228,17 @@ export default function WorkoutScreen() {
           busy={switching}
         />
       )}
+      {/* v10 (owner): make a program from your equipment, or build your own */}
+      <div className="grid grid-cols-2 gap-2 px-4 pb-1 pt-2">
+        <button type="button" onClick={() => navigate('/plan')} className="pressable rounded-xl2 bg-surface2 px-3 py-2.5 text-left shadow-card">
+          <span className="block text-[13px] font-semibold text-ink">✨ New program</span>
+          <span className="block text-[11.5px] text-ink3">From your equipment · 1–16 weeks</span>
+        </button>
+        <button type="button" onClick={() => navigate('/plan/build')} className="pressable rounded-xl2 bg-surface2 px-3 py-2.5 text-left shadow-card">
+          <span className="block text-[13px] font-semibold text-ink">🛠 Build my own</span>
+          <span className="block text-[11.5px] text-ink3">Your exercises, sets & reps</span>
+        </button>
+      </div>
 
       {!plan || !week || !day ? (
         /* ------- no active plan: hero CTA ------- */

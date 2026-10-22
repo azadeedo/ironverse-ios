@@ -1031,6 +1031,12 @@ export interface GeneratePlanOptions {
   equipment?: EquipmentProfile
   /** nudges which of several equally good accessory variants comes up */
   seed?: number
+  /**
+   * v10 (owner, 23 Oct 2026): program length in weeks (1-16). Up to 5 takes the
+   * first weeks of the usual wave; longer repeats the 5-week wave as new blocks,
+   * each block one load step heavier on loaded lifts. Omit for the classic 5.
+   */
+  weeks?: number
 }
 
 /**
@@ -1090,11 +1096,13 @@ export function generatePlan(p: Profile, opts?: GeneratePlanOptions): Plan {
     days: templates.map((t, d) => materialiseDay(t, dayPicks[d], ladders, w, p, dayTrimmed[d])),
   }))
 
-  const base = `5-Week ${splitLabel(p.daysPerWeek)} ${GOAL_LABEL[p.goal] ?? ''}`.trim()
+  const total = opts?.weeks === undefined ? 5 : Math.max(1, Math.min(16, Math.round(opts.weeks)))
+  const allWeeks = total === 5 ? weeks : extendWeeks(weeks, total, p, eq)
+  const base = `${total}-Week ${splitLabel(p.daysPerWeek)} ${GOAL_LABEL[p.goal] ?? ''}`.trim()
   const plan: Plan = {
     id: newId(),
     name: eq ? `${base} · ${eq.name}` : base,
-    weeks,
+    weeks: allWeeks,
     startDate: todayStr(),
     trainingWeekdays: pickTrainingDays(p),
     active: true,
@@ -1102,6 +1110,31 @@ export function generatePlan(p: Profile, opts?: GeneratePlanOptions): Plan {
   }
   if (eq) plan.equipmentProfileId = eq.id
   return plan
+}
+
+/**
+ * Lay the 5-week wave out over `total` weeks: week i uses wave week i % 5, and
+ * every repeat of the wave (a new block) sits one buildable load step heavier.
+ */
+function extendWeeks(wave: PlanWeek[], total: number, p: Profile, eq?: EquipmentProfile): PlanWeek[] {
+  const src: LoadSource = eq ?? p
+  const stepUp = (px: PlanExercise, steps: number): PlanExercise => {
+    const ex = byId.get(px.exerciseId)
+    if (!ex || px.weightKg === undefined || steps <= 0) return { ...px }
+    const mode: AnyLoadMode = eq ? (effectiveLoadMode(ex, eq) ?? ex.loadMode) : ex.loadMode
+    let cur = px.weightKg
+    for (let i = 0; i < steps; i++) cur = nextLoadUp(mode, cur, src) ?? cur
+    return { ...px, weightKg: cur }
+  }
+  return Array.from({ length: total }, (_, i) => {
+    const block = Math.floor(i / wave.length)
+    const w = wave[i % wave.length]
+    return {
+      index: i + 1,
+      label: block ? `${w.label} · block ${block + 1}` : w.label,
+      days: w.days.map((d) => ({ ...d, id: newId(), exercises: d.exercises.map((px) => stepUp(px, block)) })),
+    }
+  })
 }
 
 // ---------- calendar mapping ----------

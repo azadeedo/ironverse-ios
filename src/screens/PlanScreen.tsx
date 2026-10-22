@@ -46,6 +46,8 @@ export default function PlanScreen() {
   const [sheetOpen, setSheetOpen] = useState(false)
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [busy, setBusy] = useState(false)
+  // v10: program length (owner, 23 Oct 2026) — 5 is the classic wave
+  const [weeks, setWeeks] = useState(5)
 
   // ---- equipment profiles (locations) ----
   const eqProfiles = useLiveQuery(() => ensureEquipmentProfiles(), [])
@@ -106,8 +108,8 @@ export default function PlanScreen() {
       )
 
       const built = targets.length
-        ? targets.map((eq, i) => generatePlan(profile, { equipment: eq, seed: i + 1 }))
-        : [generatePlan(profile)]
+        ? targets.map((eq, i) => generatePlan(profile, { equipment: eq, seed: i + 1, weeks }))
+        : [generatePlan(profile, { weeks })]
 
       await db.transaction('rw', db.plans, async () => {
         await db.plans.toCollection().modify((p) => { p.active = false })
@@ -255,6 +257,9 @@ export default function PlanScreen() {
               <Button full className="mt-3" onClick={() => setSheetOpen(true)}>
                 <Sparkles size={16} /> Generate new plan
               </Button>
+              <Button full variant="outline" className="mt-2" onClick={() => navigate('/plan/build')}>
+                <Plus size={16} /> Build my own program
+              </Button>
             </Card>
           </Section>
         </>
@@ -271,6 +276,9 @@ export default function PlanScreen() {
             </p>
             <Button full className="mt-4" onClick={() => setSheetOpen(true)}>
               <Sparkles size={16} /> Generate my plan
+            </Button>
+            <Button full variant="outline" className="mt-2" onClick={() => navigate('/plan/build')}>
+              <Plus size={16} /> Build my own program
             </Button>
           </Card>
         </Section>
@@ -356,6 +364,21 @@ export default function PlanScreen() {
             chevron={false}
           />
         </ListGroup>
+        <div className="mt-3">
+          <div className="mb-1.5 text-[12px] font-semibold uppercase tracking-wide text-ink3">Program length</div>
+          <div className="grid grid-cols-4 gap-1.5" role="radiogroup" aria-label="Program length">
+            {[1, 2, 4, 5, 6, 8, 12, 16].map((n) => (
+              <button key={n} type="button" role="radio" aria-checked={weeks === n} onClick={() => setWeeks(n)}
+                className={`pressable rounded-xl py-2.5 text-[14px] font-bold ${weeks === n ? 'bg-brand text-white' : 'bg-surface3 text-ink2'}`}>
+                {n} wk
+              </button>
+            ))}
+          </div>
+          <p className="mt-1.5 text-[11.5px] text-ink3">
+            Built from each location’s equipment (edit it under Locations). Longer programs repeat the
+            5-week wave — foundations, build, push, peak, deload — a little heavier each block.
+          </p>
+        </div>
         <Button
           full
           variant="outline"
