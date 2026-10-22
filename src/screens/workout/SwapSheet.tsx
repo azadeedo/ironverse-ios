@@ -1,6 +1,7 @@
 // Bottom sheet listing hardware-compatible alternatives for one plan exercise.
 // Picking one rewrites the SAVED plan (same day slot in every week).
 
+import { MEDIA } from '@/data/media'
 import { ArrowLeftRight } from 'lucide-react'
 import { alternativesFor, byId } from '@/data/exercises'
 import { ExerciseAnim } from '@/anim/rig'
@@ -53,7 +54,9 @@ export function SwapSheet({ target, dayExerciseIds, location, onPick, onClose }:
               className="pressable flex items-center gap-3 rounded-2xl bg-surface3 p-3 text-left"
             >
               <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-surface2">
-                <ExerciseAnim def={ex.anim} size={64} playing />
+                {MEDIA[ex.id]
+                  ? <img src={MEDIA[ex.id].imgSmall ?? MEDIA[ex.id].img} alt="" loading="lazy" className="h-16 w-16 rounded-xl object-cover" />
+                  : <ExerciseAnim def={ex.anim} size={64} playing />}
               </div>
               <div className="min-w-0 flex-1">
                 <div className="truncate text-[15px] font-semibold text-ink">{ex.name}</div>

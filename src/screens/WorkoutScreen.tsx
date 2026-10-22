@@ -394,6 +394,8 @@ export default function WorkoutScreen() {
                     <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-surface3">
                       {ex && MEDIA[ex.id]?.video
                         ? <video src={MEDIA[ex.id]!.video} poster={MEDIA[ex.id]!.imgSmall} autoPlay loop muted playsInline preload="metadata" className="h-full w-full object-cover" aria-hidden />
+                        : ex && MEDIA[ex.id]
+                          ? <img src={MEDIA[ex.id]!.imgSmall ?? MEDIA[ex.id]!.img} alt="" loading="lazy" className="h-full w-full object-cover" />
                         : ex
                           ? <ExerciseAnim def={ex.anim} size={64} playing />
                           : <span className="text-[10px] text-ink3">?</span>}

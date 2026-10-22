@@ -1087,6 +1087,8 @@ export default function SessionScreen() {
                 {MEDIA[ex.id]?.video ? (
                   <video key={ex.id} src={MEDIA[ex.id]!.video} poster={MEDIA[ex.id]!.imgSmall} autoPlay loop muted playsInline preload="metadata"
                     aria-label={`${ex.name} — one controlled repetition`} className="h-[228px] w-[228px] rounded-2xl bg-black object-contain" />
+                ) : MEDIA[ex.id] ? (
+                  <img key={ex.id} src={MEDIA[ex.id]!.imgSmall ?? MEDIA[ex.id]!.img} alt={`${ex.name} — key positions`} className="h-[228px] w-[228px] rounded-2xl bg-black object-contain" />
                 ) : <ExerciseAnim def={ex.anim} size={228} />}
                 <MuscleMap primary={ex.primary} secondary={ex.secondary} size={100} />
               </>
