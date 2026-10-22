@@ -14,10 +14,10 @@ import os
 import sys
 import time
 
-import jwt
 import requests
 
-API = 'https://api.appstoreconnect.apple.com'
+sys.path.insert(0, os.path.dirname(__file__))
+from api import API, call, get, token  # noqa: E402
 APP_ID = os.environ.get('APP_STORE_APPLE_ID', '6825232233')
 VERSION = '1.0.0'
 BUILD = os.environ.get('IV_BUILD', '3')
@@ -31,35 +31,6 @@ TO TRY: Workout tab > Start this workout > log a set. Food tab > + > pick a cuis
 Data is stored on the device. The optional meal-photo feature uses the user's OWN Anthropic API key and asks for consent before sending. Barcode lookups use the public Open Food Facts database. Location is used only while tracking an outdoor run. There are no ads and no tracking."""
 
 failures = []
-
-
-def pem_key():
-    # Codemagic may hand the .p8 over with literal "\n", stray quotes or no PEM armour
-    raw = os.environ['APP_STORE_CONNECT_PRIVATE_KEY'].strip()
-    # Codemagic CLI-style references: "@file:/path/key.p8" or "@env:OTHER_VAR"
-    if raw.startswith('@file:'):
-        raw = open(os.path.expanduser(raw[6:]), encoding='utf-8').read().strip()
-    elif raw.startswith('@env:'):
-        raw = os.environ[raw[5:]].strip().strip('"').strip("'").replace(chr(92) + 'n', ' ')
-    raw = raw.replace('-----BEGIN PRIVATE KEY-----', ' ').replace('-----END PRIVATE KEY-----', ' ')
-    body = ''.join(raw.split())
-    lines = [body[i:i + 64] for i in range(0, len(body), 64)]
-    return '-----BEGIN PRIVATE KEY-----\n' + '\n'.join(lines) + '\n-----END PRIVATE KEY-----\n'
-
-
-def token():
-    key = pem_key()
-    now = int(time.time())
-    return jwt.encode({'iss': os.environ['APP_STORE_CONNECT_ISSUER_ID'], 'iat': now, 'exp': now + 900, 'aud': 'appstoreconnect-v1'},
-                      key, algorithm='ES256', headers={'kid': os.environ['APP_STORE_CONNECT_KEY_IDENTIFIER'], 'typ': 'JWT'})
-
-
-def call(method, path, body=None, ok=(200, 201, 204)):
-    r = requests.request(method, API + path, headers={'Authorization': 'Bearer ' + token(), 'Content-Type': 'application/json'},
-                         data=json.dumps(body) if body is not None else None, timeout=60)
-    if r.status_code not in ok:
-        raise RuntimeError(f'{method} {path} -> {r.status_code}: {r.text[:800]}')
-    return r.json() if r.text else {}
 
 
 def step(name):
@@ -149,11 +120,6 @@ for sid, p in SUBS.items():
     step(f'review screenshot for subscription {sid}')(lambda sid=sid, p=p: upload_review_shot(sid, p))
 
 GROUP = '22499474'
-
-
-def get(path):
-    r = requests.get(API + path, headers={'Authorization': 'Bearer ' + token()}, timeout=60)
-    return r.json() if r.status_code == 200 else {'error': r.status_code, 'body': r.text[:300]}
 
 
 @step('subscription group localization (App Store display name)')
