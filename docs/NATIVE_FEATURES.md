@@ -24,13 +24,29 @@ These cover what Hevy, Strong and Fitbod offer, and more:
 - Body: weigh-ins, measurements, progress photos with compare and a transformation view, 3D anatomy, achievements and the progress hub.
 - Water, creatine, steps and weekly reviews, with all data on the device and encrypted backups.
 
+## Added in build 7
+- **Apple Watch app** (`ios/App/IronverseWatch`, SwiftUI, watchOS 10+). It has three pages:
+  - **Today:** calories left, protein, water, recovery score, steps and creatine.
+  - **Workout:** today's session. Log each set with "Done set", get a rest countdown with a wrist tap, and move between exercises.
+  - **Quick log:** +250 or +500 ml water, and creatine.
+- **How the Watch and iPhone talk:**
+  - The iPhone pushes a snapshot whenever you log something (`src/native/watch.ts` via `@capgo/capacitor-watch`).
+  - Watch actions are queued and re-sent until the iPhone confirms them, and repeats are ignored, so nothing is lost or doubled.
+- **How it's built:**
+  - The Watch target is added on Codemagic by `tools/watch/add_watch_target.rb` (xcodeproj gem).
+  - Watch App ID `com.nouriapps.ironverse.watchkitapp` and profile `ironverse_watch_app_store` were created through the API (`tools/asc/signing.py`).
+  - The `watch-compile-check` workflow builds it unsigned.
+- **WHOOP, Oura, Garmin, Polar, Withings, scales, Strava, COROS and HR straps** come in through Apple Health. Connected devices has step-by-step guides for each. Fitbit needs a bridge app, and Galaxy Watch doesn't work with iPhone.
+- **Quick log** (Today and More, plus a home-screen quick action): water, creatine, weight and sleep in one sheet, with shortcuts to food, workout, cardio, photos, fasting and measurements.
+- **Foldable sections on Today** (This week, Body & progress, Your day). They are open by default.
+
 ## Next: needs native Swift work (Xcode targets, built on Codemagic)
 
 These are Apple features that need a separate native extension, which the web code can't provide. Each is a self-contained project.
 
 | Feature | Why it matters | Work involved |
 |---|---|---|
-| **Apple Watch app** | Log sets and see the rest timer and heart rate from your wrist (Hevy and Strong have this) | A watchOS target in SwiftUI with WatchConnectivity to the phone. Large job |
+| ~~Apple Watch app~~ | **Built in build 7** (see below) | — |
 | **Home-screen and Lock-screen widgets** | Calories left, water, today's workout, recovery score at a glance | A WidgetKit extension plus an App Group to share a small JSON snapshot. Medium job |
 | **Live Activity / Dynamic Island** | Rest-timer countdown and current set on the Lock Screen while you train | An ActivityKit extension plus a small Capacitor bridge. Medium job |
 | **Siri and Shortcuts** ("Hey Siri, log 500 ml of water") | Hands-free logging | App Intents in Swift. Small to medium job |

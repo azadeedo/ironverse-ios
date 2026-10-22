@@ -6,6 +6,7 @@ The App Store version (Xcode `MARKETING_VERSION`) is separate from the web base 
 Web base 2.24.0 (`iron-verse@7905a90`).
 
 **Builds**
+- **Build 7** (23 Oct 2026): Apple Watch companion app (today, set logging with rest timer and wrist taps, quick water and creatine) talking to the iPhone app; WHOOP, Oura, Garmin, Polar, Withings, scales, Strava and HR straps through Apple Health with setup guides; Quick log sheet; foldable Today sections.
 - **Build 6** (23 Oct 2026): native features. Sleep & recovery screen (morning rating, Apple Watch sleep stages, chart, debt, consistency, personal factor effects, reminders, cited research); daily recovery score on Today; Apple Health also reads sleep, HRV and resting heart rate and can save water and food calories; fasting timer with goal alert; rest timer alerts in the background; home-screen quick actions; optional Face ID lock; App Store rating prompt after the 3rd/10th/30th workout. See docs/NATIVE_FEATURES.md.
 - **Build 5** (23 Oct 2026, owner's device feedback):
   - Food: cuisine chips in Add food now list their dishes (they showed nothing); Middle Eastern is a cuisine, not a food type.
