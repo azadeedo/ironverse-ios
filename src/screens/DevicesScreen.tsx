@@ -13,7 +13,7 @@ import { isNativeApp } from '@/lib/edition'
 import { useUI } from '@/lib/store'
 import { dayjs } from '@/lib/fmt'
 import { DeviceGuides } from './devices/DeviceGuides'
-import { HEALTH_KEYS, connectAppleHealth, disconnectAppleHealth, healthAvailable, syncAppleHealth, type HealthToday } from '@/native/health'
+import { HEALTH_KEYS, connectAppleHealth, disconnectAppleHealth, healthAvailable, healthLog, probeAppleHealth, syncAppleHealth, type HealthToday } from '@/native/health'
 
 type Row = { name: string; status: 'works' | 'manual' | 'not-possible'; what: string; how?: string; to?: string; cta?: string }
 
@@ -72,15 +72,37 @@ function AppleHealthSection() {
     weighIns: await db.weighIns.filter((w) => w.id.startsWith('hk-')).count(),
   }), [])
 
-  async function run(fn: () => Promise<{ steps: number; weighIns: number; workouts: number }>, verb: string) {
+  const [step, setStep] = useState<string | null>(null)
+  const [failed, setFailed] = useState<string | null>(null)
+  const [showLog, setShowLog] = useState(false)
+  const log = useLiveQuery(() => healthLog(), [step, failed, showLog]) ?? []
+
+  // v10.1: connect = permission only (never waits on the sync); the first sync runs in the background
+  async function connect() {
     if (busy) return
-    setBusy(true)
+    setBusy(true); setFailed(null); setStep('Asking your iPhone for permission — tap “Turn On All”, then “Allow”.')
     try {
-      const r = await fn()
-      toast(`${verb} — ${r.steps} days of steps, ${r.weighIns} weigh-in${r.weighIns === 1 ? '' : 's'}, ${r.workouts} workout${r.workouts === 1 ? '' : 's'}`)
+      await connectAppleHealth()
+      setStep(null)
+      toast('Apple Health connected')
+      void sync(14, true)
     } catch (e) {
-      toast(`Apple Health: ${(e as Error).message || 'could not connect'}`, 'error')
+      setStep(null)
+      setFailed((e as Error).message || 'could not connect')
     } finally { setBusy(false) }
+  }
+  async function sync(days = 14, quiet = false) {
+    setStep('Reading steps, workouts, sleep and weight from Apple Health…')
+    try {
+      const r = await syncAppleHealth(days)
+      if (!quiet || r.steps || r.workouts || r.weighIns) toast(`Synced — ${r.steps} days of steps, ${r.weighIns} weigh-in${r.weighIns === 1 ? '' : 's'}, ${r.workouts} workout${r.workouts === 1 ? '' : 's'}`)
+    } catch (e) { setFailed((e as Error).message || 'sync failed') } finally { setStep(null) }
+  }
+  async function checkAgain() {
+    setBusy(true); setFailed(null); setStep('Checking Apple Health…')
+    const ok = await probeAppleHealth()
+    setBusy(false); setStep(null)
+    if (ok) { toast('Apple Health connected'); void sync(14, true) } else setFailed('Apple Health did not answer')
   }
 
   const items: { name: string; what: string }[] = [
@@ -111,12 +133,26 @@ function AppleHealthSection() {
         )}
         <div className="mt-3 flex gap-2">
           {!connected
-            ? <Button full disabled={busy || available === false} onClick={() => void run(connectAppleHealth, 'Connected')}>{busy ? 'Connecting…' : 'Connect Apple Health'}</Button>
+            ? <Button full disabled={busy || available === false} onClick={() => void connect()}>{busy ? 'Connecting…' : 'Connect Apple Health'}</Button>
             : <>
-                <Button full disabled={busy} onClick={() => void run(() => syncAppleHealth(14), 'Synced')}>{busy ? 'Syncing…' : 'Sync now'}</Button>
+                <Button full disabled={busy || !!step} onClick={() => void sync(14)}>{step ? 'Syncing…' : 'Sync now'}</Button>
                 <Button variant="secondary" onClick={() => void disconnectAppleHealth().then(() => toast('Apple Health disconnected'))}>Disconnect</Button>
               </>}
         </div>
+        {step && <div className="mt-2 rounded-xl bg-surface3 px-3 py-2 text-[12.5px] text-ink2">⏳ {step}</div>}
+        {failed && (
+          <div className="mt-2 space-y-2 rounded-xl border border-amber-400/40 bg-amber-500/10 p-3 text-[12.5px]">
+            <div><b>Apple Health didn’t finish connecting</b> ({failed}).</div>
+            <div className="text-ink2">If no permission sheet appeared: open the <b>Health</b> app → tap your picture (top right) → <b>Apps</b> (or Privacy → Apps) → <b>Ironverse</b> → <b>Turn On All</b>. Then come back and tap <b>Check again</b>.</div>
+            <div className="flex gap-2">
+              <Button small onClick={() => void checkAgain()}>Check again</Button>
+              <Button small variant="secondary" onClick={() => { window.location.href = 'x-apple-health://' }}>Open Health app</Button>
+            </div>
+          </div>
+        )}
+        {!connected && !failed && !step && <div className="mt-2 text-[12px] text-ink3">Already allowed Ironverse in the Health app? <button type="button" className="font-semibold text-brand" onClick={() => void checkAgain()}>Check again</button></div>}
+        <button type="button" className="mt-2 text-[11.5px] text-ink3 underline" onClick={() => setShowLog((v) => !v)}>{showLog ? 'Hide' : 'Show'} connection log</button>
+        {showLog && <pre className="mt-1 max-h-48 overflow-auto whitespace-pre-wrap rounded-lg bg-black/40 p-2 text-[10.5px] leading-snug text-ink2">{log.length ? log.join(String.fromCharCode(10)) : 'Nothing logged yet.'}</pre>}
         {connected && (
           <div className="mt-3 flex items-center gap-3 border-t border-line pt-3">
             <div className="flex-1"><div className="font-semibold">Save weigh-ins to Apple Health</div><div className="text-[12px] text-ink3">Weigh-ins you log in Ironverse also go to Health.</div></div>
