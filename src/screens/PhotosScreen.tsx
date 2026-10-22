@@ -49,6 +49,17 @@ export default function PhotosScreen() {
   const groups = useMemo(() => groupByDate(shown), [shown])
   const urls = usePhotoUrls(photos)
   const pair = useMemo(() => defaultComparePair(all), [all])
+  // v10 (owner): transformation hero — first vs latest photo of the pose you shoot most
+  const hero = useMemo(() => {
+    const counts = new Map<PhotoPose, number>()
+    for (const p of all) counts.set(p.pose, (counts.get(p.pose) ?? 0) + 1)
+    const pose = [...counts].sort((a, b) => b[1] - a[1])[0]?.[0]
+    const ofPose = all.filter((p) => p.pose === pose)
+    if (ofPose.length < 2 || ofPose[0].date === ofPose[ofPose.length - 1].date) return null
+    const first = ofPose[0], last = ofPose[ofPose.length - 1]
+    return { first, last, days: dayjs(last.date).diff(dayjs(first.date), 'day'), kg: first.weightKg && last.weightKg ? last.weightKg - first.weightKg : null }
+  }, [all])
+  const checkinDays = useMemo(() => new Set(all.map((p) => p.date)).size, [all])
 
   async function remove(p: ProgressPhoto) {
     try {
@@ -137,6 +148,30 @@ export default function PhotosScreen() {
         <CompareView photos={all} initial={pair} />
       ) : (
         <>
+          {hero && (
+            <Section title="Your transformation">
+              <button type="button" onClick={() => setMode('compare')} className="pressable block w-full overflow-hidden rounded-2xl bg-surface2 text-left shadow-card">
+                <div className="grid grid-cols-2 gap-0.5">
+                  {[hero.first, hero.last].map((p, i) => (
+                    <div key={p.id} className="relative aspect-[3/4] bg-surface3">
+                      {urls[p.id] && <img src={urls[p.id]} alt={`${poseLabel(p.pose)} on ${p.date}`} className="h-full w-full object-cover" />}
+                      <span className="absolute left-2 top-2 rounded-full bg-black/60 px-2 py-0.5 text-[11px] font-bold text-white">{i ? 'NOW' : 'DAY 1'}</span>
+                      <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 to-transparent px-2 pb-1.5 pt-6 text-[11.5px] font-semibold text-white">{dayjs(p.date).format('D MMM YYYY')}{p.weightKg ? ` · ${p.weightKg.toFixed(1)} kg` : ''}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex items-center justify-between px-3.5 py-2.5 text-[13px]">
+                  <span><b>{hero.days >= 14 ? `${Math.round(hero.days / 7)} weeks` : `${hero.days} days`}</b> apart · {poseLabel(hero.first.pose)}</span>
+                  <span className={hero.kg === null ? 'text-ink3' : 'font-bold text-brand'}>{hero.kg === null ? 'tap to compare' : `${hero.kg > 0 ? '+' : ''}${hero.kg.toFixed(1)} kg`}</span>
+                </div>
+              </button>
+              <div className="mt-2 grid grid-cols-3 gap-2 text-center">
+                <div className="rounded-xl bg-surface2 py-2"><b className="big-num block text-[17px]">{all.length}</b><span className="text-[11px] text-ink3">photos</span></div>
+                <div className="rounded-xl bg-surface2 py-2"><b className="big-num block text-[17px]">{checkinDays}</b><span className="text-[11px] text-ink3">photo days</span></div>
+                <div className="rounded-xl bg-surface2 py-2"><b className="big-num block text-[17px]">{Math.max(1, Math.round(hero.days / 7))}</b><span className="text-[11px] text-ink3">weeks tracked</span></div>
+              </div>
+            </Section>
+          )}
           <div className="mt-2">
             <div className="no-scrollbar flex gap-2 overflow-x-auto px-4 py-1">
               {FILTERS.map((f) => {

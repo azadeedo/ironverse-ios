@@ -19,6 +19,7 @@ import VerdictCard from './review/VerdictCard'
 import TrainingCard from './review/TrainingCard'
 import NutritionCard from './review/NutritionCard'
 import BodyCard from './review/BodyCard'
+import ExtrasCard from './review/ExtrasCard'
 import {
   bodyStats, buildVerdict, cardioStats, isValidWeekStart, nutritionStats, prevWeek,
   trainingStats, weekRange,
@@ -98,6 +99,7 @@ export default function ReviewScreen() {
           <TrainingCard t={model.training} />
           <NutritionCard n={model.nutrition} unit={model.unit} />
           <BodyCard body={model.body} cardio={model.cardio} goal={profile.goal} />
+          <ExtrasCard range={range} waterTargetMl={profile.waterTargetMl} stepsTarget={profile.stepsTarget} />
 
           <div className="mt-5 flex gap-2 px-4">
             <Button variant="secondary" full onClick={() => navigate('/photos')}>
