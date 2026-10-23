@@ -166,3 +166,72 @@ workflows:
         script: |
           python3 -m pip install --quiet --user pyjwt cryptography requests
           python3 tools/asc/status.py
+
+  # 7) Apple Watch App Store screenshots (manual): run the real Watch app in the
+  #    watchOS simulator with sample data (-ivDemo YES), capture each page and
+  #    upload them to version 1.0.0 through the API.
+  watch-screenshots:
+    name: Ironverse — Apple Watch screenshots (simulator + API upload)
+    instance_type: mac_mini_m2
+    max_build_duration: 45
+    integrations:
+      app_store_connect: Ironverse ASC key
+    environment:
+      node: 22
+      xcode: latest
+      vars:
+        APP_STORE_APPLE_ID: 6825232233
+    scripts:
+      - name: Install
+        script: npm ci
+      - name: Build web bundle (iOS edition)
+        script: npm run build:ios
+      - name: Sync native project
+        script: npx cap sync ios
+      - name: Add the Apple Watch target
+        script: |
+          gem list -i xcodeproj >/dev/null || gem install xcodeproj --user-install
+          ruby tools/watch/add_watch_target.rb
+      - name: Build the Watch app for the simulator
+        script: |
+          set -o pipefail
+          xcodebuild -project ios/App/App.xcodeproj -target IronverseWatch -sdk watchsimulator \
+            -configuration Debug CODE_SIGNING_ALLOWED=NO SYMROOT="$PWD/build-watch" build | xcpretty
+          ls build-watch/Debug-watchsimulator
+      - name: Screenshots in the watchOS simulator
+        script: |
+          set -e
+          APP=$(ls -d build-watch/Debug-watchsimulator/*.app | head -1)
+          UDID=$(xcrun simctl list devices available -j | python3 -c "
+          import json,sys
+          d=json.load(sys.stdin)['devices']
+          rts=sorted([k for k in d if 'watchOS' in k], key=lambda k:[int(x) for x in k.split('watchOS-')[1].split('-')])
+          best=None
+          for rt in reversed(rts):
+              for pref in ('Ultra','Series 1','Series'):
+                  for dev in d[rt]:
+                      if pref in dev['name']: best=dev; break
+                  if best: break
+              if best: break
+          print(best['udid'] if best else '')
+          ")
+          [ -n "$UDID" ] || { xcrun simctl list devices; exit 1; }
+          xcrun simctl list devices | grep "$UDID"
+          xcrun simctl boot "$UDID" || true
+          xcrun simctl bootstatus "$UDID" -b
+          xcrun simctl status_bar "$UDID" override --time 9:41 || true
+          xcrun simctl install "$UDID" "$APP"
+          mkdir -p store/watch
+          for p in 0 1 2; do
+            xcrun simctl terminate "$UDID" com.nouriapps.ironverse.watchkitapp || true
+            xcrun simctl launch "$UDID" com.nouriapps.ironverse.watchkitapp -ivDemo YES -ivPage $p
+            sleep 8
+            xcrun simctl io "$UDID" screenshot "store/watch/0$((p+1)).png"
+          done
+          sips -g pixelWidth -g pixelHeight store/watch/*.png
+      - name: Upload to App Store Connect
+        script: |
+          python3 -m pip install --quiet --user pyjwt cryptography requests
+          python3 tools/asc/watch_shots.py store/watch/*.png
+    artifacts:
+      - store/watch/*.png

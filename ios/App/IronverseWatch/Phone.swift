@@ -50,6 +50,18 @@ struct Snapshot: Codable {
     static let empty = Snapshot(updatedAt: "", name: nil, kcalLeft: 0, kcalTarget: 0, protein: 0, proteinTarget: 0,
                                 waterMl: 0, waterTargetMl: 0, creatineTaken: false, creatineGrams: nil, steps: nil,
                                 recovery: nil, recoveryZone: nil, workout: nil)
+
+    /// sample day for App Store screenshots (`-ivDemo YES`), never shown otherwise
+    static let demo = Snapshot(updatedAt: "demo", name: "Alex", kcalLeft: 860, kcalTarget: 2400, protein: 118, proteinTarget: 160,
+                               waterMl: 1750, waterTargetMl: 3000, creatineTaken: true, creatineGrams: 5, steps: 8432,
+                               recovery: 82, recoveryZone: "green",
+                               workout: WatchWorkout(logId: nil, title: "Push day", exercises: [
+                                   WatchExercise(index: 0, name: "Incline dumbbell press", restSec: 120, sets: [
+                                       WatchSet(reps: 10, kg: 30, done: true), WatchSet(reps: 9, kg: 30, done: true),
+                                       WatchSet(reps: 8, kg: 30, done: false), WatchSet(reps: 8, kg: 30, done: false)]),
+                                   WatchExercise(index: 1, name: "Cable lateral raise", restSec: 60, sets: [
+                                       WatchSet(reps: 15, kg: 7.5, done: false), WatchSet(reps: 15, kg: 7.5, done: false)]),
+                               ]))
 }
 
 final class Phone: NSObject, ObservableObject, WCSessionDelegate {
@@ -68,6 +80,8 @@ final class Phone: NSObject, ObservableObject, WCSessionDelegate {
         if let saved = UserDefaults.standard.array(forKey: queueKey) as? [[String: Any]] { queue = saved }
         pending = queue.count
         if let data = UserDefaults.standard.data(forKey: snapKey), let s = try? JSONDecoder().decode(Snapshot.self, from: data) { snapshot = s }
+        // App Store screenshots only: the simulator is launched with `-ivDemo YES`
+        if UserDefaults.standard.bool(forKey: "ivDemo") { snapshot = .demo; return }
         if WCSession.isSupported() {
             WCSession.default.delegate = self
             WCSession.default.activate()

@@ -7,13 +7,15 @@ import SwiftUI
 @main
 struct IronverseWatchApp: App {
     @StateObject private var phone = Phone.shared
+    // `-ivPage N` opens on page N (App Store screenshots); 0 otherwise
+    @State private var page = UserDefaults.standard.integer(forKey: "ivPage")
 
     var body: some Scene {
         WindowGroup {
-            TabView {
-                TodayView()
-                WorkoutView()
-                QuickLogView()
+            TabView(selection: $page) {
+                TodayView().tag(0)
+                WorkoutView().tag(1)
+                QuickLogView().tag(2)
             }
             .tabViewStyle(.verticalPage)
             .environmentObject(phone)
