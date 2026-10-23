@@ -8,12 +8,13 @@ import { ExerciseAnim } from '@/anim/rig'
 import { MEDIA } from '@/data/media'
 import type { Exercise } from '@/db/types'
 
-export function ExerciseThumb({ ex, size = 64, className = '', playing = true }: { ex: Exercise; size?: number; className?: string; playing?: boolean }) {
+/** `motion` plays our looping demo; leave it off in long lists (dozens of videos stutter an iPhone) */
+export function ExerciseThumb({ ex, size = 64, className = '', playing = true, motion = false }: { ex: Exercise; size?: number; className?: string; playing?: boolean; motion?: boolean }) {
   const m = MEDIA[ex.id]
   const [failed, setFailed] = useState(false)
   const box = `flex shrink-0 items-center justify-center overflow-hidden rounded-xl bg-black ${className}`
   if (m && !failed) {
-    if (m.video && m.kind !== 'photo') {
+    if (motion && m.video && m.kind !== 'photo') {
       return <div className={box} style={{ width: size, height: size }}><video src={m.video} poster={m.imgSmall} autoPlay={playing} loop muted playsInline preload="metadata" className="h-full w-full object-cover" aria-hidden /></div>
     }
     const src = m.kind === 'photo' ? (m.thumb ?? m.imgSmall ?? m.img) : (m.imgSmall ?? m.img)

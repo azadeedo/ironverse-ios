@@ -72,7 +72,7 @@ export function TodayTop({ plan, week, dayKey, isToday, openLog, onStart }: {
             const flag = r?.flags.includes('increase') ? 'up' : r?.flags.includes('maintain') ? 'hold' : null
             return (
               <button key={`${pe.exerciseId}-${i}`} type="button" onClick={() => navigate(`/exercise/${pe.exerciseId}`)} className="pressable flex w-full items-center gap-3 px-3 py-2 text-left">
-                {ex ? <ExerciseThumb ex={ex} size={56} /> : <div className="h-14 w-14 shrink-0 rounded-xl bg-black" />}
+                {ex ? <ExerciseThumb ex={ex} size={56} motion /> : <div className="h-14 w-14 shrink-0 rounded-xl bg-black" />}
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-1.5">
                     {pe.supersetGroup && <span className="text-[12px] font-black text-brand">{pe.supersetGroup}</span>}

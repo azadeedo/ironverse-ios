@@ -138,7 +138,7 @@ function ExerciseCard({ pe, label, rx, logs }: { pe: PlanExercise; label?: strin
   return (
     <div className="rounded-2xl bg-surface2 p-3 shadow-card">
       <div className="flex gap-3">
-        <ExerciseThumb ex={ex} size={media ? 104 : 84} />
+        <ExerciseThumb ex={ex} size={media ? 104 : 84} motion />
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5">
             {label && <span className="shout text-[14px] text-brand">{label}</span>}

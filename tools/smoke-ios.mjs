@@ -16,7 +16,8 @@ const problems = []
 for (const user of ['trial', 'free', 'pro']) {
   const out = `store/smoke/${user}`
   mkdirSync(out, { recursive: true })
-  const { page } = await newPage(browser)
+  // IV_SE=1 → iPhone SE size (375 x 667) to catch layouts that don't fit small phones
+  const { page } = await newPage(browser, process.env.IV_SE ? { viewport: { width: 375, height: 667 } } : {})
   const errs = []
   page.on('pageerror', (e) => errs.push('pageerror: ' + e.message))
   page.on('console', (m) => { if (m.type() === 'error') errs.push('console: ' + m.text().slice(0, 200)) })

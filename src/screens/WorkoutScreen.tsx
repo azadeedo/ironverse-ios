@@ -392,7 +392,7 @@ export default function WorkoutScreen() {
                     onClick={() => ex && navigate(`/exercise/${ex.id}`)}
                     className={`flex items-center gap-3 px-3 py-2.5 ${ex ? 'pressable cursor-pointer' : ''}`}
                   >
-                    {ex ? <ExerciseThumb ex={ex} size={64} /> : <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-surface3"><span className="text-[10px] text-ink3">?</span></div>}
+                    {ex ? <ExerciseThumb ex={ex} size={64} motion /> : <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-surface3"><span className="text-[10px] text-ink3">?</span></div>}
                     <div className="min-w-0 flex-1">
                       <div className="truncate text-[15px] font-semibold text-ink">
                         {ex ? ex.name : pe.exerciseId}

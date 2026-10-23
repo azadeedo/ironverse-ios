@@ -101,8 +101,10 @@ export function parseStackSteps(text: string): StackParse {
 /** Record a weight for today (updates today's entry if one already exists). */
 export async function upsertTodayWeighIn(weightKg: number): Promise<void> {
   const today = todayStr()
-  const existing = await db.weighIns.where('date').equals(today).first()
-  if (existing) await db.weighIns.update(existing.id, { weightKg })
+  // v10.1: a day can hold more than one row (e.g. first-time setup + a later
+  // weigh-in) — update every one of today's rows so "latest" never shows a stale value
+  const existing = await db.weighIns.where('date').equals(today).toArray()
+  if (existing.length) await Promise.all(existing.map((w) => db.weighIns.update(w.id, { weightKg })))
   else await db.weighIns.add({ id: newId(), date: today, weightKg })
   // keep the profile's "latest known" weight in step, like the Body tab does
   const me = await db.profile.get('me')
