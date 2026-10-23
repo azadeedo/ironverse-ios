@@ -5,6 +5,8 @@ The App Store version (Xcode `MARKETING_VERSION`) is separate from the web base 
 ## 1.0.0 (unreleased)
 Web base 2.24.0 (`iron-verse@7905a90`).
 
+**Submitted for App Review 23 Oct 2026, 6:35 PM AEDT** with build 10, Ironverse Pro Monthly and Yearly, and the Ironverse Pro subscription group. Manual release: after approval it waits for the owner to press Release. App Privacy published (Suggest & report data only, no tracking), price Free in all 175 countries, 3 Apple Watch screenshots from the watchOS simulator (`watch-screenshots` workflow).
+
 **Builds**
 - **Build 10** (23 Oct 2026, owner request):
   - Muslim features, only when Halal mode is on in Settings → Food: a live prayer banner on Today (next prayer with countdown, all five times, Hijri date) and a Prayer screen with a Qibla compass, prayer reminders, 8 calculation methods, Shafi/Hanafi Asr, per-prayer offsets, GPS or city, and "plan workouts around today's prayers". Times checked against Aladhan.
