@@ -1,6 +1,7 @@
 // MORE — launcher hub: profile card, feature tiles, today's mini timeline,
 // one-tap backup. Everything mirrors the Today screen's visual language.
 
+import { halalMode } from '@/db/defaults'
 import { QuickLogButton } from '@/components/QuickLog'
 import { AppVersionCard } from '@/components/UpdatePrompt'
 import { AthleteCard } from './more/AthleteCard'
@@ -26,7 +27,7 @@ import { dayForDate } from '@/lib/plangen'
 import { minutesOf, todayTimeline, type TimelineItem } from '@/lib/schedule'
 import { useUI } from '@/lib/store'
 import { APP_VERSION, GOAL_META, fmt12, nowMinutes, parseNumber, upsertTodayWeighIn } from './settings/lib'
-import { Bookmark, Crown, MessageSquarePlus, Moon, Timer } from 'lucide-react'
+import { Bookmark, Compass, Crown, MessageSquarePlus, Moon, Timer } from 'lucide-react'
 import { isAppStoreEdition } from '@/lib/edition'
 
 const TIMELINE_ICONS: Record<TimelineItem['kind'], typeof Droplets> = {
@@ -48,6 +49,7 @@ const TIMELINE_TONES: Record<TimelineItem['kind'], string> = {
 /** which group each shortcut lives in on More */
 // v10 order (owner, 23 Oct 2026): the showpieces first, housekeeping last — nothing removed
 const TILE_GROUPS: [string, string[]][] = [
+  ['Faith', ['/prayer']],
   ['Your progress', ['/hub', '/sleep', '/photos', '/anatomy', '/review', '/progress', '/achievements']],
   ['Training', ['/saved', '/programs', '/plan', '/exercises', '/cardio']],
   ['Food & health', ['/health-scan', '/fasting', '/meal-plan', '/nutrition-week', '/calories', '/hydration', '/pill-box']],
@@ -77,6 +79,7 @@ const TILES = [
   { label: 'Sleep & recovery', sub: 'Rate nights, Watch sleep, score', icon: Moon, to: '/sleep', tint: 'text-indigo-300', bg: 'bg-indigo-300/12' },
   { label: 'Fasting timer', sub: '16:8 and more, with alerts', icon: Timer, to: '/fasting', tint: 'text-amber-300', bg: 'bg-amber-300/12' },
   { label: 'Saved', sub: 'Workouts, exercises, foods, meals', icon: Bookmark, to: '/saved', tint: 'text-amber-400', bg: 'bg-amber-400/12' },
+  { label: 'Prayer times & Qibla', sub: 'Live times, reminders, compass', icon: Compass, to: '/prayer', tint: 'text-emerald-400', bg: 'bg-emerald-400/12' },
   { label: 'Settings', sub: 'Profile & data', icon: Settings, to: '/settings', tint: 'text-ink2', bg: 'bg-surface3' },
   { label: 'Suggest & report', sub: 'Ideas, bugs, fixes', icon: MessageSquarePlus, to: '/feedback', tint: 'text-brand', bg: 'bg-brand/12' },
   { label: 'Ironverse Pro', sub: 'Plans & subscription', icon: Crown, to: '/pro', tint: 'text-brand', bg: 'bg-brand/12' },
@@ -111,6 +114,8 @@ export default function MoreScreen() {
   const saveTilePrefs = (v: { pinned: string[]; hidden: string[] }) => setSetting('more:tiles', v)
   const orderedTiles = [...TILES.filter((t) => tilePrefs.pinned.includes(t.to)).sort((a, b) => tilePrefs.pinned.indexOf(a.to) - tilePrefs.pinned.indexOf(b.to)), ...TILES.filter((t) => !tilePrefs.pinned.includes(t.to))]
     .filter((t) => customising || showHidden || !tilePrefs.hidden.includes(t.to))
+    // v10.2: Muslim features only appear when Halal mode is on
+    .filter((t) => t.to !== '/prayer' || halalMode(profile))
   const latestWeigh = useLiveQuery(() => db.weighIns.orderBy('date').last(), [])
   const [exporting, setExporting] = useState(false)
 

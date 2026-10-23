@@ -99,6 +99,7 @@ const SCREEN_TARGETS: { title: string; subtitle: string; keywords: string; to: s
   { title: 'Backup', subtitle: 'Export, restore and snapshots', keywords: 'backup export restore snapshot json safety', to: '/backup' },
   { title: 'Progress photos', subtitle: 'Side-by-side, stored on this device', keywords: 'photos progress camera pictures front side back', to: '/photos' },
   { title: 'Weekly review', subtitle: 'How the week actually went', keywords: 'weekly review week summary recap', to: '/review' },
+  { title: 'Prayer times & Qibla', subtitle: 'Live prayer times, reminders and Qibla compass (Halal mode)', keywords: 'prayer salah salat namaz adhan azan qibla kiblah fajr dhuhr asr maghrib isha hijri muslim islam', to: '/prayer' },
   { title: 'Saved', subtitle: 'Saved workouts, starred exercises, favourite foods, meals', keywords: 'saved save template favourite favorites starred bookmark', to: '/saved' },
   { title: 'Fasting timer', subtitle: 'Intermittent fasting 13:11 to 20:4', keywords: 'fasting fast intermittent 16:8 18:6 omad timer window', to: '/fasting' },
   { title: 'Sleep & recovery', subtitle: 'Rate last night, Apple Watch sleep, recovery score', keywords: 'sleep bed tired recovery hrv rest night insomnia nap', to: '/sleep' },

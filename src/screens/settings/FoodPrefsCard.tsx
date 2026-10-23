@@ -1,6 +1,7 @@
 // Halal mode + energy unit. Both are display/filter preferences — nothing
 // stored changes, so flipping them back restores exactly what was there.
 
+import { useNavigate } from 'react-router-dom'
 import { Card, Segmented, Toggle } from '@/components/ui'
 import { energyUnit, fmtEnergy, halalMode } from '@/db/defaults'
 import type { EnergyUnit, Profile } from '@/db/types'
@@ -16,6 +17,7 @@ export function FoodPrefsCard({ profile, onPatch }: {
   onPatch: (patch: Partial<Profile>, msg?: string) => void
 }) {
   const halal = halalMode(profile)
+  const navigate = useNavigate()
   const unit = energyUnit(profile)
 
   return (
@@ -29,8 +31,13 @@ export function FoodPrefsCard({ profile, onPatch }: {
               unclear still shows, flagged with a “check the label” note — the call
               stays yours.
             </p>
+            {halal && (
+              <button type="button" onClick={() => navigate('/prayer')} className="pressable mt-2 flex w-full items-center gap-2 rounded-xl bg-emerald-500/15 px-3 py-2 text-left text-[13px] font-semibold text-emerald-300">
+                🕌 Prayer times, Qibla & reminders →
+              </button>
+            )}
             <p className="mt-1.5 text-[12px] leading-relaxed text-ink3">
-              Turning it on also adds: a halal check in the Health scanner (halal label,
+              Turning it on also adds: live prayer times on Today, a Qibla compass, prayer reminders, Ramadan and prayer-aware workout planning, a halal check in the Health scanner (halal label,
               pork, alcohol, gelatine and doubtful E-numbers), “not halal” badges on
               scanned barcodes, and halal swaps when you search for something hidden.
             </p>
@@ -38,7 +45,7 @@ export function FoodPrefsCard({ profile, onPatch }: {
           <Toggle
             checked={halal}
             label="Halal mode"
-            onChange={(on) => onPatch({ halalMode: on }, on ? 'Halal mode on' : 'Halal mode off')}
+            onChange={(on) => { onPatch({ halalMode: on }, on ? 'Halal mode on — prayer times added to Today' : 'Halal mode off'); setTimeout(() => { void import('@/lib/muslim').then((m) => m.schedulePrayerReminders()) }, 800) }}
           />
         </div>
       </Card>

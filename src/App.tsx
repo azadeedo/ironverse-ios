@@ -32,6 +32,7 @@ const BuildProgramScreen = lazy(() => import('@/screens/workout/BuildProgramScre
 const SleepScreen = lazy(() => import('@/screens/SleepScreen'))
 const FastingScreen = lazy(() => import('@/screens/FastingScreen'))
 const SavedScreen = lazy(() => import('@/screens/SavedScreen'))
+const PrayerScreen = lazy(() => import('@/screens/PrayerScreen'))
 const BackupScreen = lazy(() => import('@/screens/BackupScreen'))
 const ProgramsScreen = lazy(() => import('@/screens/ProgramsScreen'))
 const ReviewScreen = lazy(() => import('@/screens/ReviewScreen'))
@@ -153,6 +154,7 @@ const router = createBrowserRouter([
       { path: 'sleep', element: <S><SleepScreen /></S> },
       { path: 'fasting', element: <S><FastingScreen /></S> },
       { path: 'saved', element: <S><SavedScreen /></S> },
+      { path: 'prayer', element: <S><PrayerScreen /></S> },
       { path: 'session/:logId', element: <S><SessionScreen /></S> },
       { path: 'exercises', element: <S><ExercisesScreen /></S> },
       { path: 'exercise/:id', element: <S><ExerciseDetailScreen /></S> },

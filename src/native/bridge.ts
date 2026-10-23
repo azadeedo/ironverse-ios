@@ -58,6 +58,14 @@ export async function initNative(): Promise<void> {
     db.foodLog.hook('creating', (_pk, f) => { if (f?.kcal > 0) setTimeout(() => { void h.saveFoodEnergyToHealth(f.kcal, f.createdAt) }, 0) })
   } catch { /* Health unavailable — steps/weigh-ins stay manual */ }
 
+  // v10.2: keep a week of prayer reminders scheduled (only when Halal mode + reminders are on)
+  try {
+    const m = await import('@/lib/muslim')
+    void m.schedulePrayerReminders()
+    const { App } = await import('@capacitor/app')
+    await App.addListener('resume', () => { void m.schedulePrayerReminders() })
+  } catch { /* reminders are optional */ }
+
   // v10: Apple Watch companion app — snapshot out, actions in
   try {
     const w = await import('./watch')

@@ -1,6 +1,7 @@
 // SETTINGS — grouped controls for profile, targets, schedule, equipment and data.
 // Inline editors autosave; sheet editors save explicitly. Weight edits log a weigh-in.
 
+import { halalMode, prayerConfig, ramadanConfig } from '@/db/defaults'
 import { PrivacyCard } from './settings/PrivacyCard'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
@@ -59,6 +60,7 @@ export default function SettingsScreen() {
 
   const matches = useMemo(() => matchSettingsSections(filter), [filter])
   const show = (id: string) => matches === null || matches.has(id)
+  const muslim = !!profile && (halalMode(profile) || ramadanConfig(profile).enabled || prayerConfig(profile).enabled)
   const matchList = useMemo(() => (matches ? [...matches] : []), [matches])
 
   function jumpTo(id: string) {
@@ -392,7 +394,8 @@ export default function SettingsScreen() {
       </AnchorSection>
       )}
 
-      {show('ramadan') && (
+      {/* v10.2: Muslim settings appear with Halal mode on (or if already in use) */}
+      {show('ramadan') && muslim && (
       <AnchorSection id="ramadan" highlight={highlight === 'ramadan'}>
         <Section title="Ramadan">
           <RamadanCard profile={profile} onPatch={quietSave} />
@@ -400,7 +403,7 @@ export default function SettingsScreen() {
       </AnchorSection>
       )}
 
-      {show('prayer') && (
+      {show('prayer') && muslim && (
       <AnchorSection id="prayer" highlight={highlight === 'prayer'}>
         <Section title="Prayer times">
           <PrayerCard profile={profile} onPatch={quietSave} />

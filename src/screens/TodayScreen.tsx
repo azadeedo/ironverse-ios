@@ -2,6 +2,7 @@ import { getProgramPlan } from '@/lib/programStore'
 // TODAY — the daily command centre. Live cards for workout, water, creatine,
 // nutrition and the reminder timeline; welcome takeover until onboarded.
 
+import { PrayerBanner } from './today/PrayerBanner'
 import { useEffect, useMemo, useState } from 'react'
 import { WeekGlance } from './today/WeekGlance'
 import { StreakCard } from './today/StreakCard'
@@ -218,6 +219,8 @@ export default function TodayScreen() {
 
         <TrialBanner />
         {/* owner's order (23 Oct 2026): daily habits, then nutrition, then Move today, then training */}
+        {/* v10.2: live prayer banner — only when Halal mode is on */}
+        <PrayerBanner />
         <SleepRecoveryCard />
         <div className="px-1 pt-1 text-[11px] font-semibold uppercase tracking-wider text-ink3">Daily habits</div>
         <div className="grid grid-cols-2 gap-3">
