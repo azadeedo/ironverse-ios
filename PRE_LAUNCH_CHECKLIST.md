@@ -46,6 +46,14 @@
 - [ ] On the Watch: Today shows your numbers; +250 ml shows up on the phone; Done set during a workout ticks the set on the phone.
 - [ ] If you have them: connect WHOOP, Oura or a scale using the guide on Connected devices.
 
+### New in build 10
+- [ ] Halal mode OFF: no prayer banner on Today, and no Faith tile in More.
+- [ ] Halal mode ON: the green prayer banner shows on Today with the next prayer and a countdown. Tap it to open Prayer times.
+- [ ] Prayer times: tap **Use my location**. Compare the times with your usual app (pick the same method). The Qibla compass turns as you turn the phone.
+- [ ] Prayer reminders on: a reminder arrives at the next prayer.
+- [ ] Settings → Food → Diet: pick Vegan. Add food search hides meat and dairy, and the Food tab's carb/fat guides change. Set it back.
+- [ ] Coach programs → More coach styles: tap each name. Every one shows "Inspired by…", the weekly routine, and the not-affiliated note.
+
 ### Everything else
 - [ ] Progress photos: take one; the transformation card appears after a second photo on another day.
 - [ ] Weekly review shows "More from your week".
