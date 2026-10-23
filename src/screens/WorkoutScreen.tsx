@@ -5,6 +5,7 @@
 // the displayed session through the substitution engine and re-snaps every load
 // onto that location's hardware. The plan itself is never rewritten.
 
+import { ExerciseThumb } from '@/components/ExerciseThumb'
 import { useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
@@ -391,15 +392,7 @@ export default function WorkoutScreen() {
                     onClick={() => ex && navigate(`/exercise/${ex.id}`)}
                     className={`flex items-center gap-3 px-3 py-2.5 ${ex ? 'pressable cursor-pointer' : ''}`}
                   >
-                    <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-surface3">
-                      {ex && MEDIA[ex.id]?.video
-                        ? <video src={MEDIA[ex.id]!.video} poster={MEDIA[ex.id]!.imgSmall} autoPlay loop muted playsInline preload="metadata" className="h-full w-full object-cover" aria-hidden />
-                        : ex && MEDIA[ex.id]
-                          ? <img src={MEDIA[ex.id]!.imgSmall ?? MEDIA[ex.id]!.img} alt="" loading="lazy" className="h-full w-full object-cover" />
-                        : ex
-                          ? <ExerciseAnim def={ex.anim} size={64} playing />
-                          : <span className="text-[10px] text-ink3">?</span>}
-                    </div>
+                    {ex ? <ExerciseThumb ex={ex} size={64} /> : <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-surface3"><span className="text-[10px] text-ink3">?</span></div>}
                     <div className="min-w-0 flex-1">
                       <div className="truncate text-[15px] font-semibold text-ink">
                         {ex ? ex.name : pe.exerciseId}

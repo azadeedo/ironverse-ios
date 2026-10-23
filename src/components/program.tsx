@@ -45,6 +45,9 @@ export function ExerciseMedia({ ex, size = 220, showAnim = true }: { ex: Exercis
   const m = MEDIA[ex.id]
   const [failed, setFailed] = useState(false)
   const [videoFailed, setVideoFailed] = useState(false)
+  // v10.1: the stick figure is secondary when there is a real demo or photo — one tap away
+  const [diagram, setDiagram] = useState(false)
+  const hasPicture = !!m && (!failed || (!!m.video && !videoFailed))
   return (
     <div className="flex flex-col items-center gap-2">
       {m?.video && !videoFailed && (
@@ -58,11 +61,15 @@ export function ExerciseMedia({ ex, size = 220, showAnim = true }: { ex: Exercis
         <figure className="w-full overflow-hidden rounded-2xl bg-surface2">
           <img src={m.img} srcSet={m.imgSmall ? `${m.imgSmall} 480w, ${m.img} 960w` : undefined} sizes="(max-width: 520px) 100vw, 480px"
             alt={`${ex.name} demonstration`} loading="lazy" decoding="async" width={960} height={720}
-            className="aspect-[4/3] w-full object-cover" onError={() => setFailed(true)} />
+            className={m.kind === 'photo' ? 'max-h-[60svh] w-full bg-black object-contain' : 'aspect-[4/3] w-full object-cover'} onError={() => setFailed(true)} />
           {m.credit && <figcaption className="px-3 py-1.5 text-[10.5px] text-ink3">{m.credit}</figcaption>}
         </figure>
       )}
-      {showAnim && <AnimPlayer ex={ex} size={m && !failed ? Math.round(size * 0.8) : size} />}
+      {showAnim && (hasPicture
+        ? (diagram
+            ? <><AnimPlayer ex={ex} size={Math.round(size * 0.8)} /><button type="button" className="text-[12px] font-semibold text-ink3" onClick={() => setDiagram(false)}>Hide movement diagram</button></>
+            : <button type="button" className="pressable rounded-full bg-surface3 px-3 py-1.5 text-[12px] font-semibold text-ink2" onClick={() => setDiagram(true)}>🕺 Show movement diagram</button>)
+        : <AnimPlayer ex={ex} size={size} />)}
     </div>
   )
 }

@@ -103,6 +103,8 @@ export default function SessionScreen() {
   const [deload, setDeload] = useState<DeloadSignal | null>(null)
   const [deloadDismissed, setDeloadDismissed] = useState(false)
   const [exIdx, setExIdx] = useState(0)
+  // v10.1: stick-figure diagram is secondary — a tap swaps it in for the picture
+  const [showDiagram, setShowDiagram] = useState(false)
   const [swapOpen, setSwapOpen] = useState(false)
   const [regressOpen, setRegressOpen] = useState(false)
   const [jumpOpen, setJumpOpen] = useState(false)
@@ -1086,13 +1088,16 @@ export default function SessionScreen() {
           <div className="flex items-center justify-center gap-1">
             {ex ? (
               <>
-                {MEDIA[ex.id]?.video ? (
+                {showDiagram && MEDIA[ex.id] ? <ExerciseAnim def={ex.anim} size={228} /> : MEDIA[ex.id]?.video ? (
                   <video key={ex.id} src={MEDIA[ex.id]!.video} poster={MEDIA[ex.id]!.imgSmall} autoPlay loop muted playsInline preload="metadata"
                     aria-label={`${ex.name} — one controlled repetition`} className="h-[228px] w-[228px] rounded-2xl bg-black object-contain" />
                 ) : MEDIA[ex.id] ? (
                   <img key={ex.id} src={MEDIA[ex.id]!.imgSmall ?? MEDIA[ex.id]!.img} alt={`${ex.name} — key positions`} className="h-[228px] w-[228px] rounded-2xl bg-black object-contain" />
                 ) : <ExerciseAnim def={ex.anim} size={228} />}
-                <MuscleMap primary={ex.primary} secondary={ex.secondary} size={100} />
+                <div className="flex flex-col items-center gap-1">
+                  <MuscleMap primary={ex.primary} secondary={ex.secondary} size={100} />
+                  {MEDIA[ex.id] && <button type="button" onClick={() => setShowDiagram((v) => !v)} className="pressable rounded-full bg-surface3 px-2 py-1 text-[10.5px] font-semibold text-ink2">{showDiagram ? '📷 Picture' : '🕺 Diagram'}</button>}
+                </div>
               </>
             ) : (
               <div className="flex h-[190px] w-[228px] items-center justify-center rounded-2xl bg-surface2">

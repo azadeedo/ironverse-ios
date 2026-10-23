@@ -3,6 +3,7 @@
 // week's four days, and what the app recommends for each lift. Everything that
 // was already on the Workout tab stays below this block.
 
+import { ExerciseThumb } from '@/components/ExerciseThumb'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
@@ -71,10 +72,7 @@ export function TodayTop({ plan, week, dayKey, isToday, openLog, onStart }: {
             const flag = r?.flags.includes('increase') ? 'up' : r?.flags.includes('maintain') ? 'hold' : null
             return (
               <button key={`${pe.exerciseId}-${i}`} type="button" onClick={() => navigate(`/exercise/${pe.exerciseId}`)} className="pressable flex w-full items-center gap-3 px-3 py-2 text-left">
-                <div className="h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-black">
-                  {m?.video ? <video src={m.video} poster={m.imgSmall} autoPlay loop muted playsInline preload="metadata" className="h-full w-full object-cover" aria-hidden />
-                    : m ? <img src={m.imgSmall ?? m.img} alt="" loading="lazy" className="h-full w-full object-cover" /> : null}
-                </div>
+                {ex ? <ExerciseThumb ex={ex} size={56} /> : <div className="h-14 w-14 shrink-0 rounded-xl bg-black" />}
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-1.5">
                     {pe.supersetGroup && <span className="text-[12px] font-black text-brand">{pe.supersetGroup}</span>}

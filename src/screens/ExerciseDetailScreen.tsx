@@ -3,7 +3,7 @@
 // Route: /exercise/:id (handles unknown ids gracefully).
 
 import { ExerciseKnowledge } from '@/components/ExerciseKnowledge'
-import { AnimPlayer } from '@/components/program'
+import { ExerciseMedia } from '@/components/program'
 import { useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import {
@@ -157,7 +157,8 @@ function Detail({ ex }: { ex: Exercise }) {
       <div className="px-4">
         <Card className="relative p-4">
           <div className="flex justify-center">
-            <AnimPlayer ex={ex} size={260} />
+            {/* v10.1: our demo / real photo first; the stick figure is one tap away */}
+            <ExerciseMedia ex={ex} size={260} />
           </div>
           <div className="mt-2 flex flex-wrap items-center justify-center gap-1.5">
             <Badge tone="brand">{KIND_LABELS[ex.kind]}</Badge>
@@ -177,7 +178,7 @@ function Detail({ ex }: { ex: Exercise }) {
       </div>
 
       {/* v6: why / unlocks / transfer / breathing / performance */}
-      <ExerciseKnowledge ex={ex} />
+      <ExerciseKnowledge ex={ex} showMedia={false} />
 
       {/* add to today's workout */}
       {openSession && (

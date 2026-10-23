@@ -6,591 +6,827 @@ export const PHOTO_MEDIA: Record<string, MediaEntry> = {
   "45-degree-back-extension": {
     "img": "/media/exercises/photo-45-degree-back-extension.webp",
     "imgSmall": "/media/exercises/photo-45-degree-back-extension-480.webp",
+    "thumb": "/media/exercises/photo-45-degree-back-extension-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "ab-crunch-machine": {
     "img": "/media/exercises/photo-ab-crunch-machine.webp",
     "imgSmall": "/media/exercises/photo-ab-crunch-machine-480.webp",
+    "thumb": "/media/exercises/photo-ab-crunch-machine-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "ab-wheel-rollout": {
     "img": "/media/exercises/photo-ab-wheel-rollout.webp",
     "imgSmall": "/media/exercises/photo-ab-wheel-rollout-480.webp",
+    "thumb": "/media/exercises/photo-ab-wheel-rollout-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "abductor-machine": {
     "img": "/media/exercises/photo-abductor-machine.webp",
     "imgSmall": "/media/exercises/photo-abductor-machine-480.webp",
+    "thumb": "/media/exercises/photo-abductor-machine-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "adductor-machine": {
     "img": "/media/exercises/photo-adductor-machine.webp",
     "imgSmall": "/media/exercises/photo-adductor-machine-480.webp",
+    "thumb": "/media/exercises/photo-adductor-machine-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "assault-bike": {
     "img": "/media/exercises/photo-assault-bike.webp",
     "imgSmall": "/media/exercises/photo-assault-bike-480.webp",
+    "thumb": "/media/exercises/photo-assault-bike-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "bar-drag-curl": {
     "img": "/media/exercises/photo-bar-drag-curl.webp",
     "imgSmall": "/media/exercises/photo-bar-drag-curl-480.webp",
+    "thumb": "/media/exercises/photo-bar-drag-curl-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "barbell-bent-over-row": {
     "img": "/media/exercises/photo-barbell-bent-over-row.webp",
     "imgSmall": "/media/exercises/photo-barbell-bent-over-row-480.webp",
+    "thumb": "/media/exercises/photo-barbell-bent-over-row-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "barbell-hip-thrust": {
     "img": "/media/exercises/photo-barbell-hip-thrust.webp",
     "imgSmall": "/media/exercises/photo-barbell-hip-thrust-480.webp",
+    "thumb": "/media/exercises/photo-barbell-hip-thrust-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "barbell-lunge": {
     "img": "/media/exercises/photo-barbell-lunge.webp",
     "imgSmall": "/media/exercises/photo-barbell-lunge-480.webp",
+    "thumb": "/media/exercises/photo-barbell-lunge-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "barbell-overhead-press": {
     "img": "/media/exercises/photo-barbell-overhead-press.webp",
     "imgSmall": "/media/exercises/photo-barbell-overhead-press-480.webp",
+    "thumb": "/media/exercises/photo-barbell-overhead-press-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "barbell-shrug": {
     "img": "/media/exercises/photo-barbell-shrug.webp",
     "imgSmall": "/media/exercises/photo-barbell-shrug-480.webp",
+    "thumb": "/media/exercises/photo-barbell-shrug-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "barbell-upright-row": {
     "img": "/media/exercises/photo-barbell-upright-row.webp",
     "imgSmall": "/media/exercises/photo-barbell-upright-row-480.webp",
+    "thumb": "/media/exercises/photo-barbell-upright-row-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "bench-back-extension": {
     "img": "/media/exercises/photo-bench-back-extension.webp",
     "imgSmall": "/media/exercises/photo-bench-back-extension-480.webp",
+    "thumb": "/media/exercises/photo-bench-back-extension-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "bench-dip": {
     "img": "/media/exercises/photo-bench-dip.webp",
     "imgSmall": "/media/exercises/photo-bench-dip-480.webp",
+    "thumb": "/media/exercises/photo-bench-dip-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "biceps-curl-machine": {
     "img": "/media/exercises/photo-biceps-curl-machine.webp",
     "imgSmall": "/media/exercises/photo-biceps-curl-machine-480.webp",
+    "thumb": "/media/exercises/photo-biceps-curl-machine-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "bodyweight-squat": {
     "img": "/media/exercises/photo-bodyweight-squat.webp",
     "imgSmall": "/media/exercises/photo-bodyweight-squat-480.webp",
+    "thumb": "/media/exercises/photo-bodyweight-squat-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "cable-chest-press": {
     "img": "/media/exercises/photo-cable-chest-press.webp",
     "imgSmall": "/media/exercises/photo-cable-chest-press-480.webp",
+    "thumb": "/media/exercises/photo-cable-chest-press-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "cable-crossover-high-to-low": {
     "img": "/media/exercises/photo-cable-crossover-high-to-low.webp",
     "imgSmall": "/media/exercises/photo-cable-crossover-high-to-low-480.webp",
+    "thumb": "/media/exercises/photo-cable-crossover-high-to-low-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "cable-crossover-low-to-high": {
     "img": "/media/exercises/photo-cable-crossover-low-to-high.webp",
     "imgSmall": "/media/exercises/photo-cable-crossover-low-to-high-480.webp",
+    "thumb": "/media/exercises/photo-cable-crossover-low-to-high-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "cable-fly-low": {
     "img": "/media/exercises/photo-cable-fly-low.webp",
     "imgSmall": "/media/exercises/photo-cable-fly-low-480.webp",
+    "thumb": "/media/exercises/photo-cable-fly-low-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "cable-fly-mid": {
     "img": "/media/exercises/photo-cable-fly-mid.webp",
     "imgSmall": "/media/exercises/photo-cable-fly-mid-480.webp",
+    "thumb": "/media/exercises/photo-cable-fly-mid-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "cable-front-raise": {
     "img": "/media/exercises/photo-cable-front-raise.webp",
     "imgSmall": "/media/exercises/photo-cable-front-raise-480.webp",
+    "thumb": "/media/exercises/photo-cable-front-raise-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "cable-glute-kickback": {
     "img": "/media/exercises/photo-cable-glute-kickback.webp",
     "imgSmall": "/media/exercises/photo-cable-glute-kickback-480.webp",
+    "thumb": "/media/exercises/photo-cable-glute-kickback-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "cable-pallof-press": {
     "img": "/media/exercises/photo-cable-pallof-press.webp",
     "imgSmall": "/media/exercises/photo-cable-pallof-press-480.webp",
+    "thumb": "/media/exercises/photo-cable-pallof-press-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "cable-pull-through": {
     "img": "/media/exercises/photo-cable-pull-through.webp",
     "imgSmall": "/media/exercises/photo-cable-pull-through-480.webp",
+    "thumb": "/media/exercises/photo-cable-pull-through-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "cable-reverse-curl": {
     "img": "/media/exercises/photo-cable-reverse-curl.webp",
     "imgSmall": "/media/exercises/photo-cable-reverse-curl-480.webp",
+    "thumb": "/media/exercises/photo-cable-reverse-curl-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "cable-shrug": {
     "img": "/media/exercises/photo-cable-shrug.webp",
     "imgSmall": "/media/exercises/photo-cable-shrug-480.webp",
+    "thumb": "/media/exercises/photo-cable-shrug-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "cable-upright-row": {
     "img": "/media/exercises/photo-cable-upright-row.webp",
     "imgSmall": "/media/exercises/photo-cable-upright-row-480.webp",
+    "thumb": "/media/exercises/photo-cable-upright-row-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "cable-woodchopper-high-low": {
     "img": "/media/exercises/photo-cable-woodchopper-high-low.webp",
     "imgSmall": "/media/exercises/photo-cable-woodchopper-high-low-480.webp",
+    "thumb": "/media/exercises/photo-cable-woodchopper-high-low-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "calf-press-leg-press": {
     "img": "/media/exercises/photo-calf-press-leg-press.webp",
     "imgSmall": "/media/exercises/photo-calf-press-leg-press-480.webp",
+    "thumb": "/media/exercises/photo-calf-press-leg-press-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "captains-chair-knee-raise": {
     "img": "/media/exercises/photo-captains-chair-knee-raise.webp",
     "imgSmall": "/media/exercises/photo-captains-chair-knee-raise-480.webp",
+    "thumb": "/media/exercises/photo-captains-chair-knee-raise-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "chest-dip": {
     "img": "/media/exercises/photo-chest-dip.webp",
     "imgSmall": "/media/exercises/photo-chest-dip-480.webp",
+    "thumb": "/media/exercises/photo-chest-dip-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "chest-supported-dumbbell-row": {
     "img": "/media/exercises/photo-chest-supported-dumbbell-row.webp",
     "imgSmall": "/media/exercises/photo-chest-supported-dumbbell-row-480.webp",
+    "thumb": "/media/exercises/photo-chest-supported-dumbbell-row-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "chin-up": {
     "img": "/media/exercises/photo-chin-up.webp",
     "imgSmall": "/media/exercises/photo-chin-up-480.webp",
+    "thumb": "/media/exercises/photo-chin-up-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "close-grip-lat-pulldown": {
     "img": "/media/exercises/photo-close-grip-lat-pulldown.webp",
     "imgSmall": "/media/exercises/photo-close-grip-lat-pulldown-480.webp",
+    "thumb": "/media/exercises/photo-close-grip-lat-pulldown-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "close-grip-smith-press": {
     "img": "/media/exercises/photo-close-grip-smith-press.webp",
     "imgSmall": "/media/exercises/photo-close-grip-smith-press-480.webp",
+    "thumb": "/media/exercises/photo-close-grip-smith-press-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "concentration-curl": {
     "img": "/media/exercises/photo-concentration-curl.webp",
     "imgSmall": "/media/exercises/photo-concentration-curl-480.webp",
+    "thumb": "/media/exercises/photo-concentration-curl-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "converging-chest-press": {
     "img": "/media/exercises/photo-converging-chest-press.webp",
     "imgSmall": "/media/exercises/photo-converging-chest-press-480.webp",
+    "thumb": "/media/exercises/photo-converging-chest-press-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "curl-bar-curl": {
     "img": "/media/exercises/photo-curl-bar-curl.webp",
     "imgSmall": "/media/exercises/photo-curl-bar-curl-480.webp",
+    "thumb": "/media/exercises/photo-curl-bar-curl-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "dead-bug": {
     "img": "/media/exercises/photo-dead-bug.webp",
     "imgSmall": "/media/exercises/photo-dead-bug-480.webp",
+    "thumb": "/media/exercises/photo-dead-bug-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "decline-chest-press-machine": {
     "img": "/media/exercises/photo-decline-chest-press-machine.webp",
     "imgSmall": "/media/exercises/photo-decline-chest-press-machine-480.webp",
+    "thumb": "/media/exercises/photo-decline-chest-press-machine-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "decline-push-up": {
     "img": "/media/exercises/photo-decline-push-up.webp",
     "imgSmall": "/media/exercises/photo-decline-push-up-480.webp",
+    "thumb": "/media/exercises/photo-decline-push-up-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "decline-sit-up": {
     "img": "/media/exercises/photo-decline-sit-up.webp",
     "imgSmall": "/media/exercises/photo-decline-sit-up-480.webp",
+    "thumb": "/media/exercises/photo-decline-sit-up-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "dumbbell-bench-press": {
     "img": "/media/exercises/photo-dumbbell-bench-press.webp",
     "imgSmall": "/media/exercises/photo-dumbbell-bench-press-480.webp",
+    "thumb": "/media/exercises/photo-dumbbell-bench-press-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "dumbbell-curl": {
     "img": "/media/exercises/photo-dumbbell-curl.webp",
     "imgSmall": "/media/exercises/photo-dumbbell-curl-480.webp",
+    "thumb": "/media/exercises/photo-dumbbell-curl-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "dumbbell-fly": {
     "img": "/media/exercises/photo-dumbbell-fly.webp",
     "imgSmall": "/media/exercises/photo-dumbbell-fly-480.webp",
+    "thumb": "/media/exercises/photo-dumbbell-fly-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "dumbbell-pullover": {
     "img": "/media/exercises/photo-dumbbell-pullover.webp",
     "imgSmall": "/media/exercises/photo-dumbbell-pullover-480.webp",
+    "thumb": "/media/exercises/photo-dumbbell-pullover-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "dumbbell-rdl": {
     "img": "/media/exercises/photo-dumbbell-rdl.webp",
     "imgSmall": "/media/exercises/photo-dumbbell-rdl-480.webp",
+    "thumb": "/media/exercises/photo-dumbbell-rdl-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "dumbbell-rear-delt-fly": {
     "img": "/media/exercises/photo-dumbbell-rear-delt-fly.webp",
     "imgSmall": "/media/exercises/photo-dumbbell-rear-delt-fly-480.webp",
+    "thumb": "/media/exercises/photo-dumbbell-rear-delt-fly-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "dumbbell-row": {
     "img": "/media/exercises/photo-dumbbell-row.webp",
     "imgSmall": "/media/exercises/photo-dumbbell-row-480.webp",
+    "thumb": "/media/exercises/photo-dumbbell-row-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "dumbbell-shoulder-press": {
     "img": "/media/exercises/photo-dumbbell-shoulder-press.webp",
     "imgSmall": "/media/exercises/photo-dumbbell-shoulder-press-480.webp",
+    "thumb": "/media/exercises/photo-dumbbell-shoulder-press-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "dumbbell-shrug": {
     "img": "/media/exercises/photo-dumbbell-shrug.webp",
     "imgSmall": "/media/exercises/photo-dumbbell-shrug-480.webp",
+    "thumb": "/media/exercises/photo-dumbbell-shrug-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "dumbbell-skull-crusher": {
     "img": "/media/exercises/photo-dumbbell-skull-crusher.webp",
     "imgSmall": "/media/exercises/photo-dumbbell-skull-crusher-480.webp",
+    "thumb": "/media/exercises/photo-dumbbell-skull-crusher-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "dumbbell-step-up": {
     "img": "/media/exercises/photo-dumbbell-step-up.webp",
     "imgSmall": "/media/exercises/photo-dumbbell-step-up-480.webp",
+    "thumb": "/media/exercises/photo-dumbbell-step-up-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "dumbbell-walking-lunge": {
     "img": "/media/exercises/photo-dumbbell-walking-lunge.webp",
     "imgSmall": "/media/exercises/photo-dumbbell-walking-lunge-480.webp",
+    "thumb": "/media/exercises/photo-dumbbell-walking-lunge-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "face-pull": {
     "img": "/media/exercises/photo-face-pull.webp",
     "imgSmall": "/media/exercises/photo-face-pull-480.webp",
+    "thumb": "/media/exercises/photo-face-pull-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "farmers-carry": {
     "img": "/media/exercises/photo-farmers-carry.webp",
     "imgSmall": "/media/exercises/photo-farmers-carry-480.webp",
+    "thumb": "/media/exercises/photo-farmers-carry-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "front-squat": {
     "img": "/media/exercises/photo-front-squat.webp",
     "imgSmall": "/media/exercises/photo-front-squat-480.webp",
+    "thumb": "/media/exercises/photo-front-squat-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "goblet-squat": {
     "img": "/media/exercises/photo-goblet-squat.webp",
     "imgSmall": "/media/exercises/photo-goblet-squat-480.webp",
+    "thumb": "/media/exercises/photo-goblet-squat-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "good-morning": {
     "img": "/media/exercises/photo-good-morning.webp",
     "imgSmall": "/media/exercises/photo-good-morning-480.webp",
+    "thumb": "/media/exercises/photo-good-morning-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "incline-barbell-bench-press": {
     "img": "/media/exercises/photo-incline-barbell-bench-press.webp",
     "imgSmall": "/media/exercises/photo-incline-barbell-bench-press-480.webp",
+    "thumb": "/media/exercises/photo-incline-barbell-bench-press-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "incline-dumbbell-fly": {
     "img": "/media/exercises/photo-incline-dumbbell-fly.webp",
     "imgSmall": "/media/exercises/photo-incline-dumbbell-fly-480.webp",
+    "thumb": "/media/exercises/photo-incline-dumbbell-fly-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "incline-push-up": {
     "img": "/media/exercises/photo-incline-push-up.webp",
     "imgSmall": "/media/exercises/photo-incline-push-up-480.webp",
+    "thumb": "/media/exercises/photo-incline-push-up-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "iso-lateral-row": {
     "img": "/media/exercises/photo-iso-lateral-row.webp",
     "imgSmall": "/media/exercises/photo-iso-lateral-row-480.webp",
+    "thumb": "/media/exercises/photo-iso-lateral-row-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "jump-rope": {
     "img": "/media/exercises/photo-jump-rope.webp",
     "imgSmall": "/media/exercises/photo-jump-rope-480.webp",
+    "thumb": "/media/exercises/photo-jump-rope-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "kettlebell-swing": {
     "img": "/media/exercises/photo-kettlebell-swing.webp",
     "imgSmall": "/media/exercises/photo-kettlebell-swing-480.webp",
+    "thumb": "/media/exercises/photo-kettlebell-swing-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "landmine-row": {
     "img": "/media/exercises/photo-landmine-row.webp",
     "imgSmall": "/media/exercises/photo-landmine-row-480.webp",
+    "thumb": "/media/exercises/photo-landmine-row-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "lying-leg-curl": {
     "img": "/media/exercises/photo-lying-leg-curl.webp",
     "imgSmall": "/media/exercises/photo-lying-leg-curl-480.webp",
+    "thumb": "/media/exercises/photo-lying-leg-curl-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "machine-preacher-curl": {
     "img": "/media/exercises/photo-machine-preacher-curl.webp",
     "imgSmall": "/media/exercises/photo-machine-preacher-curl-480.webp",
+    "thumb": "/media/exercises/photo-machine-preacher-curl-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "mountain-climbers": {
     "img": "/media/exercises/photo-mountain-climbers.webp",
     "imgSmall": "/media/exercises/photo-mountain-climbers-480.webp",
+    "thumb": "/media/exercises/photo-mountain-climbers-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "neutral-grip-pull-up": {
     "img": "/media/exercises/photo-neutral-grip-pull-up.webp",
     "imgSmall": "/media/exercises/photo-neutral-grip-pull-up-480.webp",
+    "thumb": "/media/exercises/photo-neutral-grip-pull-up-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "overhead-dumbbell-extension": {
     "img": "/media/exercises/photo-overhead-dumbbell-extension.webp",
     "imgSmall": "/media/exercises/photo-overhead-dumbbell-extension-480.webp",
+    "thumb": "/media/exercises/photo-overhead-dumbbell-extension-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "paused-deadlift": {
     "img": "/media/exercises/photo-paused-deadlift.webp",
     "imgSmall": "/media/exercises/photo-paused-deadlift-480.webp",
+    "thumb": "/media/exercises/photo-paused-deadlift-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "pec-deck": {
     "img": "/media/exercises/photo-pec-deck.webp",
     "imgSmall": "/media/exercises/photo-pec-deck-480.webp",
+    "thumb": "/media/exercises/photo-pec-deck-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "plank": {
     "img": "/media/exercises/photo-plank.webp",
     "imgSmall": "/media/exercises/photo-plank-480.webp",
+    "thumb": "/media/exercises/photo-plank-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "plate-front-raise": {
     "img": "/media/exercises/photo-plate-front-raise.webp",
     "imgSmall": "/media/exercises/photo-plate-front-raise-480.webp",
+    "thumb": "/media/exercises/photo-plate-front-raise-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "push-up": {
     "img": "/media/exercises/photo-push-up.webp",
     "imgSmall": "/media/exercises/photo-push-up-480.webp",
+    "thumb": "/media/exercises/photo-push-up-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "reverse-hyperextension": {
     "img": "/media/exercises/photo-reverse-hyperextension.webp",
     "imgSmall": "/media/exercises/photo-reverse-hyperextension-480.webp",
+    "thumb": "/media/exercises/photo-reverse-hyperextension-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "rope-hammer-curl": {
     "img": "/media/exercises/photo-rope-hammer-curl.webp",
     "imgSmall": "/media/exercises/photo-rope-hammer-curl-480.webp",
+    "thumb": "/media/exercises/photo-rope-hammer-curl-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "rope-low-cable-row": {
     "img": "/media/exercises/photo-rope-low-cable-row.webp",
     "imgSmall": "/media/exercises/photo-rope-low-cable-row-480.webp",
+    "thumb": "/media/exercises/photo-rope-low-cable-row-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "rope-pushdown": {
     "img": "/media/exercises/photo-rope-pushdown.webp",
     "imgSmall": "/media/exercises/photo-rope-pushdown-480.webp",
+    "thumb": "/media/exercises/photo-rope-pushdown-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "rope-rear-delt-row": {
     "img": "/media/exercises/photo-rope-rear-delt-row.webp",
     "imgSmall": "/media/exercises/photo-rope-rear-delt-row-480.webp",
+    "thumb": "/media/exercises/photo-rope-rear-delt-row-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "rope-straight-arm-pulldown": {
     "img": "/media/exercises/photo-rope-straight-arm-pulldown.webp",
     "imgSmall": "/media/exercises/photo-rope-straight-arm-pulldown-480.webp",
+    "thumb": "/media/exercises/photo-rope-straight-arm-pulldown-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "rowing-machine": {
     "img": "/media/exercises/photo-rowing-machine.webp",
     "imgSmall": "/media/exercises/photo-rowing-machine-480.webp",
+    "thumb": "/media/exercises/photo-rowing-machine-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "running": {
     "img": "/media/exercises/photo-running.webp",
     "imgSmall": "/media/exercises/photo-running-480.webp",
+    "thumb": "/media/exercises/photo-running-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "russian-twist": {
     "img": "/media/exercises/photo-russian-twist.webp",
     "imgSmall": "/media/exercises/photo-russian-twist-480.webp",
+    "thumb": "/media/exercises/photo-russian-twist-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "seated-dip-machine": {
     "img": "/media/exercises/photo-seated-dip-machine.webp",
     "imgSmall": "/media/exercises/photo-seated-dip-machine-480.webp",
+    "thumb": "/media/exercises/photo-seated-dip-machine-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "seated-dumbbell-lateral-raise": {
     "img": "/media/exercises/photo-seated-dumbbell-lateral-raise.webp",
     "imgSmall": "/media/exercises/photo-seated-dumbbell-lateral-raise-480.webp",
+    "thumb": "/media/exercises/photo-seated-dumbbell-lateral-raise-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "seated-overhead-rope-extension": {
     "img": "/media/exercises/photo-seated-overhead-rope-extension.webp",
     "imgSmall": "/media/exercises/photo-seated-overhead-rope-extension-480.webp",
+    "thumb": "/media/exercises/photo-seated-overhead-rope-extension-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "seated-row-wide": {
     "img": "/media/exercises/photo-seated-row-wide.webp",
     "imgSmall": "/media/exercises/photo-seated-row-wide-480.webp",
+    "thumb": "/media/exercises/photo-seated-row-wide-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "side-plank": {
     "img": "/media/exercises/photo-side-plank.webp",
     "imgSmall": "/media/exercises/photo-side-plank-480.webp",
+    "thumb": "/media/exercises/photo-side-plank-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "single-arm-cable-curl": {
     "img": "/media/exercises/photo-single-arm-cable-curl.webp",
     "imgSmall": "/media/exercises/photo-single-arm-cable-curl-480.webp",
+    "thumb": "/media/exercises/photo-single-arm-cable-curl-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "single-arm-cable-pushdown": {
     "img": "/media/exercises/photo-single-arm-cable-pushdown.webp",
     "imgSmall": "/media/exercises/photo-single-arm-cable-pushdown-480.webp",
+    "thumb": "/media/exercises/photo-single-arm-cable-pushdown-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "single-arm-lat-pulldown": {
     "img": "/media/exercises/photo-single-arm-lat-pulldown.webp",
     "imgSmall": "/media/exercises/photo-single-arm-lat-pulldown-480.webp",
+    "thumb": "/media/exercises/photo-single-arm-lat-pulldown-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "sissy-squat": {
     "img": "/media/exercises/photo-sissy-squat.webp",
     "imgSmall": "/media/exercises/photo-sissy-squat-480.webp",
+    "thumb": "/media/exercises/photo-sissy-squat-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "skull-crusher": {
     "img": "/media/exercises/photo-skull-crusher.webp",
     "imgSmall": "/media/exercises/photo-skull-crusher-480.webp",
+    "thumb": "/media/exercises/photo-skull-crusher-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "sled-push": {
     "img": "/media/exercises/photo-sled-push.webp",
     "imgSmall": "/media/exercises/photo-sled-push-480.webp",
+    "thumb": "/media/exercises/photo-sled-push-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "smith-bench-press": {
     "img": "/media/exercises/photo-smith-bench-press.webp",
     "imgSmall": "/media/exercises/photo-smith-bench-press-480.webp",
+    "thumb": "/media/exercises/photo-smith-bench-press-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "smith-calf-raise": {
     "img": "/media/exercises/photo-smith-calf-raise.webp",
     "imgSmall": "/media/exercises/photo-smith-calf-raise-480.webp",
+    "thumb": "/media/exercises/photo-smith-calf-raise-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "smith-incline-bench-press": {
     "img": "/media/exercises/photo-smith-incline-bench-press.webp",
     "imgSmall": "/media/exercises/photo-smith-incline-bench-press-480.webp",
+    "thumb": "/media/exercises/photo-smith-incline-bench-press-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "smith-lunge": {
     "img": "/media/exercises/photo-smith-lunge.webp",
     "imgSmall": "/media/exercises/photo-smith-lunge-480.webp",
+    "thumb": "/media/exercises/photo-smith-lunge-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "smith-rdl": {
     "img": "/media/exercises/photo-smith-rdl.webp",
     "imgSmall": "/media/exercises/photo-smith-rdl-480.webp",
+    "thumb": "/media/exercises/photo-smith-rdl-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "smith-row": {
     "img": "/media/exercises/photo-smith-row.webp",
     "imgSmall": "/media/exercises/photo-smith-row-480.webp",
+    "thumb": "/media/exercises/photo-smith-row-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "smith-seated-shoulder-press": {
     "img": "/media/exercises/photo-smith-seated-shoulder-press.webp",
     "imgSmall": "/media/exercises/photo-smith-seated-shoulder-press-480.webp",
+    "thumb": "/media/exercises/photo-smith-seated-shoulder-press-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "smith-split-squat": {
     "img": "/media/exercises/photo-smith-split-squat.webp",
     "imgSmall": "/media/exercises/photo-smith-split-squat-480.webp",
+    "thumb": "/media/exercises/photo-smith-split-squat-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "smith-squat": {
     "img": "/media/exercises/photo-smith-squat.webp",
     "imgSmall": "/media/exercises/photo-smith-squat-480.webp",
+    "thumb": "/media/exercises/photo-smith-squat-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "spider-curl": {
     "img": "/media/exercises/photo-spider-curl.webp",
     "imgSmall": "/media/exercises/photo-spider-curl-480.webp",
+    "thumb": "/media/exercises/photo-spider-curl-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "stair-climber": {
     "img": "/media/exercises/photo-stair-climber.webp",
     "imgSmall": "/media/exercises/photo-stair-climber-480.webp",
+    "thumb": "/media/exercises/photo-stair-climber-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "standing-leg-curl-machine": {
     "img": "/media/exercises/photo-standing-leg-curl-machine.webp",
     "imgSmall": "/media/exercises/photo-standing-leg-curl-machine-480.webp",
+    "thumb": "/media/exercises/photo-standing-leg-curl-machine-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "straight-arm-pulldown": {
     "img": "/media/exercises/photo-straight-arm-pulldown.webp",
     "imgSmall": "/media/exercises/photo-straight-arm-pulldown-480.webp",
+    "thumb": "/media/exercises/photo-straight-arm-pulldown-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "suspension-row": {
     "img": "/media/exercises/photo-suspension-row.webp",
     "imgSmall": "/media/exercises/photo-suspension-row-480.webp",
+    "thumb": "/media/exercises/photo-suspension-row-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "t-bar-row": {
     "img": "/media/exercises/photo-t-bar-row.webp",
     "imgSmall": "/media/exercises/photo-t-bar-row-480.webp",
+    "thumb": "/media/exercises/photo-t-bar-row-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "trap-bar-deadlift": {
     "img": "/media/exercises/photo-trap-bar-deadlift.webp",
     "imgSmall": "/media/exercises/photo-trap-bar-deadlift-480.webp",
+    "thumb": "/media/exercises/photo-trap-bar-deadlift-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "triceps-dip": {
     "img": "/media/exercises/photo-triceps-dip.webp",
     "imgSmall": "/media/exercises/photo-triceps-dip-480.webp",
+    "thumb": "/media/exercises/photo-triceps-dip-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "triceps-extension-machine": {
     "img": "/media/exercises/photo-triceps-extension-machine.webp",
     "imgSmall": "/media/exercises/photo-triceps-extension-machine-480.webp",
+    "thumb": "/media/exercises/photo-triceps-extension-machine-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "walking": {
     "img": "/media/exercises/photo-walking.webp",
     "imgSmall": "/media/exercises/photo-walking-480.webp",
+    "thumb": "/media/exercises/photo-walking-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   },
   "weighted-push-up": {
     "img": "/media/exercises/photo-weighted-push-up.webp",
     "imgSmall": "/media/exercises/photo-weighted-push-up-480.webp",
+    "thumb": "/media/exercises/photo-weighted-push-up-thumb.webp",
+    "kind": "photo",
     "credit": "Real photos of the two key positions (free-exercise-db, public domain) — check the form cues too."
   }
 }

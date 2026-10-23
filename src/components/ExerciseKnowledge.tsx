@@ -20,7 +20,7 @@ import { PathwayCard } from './PathwayCard'
 
 const DIFF = ['', 'Beginner-friendly', 'Easy to learn', 'Moderate skill', 'Technical', 'Highly technical']
 
-export function ExerciseKnowledge({ ex }: { ex: Exercise }) {
+export function ExerciseKnowledge({ ex, showMedia = true }: { ex: Exercise; showMedia?: boolean }) {
   const navigate = useNavigate()
   const k = knowledgeFor(ex.id)
   const logs = useLiveQuery(() => db.workoutLogs.toArray(), [])
@@ -34,7 +34,7 @@ export function ExerciseKnowledge({ ex }: { ex: Exercise }) {
   const link = (id?: string) => (id ? <button type="button" className="text-brand" onClick={() => navigate(`/exercise/${id}`)}>{byId.get(id)?.name ?? id}</button> : null)
   return (
     <div className="space-y-3 px-4 pt-3">
-      <ExerciseMedia ex={ex} showAnim={false} />
+      {showMedia && <ExerciseMedia ex={ex} showAnim={false} />}
       <Card className="p-4">
         <div className="flex items-center gap-2 text-[13px] font-bold uppercase tracking-wide text-brand"><Sparkles size={15} /> Why am I doing this?</div>
         <p className="mt-1.5 text-[14px] leading-relaxed">{k.why}</p>

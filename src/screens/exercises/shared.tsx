@@ -1,5 +1,6 @@
 // Shared bits for the Exercise Library module (list + detail screens).
 
+import { ExerciseThumb } from '@/components/ExerciseThumb'
 import { MEDIA } from '@/data/media'
 import { useEffect, useRef, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
@@ -60,10 +61,8 @@ export function VisibleAnim({ exercise, size = 72, className = '' }: {
       className={`flex shrink-0 items-center justify-center overflow-hidden rounded-xl bg-surface3/60 ${className}`}
       style={{ width: size, height: size }}
     >
-      {/* v10: a real picture when one exists (generated demo or photo), else the diagram */}
-      {MEDIA[exercise.id]
-        ? <img src={MEDIA[exercise.id].imgSmall ?? MEDIA[exercise.id].img} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
-        : <ExerciseAnim def={exercise.anim} size={size - 6} playing={visible} />}
+      {/* v10.1: our demo first, then a whole (uncropped) photo, else the diagram */}
+      <ExerciseThumb ex={exercise} size={size} playing={visible} />
     </div>
   )
 }

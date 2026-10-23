@@ -2,7 +2,13 @@
 // Images are original AI-generated demonstrations (Higgsfield, GPT Image 2), each reviewed for
 // correct equipment, joint positions and anatomy before inclusion.
 import { PHOTO_MEDIA } from './mediaPhotos'
-export interface MediaEntry { img: string; imgSmall?: string; credit?: string; video?: string }
+export interface MediaEntry {
+  img: string; imgSmall?: string; credit?: string; video?: string
+  /** v10.1: square thumbnail that shows the whole machine/position (real photos) */
+  thumb?: string
+  /** 'photo' = real two-position photo (wide); otherwise our generated demo */
+  kind?: 'photo'
+}
 export const MEDIA: Record<string, MediaEntry> = {
   "assisted-pull-up": {
     "img": "/media/exercises/assisted-pull-up.webp",

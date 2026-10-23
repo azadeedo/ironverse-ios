@@ -2,6 +2,7 @@
 // with today's prescribed load (and why), warm-ups, RIR, rest, superset blocks,
 // and the "why / muscles / prepares you for / progression" detail.
 
+import { ExerciseThumb } from '@/components/ExerciseThumb'
 import { useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
@@ -137,8 +138,7 @@ function ExerciseCard({ pe, label, rx, logs }: { pe: PlanExercise; label?: strin
   return (
     <div className="rounded-2xl bg-surface2 p-3 shadow-card">
       <div className="flex gap-3">
-        <div className="shrink-0 overflow-hidden rounded-xl bg-surface3/50">{media?.video ? <video src={media.video} poster={media.imgSmall} autoPlay loop muted playsInline preload="metadata" aria-label={`${ex.name} demonstration`} className="h-[112px] w-[112px] bg-black object-contain" />
-          : media ? <img src={media.imgSmall ?? media.img} alt={`${ex.name} start and finish`} loading="lazy" decoding="async" className="h-[84px] w-[112px] object-cover" /> : <ExerciseAnim def={ex.anim} size={84} />}</div>
+        <ExerciseThumb ex={ex} size={media ? 104 : 84} />
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5">
             {label && <span className="shout text-[14px] text-brand">{label}</span>}
