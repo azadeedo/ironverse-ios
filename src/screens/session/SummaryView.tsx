@@ -1,5 +1,6 @@
 // Post-workout summary: headline stats, PRs vs history, per-exercise volume.
 
+import { saveWorkoutTemplate } from '@/lib/saved'
 import { shareWorkoutCard } from '@/lib/shareCard'
 import { useNavigate } from 'react-router-dom'
 import { Check, Clock, Dumbbell, Flame, Trophy, Weight } from 'lucide-react'
@@ -79,6 +80,7 @@ function Stat({ icon, value, label }: { icon: React.ReactNode; value: string; la
 
 export function SummaryView({ data, feel, onFeel }: { data: SummaryData; feel?: WorkoutLog['feel']; onFeel?: (f: NonNullable<WorkoutLog['feel']>) => void }) {
   const navigate = useNavigate()
+  const { toast } = useUI()
   const { log, durationSec, volumeKg, calories, prs } = data
   const fresh = !!log.finishedAt && Date.now() - new Date(log.finishedAt).getTime() < 120000
   const [celebrate, setCelebrate] = useState(fresh && prs.length > 0)
@@ -154,6 +156,7 @@ export function SummaryView({ data, feel, onFeel }: { data: SummaryData; feel?: 
 
       <div className="mt-auto px-4 pt-6">
         <Button full variant="secondary" onClick={() => { void shareWorkoutCard({ log, durationSec, volumeKg, prs: prs.map((p) => ({ name: p.name, detail: p.detail })), names: Object.fromEntries(log.exercises.map((e) => [e.exerciseId, byId.get(e.exerciseId)?.name ?? e.exerciseId])) }) }}>📤 Share workout card</Button>
+        <Button full variant="secondary" onClick={() => { void saveWorkoutTemplate(log).then((t) => toast(`Saved “${t.title}” — start it again from More → Saved`)) }}>⭐ Save as template</Button>
         <Button full onClick={() => navigate('/')}>Done</Button>
       </div>
     </div>

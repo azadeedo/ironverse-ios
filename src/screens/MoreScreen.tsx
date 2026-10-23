@@ -26,7 +26,7 @@ import { dayForDate } from '@/lib/plangen'
 import { minutesOf, todayTimeline, type TimelineItem } from '@/lib/schedule'
 import { useUI } from '@/lib/store'
 import { APP_VERSION, GOAL_META, fmt12, nowMinutes, parseNumber, upsertTodayWeighIn } from './settings/lib'
-import { Crown, MessageSquarePlus, Moon, Timer } from 'lucide-react'
+import { Bookmark, Crown, MessageSquarePlus, Moon, Timer } from 'lucide-react'
 import { isAppStoreEdition } from '@/lib/edition'
 
 const TIMELINE_ICONS: Record<TimelineItem['kind'], typeof Droplets> = {
@@ -49,7 +49,7 @@ const TIMELINE_TONES: Record<TimelineItem['kind'], string> = {
 // v10 order (owner, 23 Oct 2026): the showpieces first, housekeeping last — nothing removed
 const TILE_GROUPS: [string, string[]][] = [
   ['Your progress', ['/hub', '/sleep', '/photos', '/anatomy', '/review', '/progress', '/achievements']],
-  ['Training', ['/programs', '/plan', '/exercises', '/cardio']],
+  ['Training', ['/saved', '/programs', '/plan', '/exercises', '/cardio']],
   ['Food & health', ['/health-scan', '/fasting', '/meal-plan', '/nutrition-week', '/calories', '/hydration', '/pill-box']],
   ['Connect', ['/devices']],
   ['App', [...(isAppStoreEdition() ? ['/pro'] : []), '/feedback', '/whats-new', '/backup', '/settings']],
@@ -76,6 +76,7 @@ const TILES = [
   { label: 'Meal planner', sub: 'Plan the next 7 days', icon: CalendarRange, to: '/meal-plan', tint: 'text-lime-400', bg: 'bg-lime-400/12' },
   { label: 'Sleep & recovery', sub: 'Rate nights, Watch sleep, score', icon: Moon, to: '/sleep', tint: 'text-indigo-300', bg: 'bg-indigo-300/12' },
   { label: 'Fasting timer', sub: '16:8 and more, with alerts', icon: Timer, to: '/fasting', tint: 'text-amber-300', bg: 'bg-amber-300/12' },
+  { label: 'Saved', sub: 'Workouts, exercises, foods, meals', icon: Bookmark, to: '/saved', tint: 'text-amber-400', bg: 'bg-amber-400/12' },
   { label: 'Settings', sub: 'Profile & data', icon: Settings, to: '/settings', tint: 'text-ink2', bg: 'bg-surface3' },
   { label: 'Suggest & report', sub: 'Ideas, bugs, fixes', icon: MessageSquarePlus, to: '/feedback', tint: 'text-brand', bg: 'bg-brand/12' },
   { label: 'Ironverse Pro', sub: 'Plans & subscription', icon: Crown, to: '/pro', tint: 'text-brand', bg: 'bg-brand/12' },

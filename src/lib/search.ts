@@ -99,6 +99,7 @@ const SCREEN_TARGETS: { title: string; subtitle: string; keywords: string; to: s
   { title: 'Backup', subtitle: 'Export, restore and snapshots', keywords: 'backup export restore snapshot json safety', to: '/backup' },
   { title: 'Progress photos', subtitle: 'Side-by-side, stored on this device', keywords: 'photos progress camera pictures front side back', to: '/photos' },
   { title: 'Weekly review', subtitle: 'How the week actually went', keywords: 'weekly review week summary recap', to: '/review' },
+  { title: 'Saved', subtitle: 'Saved workouts, starred exercises, favourite foods, meals', keywords: 'saved save template favourite favorites starred bookmark', to: '/saved' },
   { title: 'Fasting timer', subtitle: 'Intermittent fasting 13:11 to 20:4', keywords: 'fasting fast intermittent 16:8 18:6 omad timer window', to: '/fasting' },
   { title: 'Sleep & recovery', subtitle: 'Rate last night, Apple Watch sleep, recovery score', keywords: 'sleep bed tired recovery hrv rest night insomnia nap', to: '/sleep' },
   { title: 'Coach programs', subtitle: 'Inspired by Bumstead, Nippard, Arnold, Mentzer, Yates', keywords: 'coach programs cbum chris bumstead nippard jeff arnold schwarzenegger mike mentzer heavy duty dorian yates blood guts hit block', to: '/programs' },
