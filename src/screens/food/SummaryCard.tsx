@@ -2,6 +2,9 @@
 // one big calorie ring, three macro bars with targets, protein remaining and
 // quick-add actions. Carb/fat targets are guides worked out from the day's
 // calories after protein (fat ≈ 25% of calories, carbs the rest).
+import { DIET_KEY, dietById, dietMacros, filterDiet } from '@/lib/diets'
+import { getSetting } from '@/db'
+import { useLiveQuery } from 'dexie-react-hooks'
 import { Camera, PenLine, ScanBarcode } from 'lucide-react'
 import { Card } from '@/components/ui'
 import { ProgressRing } from '@/components/charts'
@@ -34,7 +37,9 @@ export function SummaryCard({ totals, profile, target: dayTarget, onScanMeal, on
   const target = dayTarget ?? profile.calorieTarget
   const remaining = Math.round(target - totals.kcal)
   const over = remaining < 0
-  const g = macroGuides(target, profile.proteinTarget)
+  // v10.2: carb/fat guides follow the chosen diet (Settings → Food → Diet)
+  const diet = dietById(useLiveQuery(() => getSetting<string>(DIET_KEY, 'balanced'), []))
+  const g = diet.id === 'balanced' ? macroGuides(target, profile.proteinTarget) : dietMacros(target, profile.proteinTarget, diet)
   const pLeft = Math.max(0, Math.round(profile.proteinTarget - totals.protein))
   const quick = onScanMeal || onBarcode || onManual
 
@@ -64,7 +69,7 @@ export function SummaryCard({ totals, profile, target: dayTarget, onScanMeal, on
           {onManual && <button type="button" onClick={onManual} className="pressable flex flex-col items-center gap-1 rounded-xl bg-brand py-2.5 text-[12px] font-bold text-white"><PenLine size={18} />Add food</button>}
         </div>
       )}
-      <div className="mt-2 text-[10.5px] text-ink3">Carb and fat amounts are guides from your calorie and protein targets.</div>
+      <div className="mt-2 text-[10.5px] text-ink3">Carb and fat amounts are guides from your calorie and protein targets{diet.id !== 'balanced' ? ` · ${diet.emoji} ${diet.label} diet` : ''}.</div>
     </Card>
   )
 }

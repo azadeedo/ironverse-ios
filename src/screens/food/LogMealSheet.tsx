@@ -2,6 +2,9 @@
 // meal chips, Recent (same portion again), starred Favourites, All foods with
 // one-tap +. Tap a row to change the grams first. Everything the old Add food
 // sheet did is one tap away ("More options").
+import { DIET_KEY, dietById, dietMacros, filterDiet } from '@/lib/diets'
+import { getSetting } from '@/db'
+import { useLiveQuery } from 'dexie-react-hooks'
 import { useMemo, useState } from 'react'
 import { ChevronRight, Plus, ScanBarcode, Star } from 'lucide-react'
 import { db } from '@/db'
@@ -29,14 +32,15 @@ export function LogMealSheet({ open, onClose, date, initialMeal, onMoreOptions, 
   const [grams, setGrams] = useState('100')
   const catalog = useCatalog()
   const recents = useRecents() ?? []
+  const diet = dietById(useLiveQuery(() => getSetting<string>(DIET_KEY, 'balanced'), []))
   const byId = useMemo(() => new Map(catalog.map((f) => [f.id, f])), [catalog])
   const favs = catalog.filter((f) => f.favourite).slice(0, 8)
   const hits = useMemo(() => {
     const s = q.trim().toLowerCase()
     if (!s && !cuisine) return []
-    return catalog.filter((f) => (!cuisine || f.cuisine === cuisine) && (!s || f.name.toLowerCase().includes(s) || (f.brand ?? '').toLowerCase().includes(s)))
+    return filterDiet(catalog, diet).filter((f) => (!cuisine || f.cuisine === cuisine) && (!s || f.name.toLowerCase().includes(s) || (f.brand ?? '').toLowerCase().includes(s)))
       .sort((a, b) => (b.useCount ?? 0) - (a.useCount ?? 0) || a.name.localeCompare(b.name)).slice(0, cuisine ? 80 : 40)
-  }, [q, catalog, cuisine])
+  }, [q, catalog, cuisine, diet])
   const serve = (f: CatalogFood) => f.servingGrams ?? 100
 
   async function logFood(f: CatalogFood, g: number) {

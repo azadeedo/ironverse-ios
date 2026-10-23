@@ -1,6 +1,7 @@
 // SETTINGS — grouped controls for profile, targets, schedule, equipment and data.
 // Inline editors autosave; sheet editors save explicitly. Weight edits log a weigh-in.
 
+import { DietCard } from './settings/DietCard'
 import { halalMode, prayerConfig, ramadanConfig } from '@/db/defaults'
 import { PrivacyCard } from './settings/PrivacyCard'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -382,6 +383,7 @@ export default function SettingsScreen() {
       <AnchorSection id="food-energy" highlight={highlight === 'food-energy'}>
         <Section title="Food & energy">
           <FoodPrefsCard profile={profile} onPatch={quietSave} />
+          <div className="mt-3"><DietCard /></div>
         </Section>
       </AnchorSection>
       )}

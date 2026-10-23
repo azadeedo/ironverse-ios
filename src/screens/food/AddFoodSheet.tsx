@@ -4,6 +4,9 @@
 // Halal mode hides pork and alcohol and offers substitutes when a search asks
 // for them; ambiguous items stay visible with a "check the label" note.
 // Energy is entered in calories OR kilojoules and ALWAYS stored as kcal.
+import { DIET_KEY, dietById, dietMacros, filterDiet } from '@/lib/diets'
+import { getSetting } from '@/db'
+import { useLiveQuery } from 'dexie-react-hooks'
 import { ScanBarcode } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { AlertTriangle, ChevronLeft, History, Star, Utensils, Wand2 } from 'lucide-react'
@@ -116,7 +119,9 @@ export function AddFoodSheet({
   }, [open, initialMeal])
 
   /** everything halal mode allows to be shown */
-  const visible = useMemo(() => filterHalal(catalog, halal), [catalog, halal])
+  // v10.2: the chosen diet (vegetarian, vegan…) narrows the search too
+  const diet = dietById(useLiveQuery(() => getSetting<string>(DIET_KEY, 'balanced'), []))
+  const visible = useMemo(() => filterDiet(filterHalal(catalog, halal), diet), [catalog, halal, diet])
 
   const favourites = useMemo(() => visible.filter((c) => c.favourite).sort((a, b) => Number(!!b.pinned) - Number(!!a.pinned)), [visible])
   // v6: the foods he actually logs most, automatically — starring stays manual
@@ -490,6 +495,9 @@ export function AddFoodSheet({
               placeholder={`Search ${visible.length}+ foods`}
               autoFocus={false}
             />
+            {['vegetarian', 'vegan', 'pescatarian', 'dairy-free', 'gluten-free'].includes(diet.id) && (
+              <p className="mt-1.5 px-1 text-[11.5px] text-ink3">{diet.emoji} Showing {diet.label.toLowerCase()} foods — change your diet in Settings → Food.</p>
+            )}
             <div className="no-scrollbar -mx-4 mt-2 flex gap-2 overflow-x-auto px-4 py-1">
               {/* Middle Eastern is browsed as a cuisine (row below), not as a food type */}
               {([null, 'mine', ...FOOD_CATEGORIES.filter((k) => k !== 'middle-eastern')] as Filter[]).map((c) => (
