@@ -6,7 +6,7 @@ What it does (idempotent, safe to re-run):
   1. attaches TestFlight build $IV_BUILD (default 3) to version 1.0.0
   2. writes the App Review contact + notes (no phone — the owner adds it)
   3. uploads the paywall review screenshot to each subscription
-It never submits anything for review and never changes prices.
+It never changes prices, and submits for review only when IV_SUBMIT=1 (manual release).
 """
 import hashlib
 import json
@@ -146,6 +146,55 @@ def _():
         print(f'   {a.get("productId")}: state {a.get("state")}, period {a.get("subscriptionPeriod")}, family {a.get("familySharable")}, '
               f'review note {bool(a.get("reviewNote"))}, localizations {[(l["attributes"]["locale"], l["attributes"].get("state")) for l in locs]}, '
               f'price rows {len(prices)}, screenshot {(shot.get("assetDeliveryState") or {}).get("state")}')
+
+# ---------- submit for review (owner approval 23 Oct 2026; only with IV_SUBMIT=1) ----------
+# Manual release: once Apple approves, the app waits for the owner to press Release.
+if os.environ.get('IV_SUBMIT') == '1':
+    if failures:
+        print('\n== submit for review\n   NOT SUBMITTED: earlier steps failed')
+    else:
+        @step('release type: manual')
+        def _():
+            call('PATCH', f'/v1/appStoreVersions/{VID}', {'data': {'type': 'appStoreVersions', 'id': VID, 'attributes': {'releaseType': 'MANUAL'}}})
+            a = call('GET', f'/v1/appStoreVersions/{VID}')['data']['attributes']
+            print(f'   releaseType {a.get("releaseType")}')
+
+        for sid in SUBS:
+            def _sub(sid=sid):
+                a = call('GET', f'/v1/subscriptions/{sid}')['data']['attributes']
+                if a.get('state') != 'READY_TO_SUBMIT':
+                    print(f'   {a.get("productId")} is {a.get("state")}, nothing to do')
+                    return
+                call('POST', '/v1/subscriptionSubmissions', {'data': {'type': 'subscriptionSubmissions',
+                     'relationships': {'subscription': {'data': {'type': 'subscriptions', 'id': sid}}}}})
+                print(f'   {a.get("productId")} submitted with the app version')
+            step(f'submit subscription {sid} with the version')(_sub)
+
+        @step(f'submit version {VERSION} for App Review')
+        def _():
+            if failures:  # never send the app without its subscriptions
+                raise RuntimeError('not submitted, earlier steps failed: ' + '; '.join(failures))
+            open_subs =get(f'/v1/reviewSubmissions?filter[app]={APP_ID}&filter[platform]=IOS&filter[state]=READY_FOR_REVIEW').get('data') or []
+            if open_subs:
+                rs = open_subs[0]['id']
+                print(f'   reusing draft review submission {rs}')
+            else:
+                rs = call('POST', '/v1/reviewSubmissions', {'data': {'type': 'reviewSubmissions', 'attributes': {'platform': 'IOS'},
+                          'relationships': {'app': {'data': {'type': 'apps', 'id': APP_ID}}}}})['data']['id']
+                print(f'   created review submission {rs}')
+            items = get(f'/v1/reviewSubmissions/{rs}/items').get('data') or []
+            if not items:
+                call('POST', '/v1/reviewSubmissionItems', {'data': {'type': 'reviewSubmissionItems',
+                     'relationships': {'reviewSubmission': {'data': {'type': 'reviewSubmissions', 'id': rs}},
+                                       'appStoreVersion': {'data': {'type': 'appStoreVersions', 'id': VID}}}}})
+                print('   version added to the submission')
+            call('PATCH', f'/v1/reviewSubmissions/{rs}', {'data': {'type': 'reviewSubmissions', 'id': rs, 'attributes': {'submitted': True}}})
+            s = call('GET', f'/v1/reviewSubmissions/{rs}')['data']['attributes']
+            print(f'   review submission state {s.get("state")}, submitted {s.get("submittedDate")}')
+            v = call('GET', f'/v1/appStoreVersions/{VID}')['data']['attributes']
+            print(f'   version {VERSION} state {v.get("appStoreState")}')
+else:
+    print('\n== submit for review\n   not requested (set IV_SUBMIT=1 when starting the build)')
 
 print('\nSUMMARY: ' + ('all steps OK' if not failures else 'FAILED: ' + '; '.join(failures)))
 sys.exit(1 if failures else 0)

@@ -35,7 +35,7 @@ def call(method, path, body=None, ok=(200, 201, 204)):
     r = requests.request(method, API + path, headers={'Authorization': 'Bearer ' + token(), 'Content-Type': 'application/json'},
                          data=json.dumps(body) if body is not None else None, timeout=60)
     if r.status_code not in ok:
-        raise RuntimeError(f'{method} {path} -> {r.status_code}: {r.text[:800]}')
+        raise RuntimeError(f'{method} {path} -> {r.status_code}: {r.text[:3000]}')
     return r.json() if r.text else {}
 
 

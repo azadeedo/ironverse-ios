@@ -100,7 +100,7 @@ workflows:
     environment:
       vars:
         APP_STORE_APPLE_ID: 6825232233
-        IV_BUILD: 3
+        IV_BUILD: 10
     scripts:
       - name: Listing via App Store Connect API
         script: |
