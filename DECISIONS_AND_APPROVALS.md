@@ -11,7 +11,7 @@ Each entry records who decided, when, and what was done. Pending items wait for 
 | D-005 | 21 Oct 2026 | The App Store build uses neutral wording; the owner's personal goals and wording appear only in the web build. | Owner | Done |
 | D-006 | 21 Oct 2026 | Name "Ironverse: Gym Workout Planner", subtitle "Calorie Counter & Food Scanner". Listing, screenshots and previews were approved for upload. | Owner | Done |
 | D-007 | 21 Oct 2026 | **Monthly Pro price: A$12.99 → A$9.99** (Australian base storefront). Yearly stays A$79.99. | Owner request | **Approved 22 Oct 2026; DONE.** Verified in App Store Connect: Australia A$9.99 (US$5.99, Canada C$7.99) |
-| D-008 | — | "Coach programs — CBum & Nippard": real people's names in the App Store build (App Review risk). Options: rename to "Pro-style programs" in the iOS build only, or keep. | — | **Awaiting decision** |
+| D-008 | 23 Oct 2026 | Coach programs keep real names (Chris Bumstead, Jeff Nippard, Arnold Schwarzenegger, Mike Mentzer, Dorian Yates) in the App Store build, always as "Inspired by …" with "our own words, not affiliated with or endorsed by" wording. | Owner | **Decided: keep the names.** Known App Review risk (guideline 5.2.1). Fallback if Apple rejects: switch to style names only (the `inspiredBy` field can be hidden in the iOS build). |
 | D-009 | — | Any in-app usage measurement (first workout, retention). Options: none (App Store Connect only) or an anonymous, opt-in counter. Needs a privacy review. | — | Not started |
 | D-010 | — | Submit 1.0 for App Review | — | **Needs explicit approval** |
 | D-011 | — | Release 1.0 (manual release after approval) | — | **Needs explicit approval** |

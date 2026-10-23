@@ -36,7 +36,7 @@ The status labels used below are DONE, IN PROGRESS, BLOCKED, NOT STARTED and FAI
 | 0.11 | App Privacy answers (see store/APP_STORE_LISTING.md) | NOT STARTED | Publishing them is a public statement, so it needs a final OK |
 | 0.12 | Subscription tests in sandbox and TestFlight (SUBSCRIPTION_TEST_PLAN.md) | BLOCKED | Needs 0.6 |
 | 0.13 | Device test pass on the owner's iPhone (RELEASE_CHECKLIST.md) | IN PROGRESS | Owner testing |
-| 0.14 | "Coach programs — CBum & Nippard" uses real people's names (App Review 5.1/5.2 risk) | NOT STARTED | **Decision needed** (D-008) |
+| 0.14 | Coach programs use real people's names (App Review 5.2.1 risk) | DONE: owner chose to keep the names with "inspired by, not affiliated" wording (D-008, 23 Oct 2026); reviewer note added | — |
 | 0.15 | Submit for review | NOT STARTED | **Explicit approval** |
 | 0.16 | Release on approval (manual release) | NOT STARTED | **Explicit approval** |
 

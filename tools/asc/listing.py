@@ -28,7 +28,9 @@ SUBSCRIPTIONS: New installs get every Premium feature free for 7 days. This is a
 
 TO TRY: Workout tab > Start this workout > log a set. Food tab > + > pick a cuisine chip (e.g. Thai) > tap + on a dish. Progress tab shows charts after a few entries. More > Suggest & report sends feedback to the developer.
 
-Data is stored on the device. The optional meal-photo feature uses the user's OWN Anthropic API key and asks for consent before sending. Barcode lookups use the public Open Food Facts database. Location is used only while tracking an outdoor run. There are no ads and no tracking."""
+Data is stored on the device. The optional meal-photo feature uses the user's OWN Anthropic API key and asks for consent before sending. Barcode lookups use the public Open Food Facts database. Location is used only while tracking an outdoor run. There are no ads and no tracking.
+
+COACH PROGRAMS: styles are described in our own words as "inspired by" publicly known training approaches of well-known athletes and coaches. Each one states it is not their program and is not affiliated with or endorsed by them; no likeness, photo or quote is used."""
 
 failures = []
 
