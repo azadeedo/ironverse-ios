@@ -45,6 +45,20 @@ export default function CoachCard({ coach, active, applicable = true, onPicks, o
         <Line label="Deloads" value={coach.deload} />
       </div>
 
+      {coach.weeklySplit && coach.weeklySplit.length > 0 && (
+        <>
+          <h3 className="mt-3.5 text-[13px] font-semibold text-ink">The weekly routine</h3>
+          <div className="mt-1.5 overflow-hidden rounded-xl border border-line">
+            {coach.weeklySplit.map((d) => (
+              <div key={d.day + d.focus} className="flex gap-3 border-b border-line px-3 py-1.5 last:border-b-0">
+                <div className="w-[52px] shrink-0 text-[12px] font-bold text-brand">{d.day}</div>
+                <div className="min-w-0 flex-1 text-[12.5px] leading-snug text-ink2">{d.focus}</div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
       <h3 className="mt-3.5 text-[13px] font-semibold text-ink">How it trains</h3>
       <ul className="mt-1.5 space-y-1.5">
         {coach.principles.map((p) => (

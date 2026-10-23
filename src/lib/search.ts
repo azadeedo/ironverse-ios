@@ -103,7 +103,7 @@ const SCREEN_TARGETS: { title: string; subtitle: string; keywords: string; to: s
   { title: 'Saved', subtitle: 'Saved workouts, starred exercises, favourite foods, meals', keywords: 'saved save template favourite favorites starred bookmark', to: '/saved' },
   { title: 'Fasting timer', subtitle: 'Intermittent fasting 13:11 to 20:4', keywords: 'fasting fast intermittent 16:8 18:6 omad timer window', to: '/fasting' },
   { title: 'Sleep & recovery', subtitle: 'Rate last night, Apple Watch sleep, recovery score', keywords: 'sleep bed tired recovery hrv rest night insomnia nap', to: '/sleep' },
-  { title: 'Coach programs', subtitle: 'Inspired by Bumstead, Nippard, Arnold, Mentzer, Yates', keywords: 'coach programs cbum chris bumstead nippard jeff arnold schwarzenegger mike mentzer heavy duty dorian yates blood guts hit block', to: '/programs' },
+  { title: 'Coach programs', subtitle: '12 styles — Bumstead, Coleman, Israetel, Wendler, Zane…', keywords: 'coach programs ronnie coleman mike israetel rp renaissance volume jim wendler wave strength mark rippetoe novice linear 3x5 bret contreras glutes hip thrust frank zane aesthetic symmetry routine split cbum chris bumstead nippard jeff arnold schwarzenegger mike mentzer heavy duty dorian yates blood guts hit block', to: '/programs' },
   { title: 'Cardio', subtitle: 'Runs, walks and rope', keywords: 'cardio run walk jump rope treadmill steps', to: '/cardio' },
   { title: 'Water & creatine', subtitle: 'Logs and reminders', keywords: 'water hydration creatine drink litres supplement', to: '/hydration' },
   { title: 'Exercise library', subtitle: 'Every exercise, with form cues', keywords: 'exercise library list arsenal movements', to: '/exercises' },

@@ -29,8 +29,8 @@ import { fmtDate } from '@/lib/fmt'
 import { todayStr } from '@/lib/id'
 import { mondayOf } from '@/lib/plangen'
 import { useUI } from '@/lib/store'
-import { COACH_LIST, coachLabel } from '@/data/coaches'
-import type { Coach } from '@/data/coaches'
+import { COACH_LIST, EXTRA_PROGRAMS, coachLabel } from '@/data/coaches'
+import type { Coach, ProgramArchetype } from '@/data/coaches'
 import type { CoachId, Plan, ProgramOverride } from '@/db/types'
 import CoachCard from './programs/CoachCard'
 import Compare from './programs/Compare'
@@ -50,7 +50,10 @@ export default function ProgramsScreen() {
   const plans = useLiveQuery(async () => db.plans.toArray(), [])
   const overrides = useLiveQuery(() => allOverrides(), [])
 
-  const [picksFor, setPicksFor] = useState<Coach | null>(null)
+  const [picksFor, setPicksFor] = useState<ProgramArchetype | null>(null)
+  // v10.3: the reading-material styles, one at a time behind a picker
+  const [extraId, setExtraId] = useState<string>(EXTRA_PROGRAMS[0]?.id ?? '')
+  const extra = EXTRA_PROGRAMS.find((p) => p.id === extraId) ?? EXTRA_PROGRAMS[0]
   const [applyFor, setApplyFor] = useState<Coach | null>(null)
   const [blockAsk, setBlockAsk] = useState<{ coach: Coach; weeks: number } | null>(null)
   const [cancelAsk, setCancelAsk] = useState<ProgramOverride | 'week' | null>(null)
@@ -268,6 +271,24 @@ export default function ProgramsScreen() {
           ))}
         </div>
       </Section>
+
+      {/* ---------- more coach styles (v10.3) ---------- */}
+      {extra && (
+        <Section title={`More coach styles · ${EXTRA_PROGRAMS.length}`}>
+          <div className="-mx-1 mb-3 flex flex-wrap gap-1.5 px-1">
+            {EXTRA_PROGRAMS.map((p) => (
+              <button key={p.id} type="button" aria-pressed={p.id === extra.id} onClick={() => setExtraId(p.id)}
+                className={`pressable rounded-full px-3 py-1.5 text-[12.5px] font-semibold ${p.id === extra.id ? 'bg-brand text-black' : 'bg-surface3 text-ink2'}`}>
+                {p.inspiredBy ?? p.name}
+              </button>
+            ))}
+          </div>
+          <CoachCard coach={extra} applicable={false} onPicks={() => setPicksFor(extra)} onUse={() => {}} />
+          <p className="mt-2 px-1 text-[11.5px] leading-relaxed text-ink3">
+            Want to run one? Copy its weekly routine into Workout → Build my own program. Every style is our own description of publicly known training ideas — not affiliated with or endorsed by the people named.
+          </p>
+        </Section>
+      )}
 
       {/* ---------- fair comparison ---------- */}
       {COACH_LIST.length >= 2 && (

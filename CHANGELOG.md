@@ -6,6 +6,10 @@ The App Store version (Xcode `MARKETING_VERSION`) is separate from the web base 
 Web base 2.24.0 (`iron-verse@7905a90`).
 
 **Builds**
+- **Build 10** (23 Oct 2026, owner request):
+  - Muslim features, only when Halal mode is on in Settings → Food: a live prayer banner on Today (next prayer with countdown, all five times, Hijri date) and a Prayer screen with a Qibla compass, prayer reminders, 8 calculation methods, Shafi/Hanafi Asr, per-prayer offsets, GPS or city, and "plan workouts around today's prayers". Times checked against Aladhan.
+  - Diet options in Settings → Food → Diet: balanced, high protein, low carb, keto, Mediterranean, vegetarian, vegan, pescatarian, dairy free and gluten free. Each sets the carb and fat guides, filters food search where it applies, and comes with tips.
+  - Six more coach styles, each with a weekly routine and not-affiliated wording: Mass Monster Split (Ronnie Coleman), Volume Landmarks Mesocycle (Dr Mike Israetel), Wave Strength 4-Day (Jim Wendler), Novice Linear Strength (Mark Rippetoe), Glute-Focused Strength (Bret Contreras) and Aesthetic Symmetry Split (Frank Zane). The Programs screen now shows all 10 extra styles under "More coach styles"; the earlier four had not been showing there.
 - **Build 9** (23 Oct 2026): exercise pictures uncropped (square thumbnails of real photos), our demos first, photos second, stick-figure diagram one tap away; Saved hub + Save as template; 26-step tour; weigh-in fix; lighter exercise lists (no autoplay video wall).
 - **Build 8** (23 Oct 2026): Apple Health "Connect" can no longer sit on "Connecting…": every Health request has a time limit, the button turns Connected as soon as permission is granted (the first sync runs in the background), a step-by-step status, Check again, help when no permission sheet appears, and a connection log on Connected devices.
 - **Build 7** (23 Oct 2026): Apple Watch companion app (today, set logging with rest timer and wrist taps, quick water and creatine) talking to the iPhone app; WHOOP, Oura, Garmin, Polar, Withings, scales, Strava and HR straps through Apple Health with setup guides; Quick log sheet; foldable Today sections.

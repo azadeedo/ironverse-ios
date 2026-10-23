@@ -163,6 +163,8 @@ export interface ProgramArchetype {
   }
   /** the teaching layer: order, rep ranges, progression, stalls, machines */
   rationale?: ProgramRationale
+  /** v10.3: the weekly routine, day by day (or week by week) */
+  weeklySplit?: { day: string; focus: string }[]
   /** a worked example day, so the shape of a session is concrete */
   sampleDay?: { title: string; lines: string[] }
 }
@@ -1065,6 +1067,671 @@ const BLOOD_AND_GUTS: ProgramArchetype = {
   },
 }
 
+// ============================================================
+// v10.3 (owner request, 23 Oct 2026): six more "inspired by" styles, each with
+// a weekly routine. Same rule as above — publicly known training ideas in our
+// own words, no branded program names, never implying endorsement.
+// ============================================================
+
+// ---------- MASS MONSTER — heavy compounds, high volume, twice a week ----------
+
+const MASS_MONSTER: ProgramArchetype = {
+  id: 'mass-monster',
+  name: 'Mass Monster Split',
+  inspiredBy: 'Ronnie Coleman',
+  influence: 'Inspired by the publicly known training style of Ronnie Coleman: very heavy basic lifts, lots of volume and each muscle trained twice a week. Our own words — not his program, and not affiliated with or endorsed by him.',
+  shortCredit: 'Heavy, high-volume six-day bodybuilding split',
+  tagline: 'Heavy basics, lots of sets, every muscle twice a week.',
+  principles: [
+    'Six training days, one rest day — each muscle is hit twice a week.',
+    'The basics do the heavy lifting: squats, deadlifts, rows, bench and overhead presses.',
+    'One day of each pair goes heavy (6-10 reps), the other leans on volume and machines (10-15).',
+    'Lots of sets — four or five per exercise is normal — but form stays the limit, never ego.',
+    'Food and sleep are part of the program: this volume only works with a surplus behind it.',
+  ],
+  bestFor: [
+    'You are an experienced lifter chasing as much size as possible.',
+    'You can train six days a week and eat enough to recover.',
+    'You love heavy barbell work.',
+  ],
+  tradeoffs: [
+    'Very demanding — not a beginner program, and joints need to be healthy.',
+    'Sessions run 75-90 minutes.',
+    'Heavy deadlifts and squats twice a week need excellent technique.',
+  ],
+  weeklySets: '18-26 hard sets per muscle per week, split across two sessions',
+  intensity: '1-3 reps in reserve; heavy day top sets close to failure',
+  tempo: 'Controlled down, powerful up — no bouncing out of the hole',
+  exerciseBias: 'Barbell and dumbbell basics first, machines for extra volume',
+  deload: 'A lighter week every 6-8 weeks, or sooner if joints complain.',
+  weeklySplit: [
+    { day: 'Mon', focus: 'Back, biceps, shoulders — heavy (deadlift, rows)' },
+    { day: 'Tue', focus: 'Legs — heavy (squat, leg press)' },
+    { day: 'Wed', focus: 'Chest, triceps — heavy (bench, incline)' },
+    { day: 'Thu', focus: 'Back, biceps, shoulders — volume (pull-ups, T-bar, machines)' },
+    { day: 'Fri', focus: 'Legs — volume (front squat, hack squat, lunges)' },
+    { day: 'Sat', focus: 'Chest, triceps, calves — volume' },
+    { day: 'Sun', focus: 'Rest' },
+  ],
+  picks: {
+    chest: [
+      { id: 'barbell-bench-press', why: 'The heavy flat press that leads chest day.', role: 'compound' },
+      { id: 'incline-barbell-bench-press', why: 'Heavy incline for the upper chest.', role: 'compound' },
+      { id: 'incline-dumbbell-press', why: 'Dumbbells for a deeper stretch on the volume day.', role: 'compound' },
+      { id: 'dumbbell-fly', why: 'Stretch work after the heavy pressing.', role: 'isolation' },
+    ],
+    back: [
+      { id: 'barbell-deadlift', why: 'The heavy back-day anchor — strict, never a grind.', role: 'compound' },
+      { id: 'barbell-bent-over-row', why: 'Heavy rows for thickness.', role: 'compound' },
+      { id: 't-bar-row', why: 'A second heavy row angle.', role: 'compound' },
+      { id: 'dumbbell-row', why: 'One side at a time, heavy and long range.', role: 'compound' },
+      { id: 'lat-pulldown', why: 'Width work on the volume day.', role: 'compound' },
+    ],
+    shoulders: [
+      { id: 'dumbbell-shoulder-press', why: 'Seated heavy pressing.', role: 'compound' },
+      { id: 'barbell-overhead-press', why: 'The standing strength press.', role: 'compound' },
+      { id: 'dumbbell-lateral-raise', why: 'High-volume side delts.', role: 'isolation' },
+      { id: 'dumbbell-rear-delt-fly', why: 'Rear delts on every back day.', role: 'isolation' },
+    ],
+    biceps: [
+      { id: 'curl-bar-curl', why: 'Heavy, strict barbell-style curls.', role: 'isolation' },
+      { id: 'dumbbell-curl', why: 'Alternating dumbbell volume.', role: 'isolation' },
+      { id: 'preacher-curl', why: 'Strict bottom-range work.', role: 'isolation' },
+    ],
+    triceps: [
+      { id: 'close-grip-bench-press', why: 'Heavy compound triceps work.', role: 'compound' },
+      { id: 'skull-crusher', why: 'Long-head stretch under load.', role: 'isolation' },
+      { id: 'rope-pushdown', why: 'High-rep finisher.', role: 'isolation' },
+    ],
+    quads: [
+      { id: 'barbell-squat', why: 'The heavy leg-day anchor.', role: 'compound' },
+      { id: 'leg-press', why: 'Heavy volume once squats are done.', role: 'compound' },
+      { id: 'front-squat', why: 'Quad-biased squat for the volume day.', role: 'compound' },
+      { id: 'hack-squat', why: 'Machine squat volume without the back cost.', role: 'compound' },
+      { id: 'dumbbell-walking-lunge', why: 'Long walking lunges to finish legs.', role: 'compound' },
+    ],
+    hamstrings: [
+      { id: 'barbell-rdl', why: 'Heavy hinge for the hamstrings.', role: 'compound' },
+      { id: 'lying-leg-curl', why: 'Direct knee-flexion work.', role: 'isolation' },
+      { id: 'seated-leg-curl', why: 'Second curl angle.', role: 'isolation' },
+    ],
+    glutes: [
+      { id: 'barbell-squat', why: 'Deep squats load the glutes hard.', role: 'compound' },
+      { id: 'dumbbell-walking-lunge', why: 'Long strides for glutes.', role: 'compound' },
+    ],
+    calves: [
+      { id: 'standing-calf-raise-machine', why: 'Heavy straight-knee calves.', role: 'isolation' },
+      { id: 'seated-calf-raise-machine', why: 'Bent-knee calves.', role: 'isolation' },
+    ],
+    abs: [
+      { id: 'hanging-leg-raise', why: 'Strict hanging work.', role: 'isolation' },
+      { id: 'cable-crunch', why: 'Loaded ab work.', role: 'isolation' },
+    ],
+    forearms: [
+      { id: 'farmers-carry', why: 'Grip that survives heavy deadlifts and rows.', role: 'compound' },
+      { id: 'reverse-curl', why: 'Forearm mass.', role: 'isolation' },
+    ],
+  },
+  prescription: {
+    compound: { sets: 4, reps: [6, 12], restSec: 150, note: 'Heavy day 6-8, volume day 10-12. Strict form every rep.' },
+    isolation: { sets: 4, reps: [10, 15], restSec: 75, note: 'Volume and squeeze — no swinging.' },
+    core: { sets: 3, reps: [12, 20], restSec: 45, note: 'Strict and controlled.' },
+  },
+  sampleDay: {
+    title: 'Sample heavy leg day',
+    lines: [
+      'Barbell squat — 5 sets building to a heavy 6-8',
+      'Leg press — 4 × 10-12',
+      'Walking lunge — 3 × 12 steps per leg',
+      'Romanian deadlift — 4 × 8-10',
+      'Lying leg curl — 3 × 10-12',
+      'Standing calf raise — 4 × 12-15',
+    ],
+  },
+}
+
+// ---------- VOLUME LANDMARKS — MEV to MRV mesocycles ----------
+
+const VOLUME_LANDMARKS: ProgramArchetype = {
+  id: 'volume-landmarks',
+  name: 'Volume Landmarks Mesocycle',
+  inspiredBy: 'Dr Mike Israetel',
+  influence: 'Inspired by the volume-landmark ideas Dr Mike Israetel teaches publicly: start near the minimum effective volume, add sets each week towards your recoverable maximum, then deload. Our own words — not his or Renaissance Periodization’s program, and not affiliated with or endorsed by either.',
+  shortCredit: 'Mesocycles that ramp sets from minimum to maximum volume',
+  tagline: 'Start with just enough. Add sets every week. Deload before you break.',
+  principles: [
+    'Each muscle has a rough minimum effective volume (MEV) and a maximum recoverable volume (MRV).',
+    'A mesocycle runs 4-6 weeks: week 1 starts near MEV, and sets are added each week towards MRV.',
+    'Effort climbs with volume: about 3 reps in reserve in week 1, down to 0-1 in the final week.',
+    'Let the body decide how many sets to add — pump, soreness and performance are the signals.',
+    'Every mesocycle ends with a deload week at about half the sets and lighter loads.',
+    'Upper/lower or push/pull/legs, 4-6 days a week, each muscle at least twice.',
+  ],
+  bestFor: [
+    'You like a structured block with a clear plan for each week.',
+    'You want to find out how much volume YOU actually grow on.',
+    'You are an intermediate lifter who has stalled on fixed programs.',
+  ],
+  tradeoffs: [
+    'The last week or two are genuinely hard — that is the design.',
+    'It needs honest logging of reps in reserve and recovery.',
+    'Set-adding rules take a block or two to get a feel for.',
+  ],
+  weeklySets: 'About 8-10 sets per muscle in week 1, rising to roughly 16-22 by the last week',
+  intensity: '3 RIR → 2 → 1 → 0-1 across the mesocycle',
+  tempo: 'Controlled 2-3 second negative, emphasise the stretch',
+  exerciseBias: 'Stable, stretch-loaded exercises you can take close to failure safely',
+  deload: 'Every 5th or 6th week: half the sets, about a third less load, nothing near failure.',
+  weeklySplit: [
+    { day: 'Wk 1', focus: 'Start near minimum volume — 3 reps in reserve' },
+    { day: 'Wk 2', focus: 'Add 1-2 sets to muscles that recovered — 2 RIR' },
+    { day: 'Wk 3', focus: 'Add sets again where performance held — 1-2 RIR' },
+    { day: 'Wk 4', focus: 'Near your maximum recoverable volume — 0-1 RIR' },
+    { day: 'Wk 5', focus: 'Deload — half the sets, lighter, no failure' },
+    { day: 'Days', focus: 'Upper / Lower / Rest / Upper / Lower (or push / pull / legs ×2)' },
+  ],
+  picks: {
+    chest: [
+      { id: 'incline-dumbbell-press', why: 'Deep stretch under load, easy to progress.', role: 'compound' },
+      { id: 'smith-bench-press', why: 'Stable enough to take close to failure alone.', role: 'compound' },
+      { id: 'cable-fly-low', why: 'Tension at full stretch.', role: 'isolation' },
+      { id: 'pec-deck', why: 'Cheap extra sets late in the block.', role: 'isolation' },
+    ],
+    back: [
+      { id: 'chest-supported-row', why: 'All the back, none of the lower-back fatigue — sets add up cleanly.', role: 'compound' },
+      { id: 'lat-pulldown', why: 'Stretch at the top, easy to add sets.', role: 'compound' },
+      { id: 'single-arm-cable-row', why: 'Long range per side.', role: 'compound' },
+      { id: 'pull-up', why: 'Full-range vertical pull.', role: 'compound' },
+    ],
+    shoulders: [
+      { id: 'cable-lateral-raise', why: 'Side delts tolerate lots of sets — they grow on volume.', role: 'isolation' },
+      { id: 'shoulder-press-machine', why: 'Stable pressing close to failure.', role: 'compound' },
+      { id: 'reverse-pec-deck', why: 'Rear delts, low fatigue.', role: 'isolation' },
+    ],
+    biceps: [
+      { id: 'incline-dumbbell-curl', why: 'Biceps at their longest.', role: 'isolation' },
+      { id: 'cable-curl', why: 'Even tension for volume.', role: 'isolation' },
+      { id: 'preacher-curl', why: 'Hard at the stretched bottom.', role: 'isolation' },
+    ],
+    triceps: [
+      { id: 'overhead-cable-extension', why: 'Long-head stretch — the highest-value triceps set.', role: 'isolation' },
+      { id: 'skull-crusher', why: 'Loadable stretch work.', role: 'isolation' },
+      { id: 'rope-pushdown', why: 'Low-fatigue sets to add late.', role: 'isolation' },
+    ],
+    quads: [
+      { id: 'hack-squat', why: 'Deep, stable, close to failure.', role: 'compound' },
+      { id: 'leg-press', why: 'Loadable and safe alone.', role: 'compound' },
+      { id: 'leg-extension', why: 'Isolated quad sets that are easy to add.', role: 'isolation' },
+      { id: 'dumbbell-bulgarian-split-squat', why: 'Huge stretch, little spinal load.', role: 'compound' },
+    ],
+    hamstrings: [
+      { id: 'seated-leg-curl', why: 'Hamstrings at long length — the best curl for growth.', role: 'isolation' },
+      { id: 'barbell-rdl', why: 'Stretch-loaded hinge.', role: 'compound' },
+      { id: 'lying-leg-curl', why: 'Second curl angle.', role: 'isolation' },
+    ],
+    glutes: [
+      { id: 'dumbbell-bulgarian-split-squat', why: 'Deep glute stretch.', role: 'compound' },
+      { id: 'hip-thrust-machine', why: 'Easy to load and add sets.', role: 'compound' },
+    ],
+    calves: [
+      { id: 'standing-calf-raise-machine', why: 'Pause at the stretch every rep.', role: 'isolation' },
+      { id: 'seated-calf-raise-machine', why: 'Bent-knee calves.', role: 'isolation' },
+    ],
+    abs: [
+      { id: 'cable-crunch', why: 'Loaded and progressive.', role: 'isolation' },
+      { id: 'hanging-leg-raise', why: 'Long range from a hang.', role: 'isolation' },
+    ],
+    forearms: [
+      { id: 'wrist-curl', why: 'Quick sets at the end.', role: 'isolation' },
+      { id: 'reverse-curl', why: 'Top of the forearm.', role: 'isolation' },
+    ],
+  },
+  prescription: {
+    compound: { sets: 3, reps: [6, 12], restSec: 150, note: 'Week 1: 3 RIR. Add a set where you recovered; RIR drops each week.' },
+    isolation: { sets: 3, reps: [10, 20], restSec: 75, note: 'Own the stretch. Add sets before you add load.' },
+    core: { sets: 2, reps: [10, 20], restSec: 60, note: 'Add a set across the block like everything else.' },
+  },
+  sampleDay: {
+    title: 'Sample upper day — week 1 vs week 4',
+    lines: [
+      'Incline dumbbell press — 2 sets (wk 1) → 4 sets (wk 4)',
+      'Chest-supported row — 2 → 4 sets',
+      'Lat pulldown — 2 → 3 sets',
+      'Cable lateral raise — 2 → 5 sets',
+      'Overhead cable extension — 2 → 3 sets',
+      'Incline dumbbell curl — 2 → 3 sets',
+    ],
+  },
+}
+
+// ---------- WAVE STRENGTH — training max, three-week waves ----------
+
+const WAVE_STRENGTH: ProgramArchetype = {
+  id: 'wave-strength',
+  name: 'Wave Strength 4-Day',
+  inspiredBy: 'Jim Wendler',
+  influence: 'Inspired by the training-max and wave-loading ideas Jim Wendler has written about publicly: four main lifts, slow steady progress, a last-set push for reps. Our own words — not his program or its branded name, and not affiliated with or endorsed by him.',
+  shortCredit: 'Training-max wave loading on four big lifts',
+  tagline: 'Start light, progress slowly, set rep records — for years.',
+  principles: [
+    'Four days, one main lift each: squat, bench press, deadlift, overhead press.',
+    'Work from a training max of about 90% of your true one-rep max — starting light is the point.',
+    'Three-week wave: week 1 ≈ 65/75/85% × 5, week 2 ≈ 70/80/90% × 3, week 3 ≈ 75/85/95% × 5/3/1.',
+    'The last set of each day is “as many good reps as possible” — that is where the progress shows.',
+    'Week 4 is a light deload. Then add about 2.5 kg to upper-body and 5 kg to lower-body training maxes.',
+    'After the main lift: assistance for push, pull and single-leg or core — about 50-100 reps each.',
+  ],
+  bestFor: [
+    'You want to get stronger on the big four, steadily, without burning out.',
+    'You have 45-60 minutes, four days a week.',
+    'You like a simple plan that runs for months.',
+  ],
+  tradeoffs: [
+    'Progress feels slow at first — that is deliberate.',
+    'Less hypertrophy volume than a bodybuilding split unless you add assistance.',
+    'You need an honest one-rep max (or a good estimate) to start.',
+  ],
+  weeklySets: 'Main lift: 3 work sets + optional back-off sets; assistance 50-100 reps per category',
+  intensity: 'Percentages of a training max; last set to a hard, clean rep max',
+  tempo: 'Normal, powerful, technically clean reps',
+  exerciseBias: 'The four barbell lifts lead; simple assistance after',
+  deload: 'Every 4th week (40/50/60% × 5), built into the cycle.',
+  weeklySplit: [
+    { day: 'Day 1', focus: 'Overhead press + push/pull/core assistance' },
+    { day: 'Day 2', focus: 'Deadlift + single-leg/core assistance' },
+    { day: 'Day 3', focus: 'Bench press + push/pull assistance' },
+    { day: 'Day 4', focus: 'Squat + single-leg/core assistance' },
+    { day: 'Wk 1-3', focus: '5s week → 3s week → 5/3/1 week, last set for max reps' },
+    { day: 'Wk 4', focus: 'Deload, then raise training maxes and repeat' },
+  ],
+  picks: {
+    chest: [
+      { id: 'barbell-bench-press', why: 'One of the four main lifts.', role: 'compound' },
+      { id: 'dumbbell-bench-press', why: 'Simple pressing assistance.', role: 'compound' },
+      { id: 'push-up', why: 'Easy push volume after the main work.', role: 'compound' },
+      { id: 'chest-dip', why: 'Classic push assistance.', role: 'compound' },
+    ],
+    back: [
+      { id: 'barbell-deadlift', why: 'One of the four main lifts.', role: 'compound' },
+      { id: 'chin-up', why: 'The go-to pull assistance.', role: 'compound' },
+      { id: 'dumbbell-row', why: 'Heavy, simple rowing.', role: 'compound' },
+      { id: 'pull-up', why: 'Pull reps every session.', role: 'compound' },
+    ],
+    shoulders: [
+      { id: 'barbell-overhead-press', why: 'One of the four main lifts.', role: 'compound' },
+      { id: 'dumbbell-lateral-raise', why: 'Optional shoulder assistance.', role: 'isolation' },
+      { id: 'face-pull', why: 'Shoulder health with all the pressing.', role: 'isolation' },
+    ],
+    biceps: [
+      { id: 'chin-up', why: 'Pull assistance that trains the biceps too.', role: 'compound' },
+      { id: 'dumbbell-curl', why: 'Optional arm work.', role: 'isolation' },
+    ],
+    triceps: [
+      { id: 'triceps-dip', why: 'Push assistance for lockout strength.', role: 'compound' },
+      { id: 'close-grip-bench-press', why: 'Bench lockout assistance.', role: 'compound' },
+    ],
+    quads: [
+      { id: 'barbell-squat', why: 'One of the four main lifts.', role: 'compound' },
+      { id: 'dumbbell-bulgarian-split-squat', why: 'Single-leg assistance.', role: 'compound' },
+      { id: 'dumbbell-step-up', why: 'Simple single-leg work.', role: 'compound' },
+    ],
+    hamstrings: [
+      { id: 'barbell-rdl', why: 'Hinge assistance after squats.', role: 'compound' },
+      { id: 'good-morning', why: 'Light posterior-chain assistance.', role: 'compound' },
+    ],
+    glutes: [
+      { id: 'dumbbell-walking-lunge', why: 'Single-leg/glute assistance.', role: 'compound' },
+      { id: 'kettlebell-swing', why: 'Hip power and conditioning.', role: 'compound' },
+    ],
+    calves: [
+      { id: 'standing-calf-raise-machine', why: 'Optional extra.', role: 'isolation' },
+    ],
+    abs: [
+      { id: 'hanging-leg-raise', why: 'Core assistance.', role: 'isolation' },
+      { id: 'ab-wheel-rollout', why: 'Anti-extension strength for heavy lifts.', role: 'isolation' },
+    ],
+    forearms: [
+      { id: 'farmers-carry', why: 'Grip for heavy deadlifts.', role: 'compound' },
+    ],
+  },
+  prescription: {
+    compound: { sets: 3, reps: [3, 5], restSec: 180, note: 'Percentages of your training max; last set for as many clean reps as possible.' },
+    isolation: { sets: 3, reps: [10, 15], restSec: 75, note: 'Assistance: 50-100 total reps, nothing to failure.' },
+    core: { sets: 3, reps: [10, 15], restSec: 60, note: 'Core assistance after squat and deadlift days.' },
+  },
+  sampleDay: {
+    title: 'Sample squat day — week 1',
+    lines: [
+      'Warm-up: 40% × 5, 50% × 5, 60% × 3 (of training max)',
+      'Squat — 65% × 5, 75% × 5, 85% × as many clean reps as possible',
+      'Bulgarian split squat — 3 × 10 per leg',
+      'Hanging leg raise — 3 × 10-15',
+      'Optional: 10 minutes of walking or light conditioning',
+    ],
+  },
+}
+
+// ---------- NOVICE LINEAR — add weight every session ----------
+
+const NOVICE_LINEAR: ProgramArchetype = {
+  id: 'novice-linear',
+  name: 'Novice Linear Strength',
+  inspiredBy: 'Mark Rippetoe',
+  influence: 'Inspired by the novice linear-progression approach Mark Rippetoe teaches publicly: a few big barbell lifts, three sets of five, and a little more weight every session. Our own words — not his program or book, and not affiliated with or endorsed by him.',
+  shortCredit: 'Beginner barbell linear progression, 3×5',
+  tagline: 'Three lifts a session. Add weight every time. Simple works.',
+  principles: [
+    'Three full-body sessions a week, alternating workout A and workout B.',
+    'Squat every session: 3 sets of 5.',
+    'Bench press and overhead press alternate each session: 3 × 5.',
+    'Deadlift 1 heavy set of 5 (power clean or rows can rotate in later).',
+    'Add weight every session while it works: about 2.5-5 kg on squat and deadlift, 1-2.5 kg on presses.',
+    'When a lift stalls three sessions in a row, take off about 10% and build back up.',
+  ],
+  bestFor: [
+    'You are new to barbell training or coming back after a long break.',
+    'You want strength fast with a dead-simple plan.',
+    'You can only train three days a week.',
+  ],
+  tradeoffs: [
+    'Linear progress only lasts a few months — then you need an intermediate plan.',
+    'Low variety and little arm or isolation work.',
+    'Squatting three times a week is tough; you need to eat enough.',
+  ],
+  weeklySets: 'Squat 9 sets, presses 3-6 each, deadlift 1-2 heavy sets per week',
+  intensity: 'Heavy fives — each session a little heavier than the last',
+  tempo: 'Normal, powerful, technically clean reps',
+  exerciseBias: 'Barbell basics only',
+  deload: 'No planned deloads — reset about 10% on a lift after three stalled sessions.',
+  weeklySplit: [
+    { day: 'Mon', focus: 'A: Squat 3×5 · Bench 3×5 · Deadlift 1×5' },
+    { day: 'Wed', focus: 'B: Squat 3×5 · Overhead press 3×5 · Deadlift 1×5 (or rows)' },
+    { day: 'Fri', focus: 'A again — next week starts with B' },
+    { day: 'Rest', focus: 'Tue, Thu, Sat, Sun — eat, sleep, walk' },
+  ],
+  picks: {
+    chest: [
+      { id: 'barbell-bench-press', why: 'The main horizontal press, alternated with the overhead press.', role: 'compound' },
+    ],
+    back: [
+      { id: 'barbell-deadlift', why: 'One heavy set of five — the whole back works.', role: 'compound' },
+      { id: 'barbell-bent-over-row', why: 'Can rotate in for the deadlift later.', role: 'compound' },
+      { id: 'chin-up', why: 'Optional extra pulling.', role: 'compound' },
+    ],
+    shoulders: [
+      { id: 'barbell-overhead-press', why: 'The standing press, alternated with bench.', role: 'compound' },
+    ],
+    biceps: [
+      { id: 'chin-up', why: 'The only arm work most beginners need.', role: 'compound' },
+    ],
+    triceps: [
+      { id: 'barbell-bench-press', why: 'Pressing trains the triceps hard.', role: 'compound' },
+      { id: 'triceps-dip', why: 'Optional extra.', role: 'compound' },
+    ],
+    quads: [
+      { id: 'barbell-squat', why: 'Every session, 3 × 5 — the core of the program.', role: 'compound' },
+    ],
+    hamstrings: [
+      { id: 'barbell-deadlift', why: 'The hinge that builds the back of the legs.', role: 'compound' },
+      { id: 'barbell-squat', why: 'A full-depth squat trains the hamstrings and hips too.', role: 'compound' },
+    ],
+    glutes: [
+      { id: 'barbell-squat', why: 'Deep squats are glute work.', role: 'compound' },
+      { id: 'barbell-deadlift', why: 'Hip extension under heavy load.', role: 'compound' },
+    ],
+    calves: [
+      { id: 'standing-calf-raise-machine', why: 'Optional — not part of the core plan.', role: 'isolation' },
+    ],
+    abs: [
+      { id: 'plank', why: 'Bracing practice for heavy lifts.', role: 'isolation' },
+      { id: 'hanging-knee-raise', why: 'Optional core work.', role: 'isolation' },
+    ],
+    forearms: [
+      { id: 'barbell-deadlift', why: 'Heavy deadlifts build grip.', role: 'compound' },
+    ],
+  },
+  prescription: {
+    compound: { sets: 3, reps: [5, 5], restSec: 240, note: 'Same weight for all three sets. Add a little next session.' },
+    isolation: { sets: 2, reps: [8, 12], restSec: 90, note: 'Optional extras only — the barbell lifts come first.' },
+    core: { sets: 2, reps: [8, 15], restSec: 60, note: 'Optional bracing work.' },
+  },
+  sampleDay: {
+    title: 'Sample workout A',
+    lines: [
+      'Squat — warm-ups, then 3 × 5 (last session + 2.5-5 kg)',
+      'Bench press — warm-ups, then 3 × 5 (last time + 1-2.5 kg)',
+      'Deadlift — warm-ups, then 1 × 5 (last time + 5 kg)',
+      'Rest 3-5 minutes between work sets',
+    ],
+  },
+}
+
+// ---------- GLUTE BUILDER — hip thrusts, varied loading ----------
+
+const GLUTE_BUILDER: ProgramArchetype = {
+  id: 'glute-builder',
+  name: 'Glute-Focused Strength',
+  inspiredBy: 'Bret Contreras',
+  influence: 'Inspired by the glute-training ideas Bret Contreras has popularised publicly: hip thrusts as a staple, glutes trained from several angles, several times a week. Our own words — not his program, and not affiliated with or endorsed by him.',
+  shortCredit: 'Glute-priority training, three or four days a week',
+  tagline: 'Thrust, hinge, squat, abduct — glutes from every angle.',
+  principles: [
+    'Glutes trained 3-4 times a week, each session with a different emphasis.',
+    'Hip thrusts or glute bridges are the staple — hardest at the top, where the glutes are shortest.',
+    'Mix the angles: a hinge (RDL, back extension), a squat or lunge, and abduction work.',
+    'Mix the loads: heavy days (6-10 reps), moderate days (10-20) and high-rep burnouts (20-30).',
+    'Squeeze and pause at the top of every hip-extension rep.',
+    'Upper body still gets trained — usually two short upper sessions or upper work on each day.',
+  ],
+  bestFor: [
+    'Your main goal is stronger, bigger glutes and legs.',
+    'You want a lower-body focus without neglecting the rest.',
+    'You enjoy variety in rep ranges.',
+  ],
+  tradeoffs: [
+    'Less upper-body volume than a balanced plan.',
+    'Hip thrust setup takes some practice (pad, bench height, foot position).',
+    'Frequent glute work needs moderate per-session volume to recover.',
+  ],
+  weeklySets: '12-20 hard glute sets per week across 3-4 sessions',
+  intensity: '1-3 reps in reserve; burnouts close to failure',
+  tempo: 'Pause and squeeze for 1 second at full hip extension',
+  exerciseBias: 'Hip thrusts and bridges first, then hinges, lunges and abduction',
+  deload: 'Every 5-6 weeks, or swap heavy thrusts for light pump work for a week.',
+  weeklySplit: [
+    { day: 'Mon', focus: 'Heavy glutes — hip thrust 6-10, RDL, abduction' },
+    { day: 'Tue', focus: 'Upper body' },
+    { day: 'Wed', focus: 'Quad & glute — split squats, leg press, glute kickbacks' },
+    { day: 'Thu', focus: 'Rest' },
+    { day: 'Fri', focus: 'Pump glutes — thrusts 15-20, back extensions, burnout abduction' },
+    { day: 'Sat', focus: 'Upper body (optional) or rest' },
+  ],
+  picks: {
+    chest: [
+      { id: 'dumbbell-bench-press', why: 'Simple upper-day pressing.', role: 'compound' },
+      { id: 'push-up', why: 'Quick upper volume.', role: 'compound' },
+    ],
+    back: [
+      { id: 'lat-pulldown', why: 'Upper-day vertical pull.', role: 'compound' },
+      { id: 'seated-row-machine', why: 'Upper-day row.', role: 'compound' },
+    ],
+    shoulders: [
+      { id: 'dumbbell-shoulder-press', why: 'Upper-day press.', role: 'compound' },
+      { id: 'dumbbell-lateral-raise', why: 'Shoulder width.', role: 'isolation' },
+    ],
+    biceps: [
+      { id: 'dumbbell-curl', why: 'Quick arm work on upper days.', role: 'isolation' },
+    ],
+    triceps: [
+      { id: 'rope-pushdown', why: 'Quick arm work on upper days.', role: 'isolation' },
+    ],
+    quads: [
+      { id: 'dumbbell-bulgarian-split-squat', why: 'Long stride for quads and glutes together.', role: 'compound' },
+      { id: 'leg-press', why: 'Feet high and wide shifts it to the glutes.', role: 'compound' },
+      { id: 'goblet-squat', why: 'Easy, deep squat pattern.', role: 'compound' },
+    ],
+    hamstrings: [
+      { id: 'barbell-rdl', why: 'The hinge — glutes and hamstrings in the stretch.', role: 'compound' },
+      { id: 'dumbbell-rdl', why: 'Easier setup for the same hinge.', role: 'compound' },
+      { id: 'seated-leg-curl', why: 'Direct hamstring work.', role: 'isolation' },
+    ],
+    glutes: [
+      { id: 'barbell-hip-thrust', why: 'The staple — glutes hardest at full squeeze.', role: 'compound' },
+      { id: 'hip-thrust-machine', why: 'Same job, quicker setup.', role: 'compound' },
+      { id: 'machine-glute-bridge', why: 'Shorter-range bridge for heavy loading.', role: 'compound' },
+      { id: '45-degree-back-extension', why: 'Round the upper back slightly and drive with the glutes.', role: 'isolation' },
+      { id: 'abductor-machine', why: 'Upper glute work that thrusts and squats miss.', role: 'isolation' },
+      { id: 'cable-glute-kickback', why: 'Single-leg glute isolation.', role: 'isolation' },
+      { id: 'dumbbell-walking-lunge', why: 'Long strides for a deep glute stretch.', role: 'compound' },
+      { id: 'reverse-hyperextension', why: 'Hip extension with the spine unloaded.', role: 'isolation' },
+    ],
+    calves: [
+      { id: 'standing-calf-raise-machine', why: 'Optional calves.', role: 'isolation' },
+    ],
+    abs: [
+      { id: 'dead-bug', why: 'Bracing that keeps the ribs down during thrusts.', role: 'isolation' },
+      { id: 'cable-pallof-press', why: 'Anti-rotation core.', role: 'isolation' },
+    ],
+    forearms: [
+      { id: 'farmers-carry', why: 'Grip and trunk together.', role: 'compound' },
+    ],
+  },
+  prescription: {
+    compound: { sets: 4, reps: [6, 12], restSec: 120, note: 'Pause one second at the top of every thrust.' },
+    isolation: { sets: 3, reps: [12, 30], restSec: 60, note: 'High reps and a hard squeeze — burnouts welcome.' },
+    core: { sets: 3, reps: [8, 12], restSec: 45, note: 'Ribs down, slow and controlled.' },
+  },
+  sampleDay: {
+    title: 'Sample heavy glute day',
+    lines: [
+      'Barbell hip thrust — 4 × 6-10, pause at the top',
+      'Romanian deadlift — 3 × 8-10',
+      'Bulgarian split squat — 3 × 10 per leg',
+      'Abductor machine — 3 × 20-30',
+      '45° back extension (glute-biased) — 2 × 15-20',
+    ],
+  },
+}
+
+// ---------- AESTHETIC SYMMETRY — proportion, control, a tight waist ----------
+
+const AESTHETIC_SYMMETRY: ProgramArchetype = {
+  id: 'aesthetic-symmetry',
+  name: 'Aesthetic Symmetry Split',
+  inspiredBy: 'Frank Zane',
+  influence: 'Inspired by the publicly known aesthetic approach of Frank Zane: proportion over size, strict moderate-weight reps, and plenty of waist and detail work. Our own words — not his program, and not affiliated with or endorsed by him.',
+  shortCredit: 'Three-way split built for proportion and symmetry',
+  tagline: 'Shape, proportion and control — build the look, not just the weight.',
+  principles: [
+    'A three-way split: back & biceps, legs & abs, chest, shoulders & triceps — then repeat.',
+    'Moderate weights for 8-12 strict reps; feel every rep instead of chasing numbers.',
+    'Isolation work for the details: side and rear delts, upper chest, the outer sweep of the lats.',
+    'A narrow waist is part of the look — abs every leg day, and nothing that thickens it on purpose.',
+    'Train weak points first and give them an extra set until they catch up.',
+    'Short rests (about 60 seconds) and a steady pace through the session.',
+  ],
+  bestFor: [
+    'You care more about how you look than how much you lift.',
+    'You want balanced, symmetrical development.',
+    'Heavy maxing out bothers your joints.',
+  ],
+  tradeoffs: [
+    'Less raw strength progress than heavy programs.',
+    'Strict reps at moderate loads need focus to stay effective.',
+    'Six sessions over a 3-on-1-off rotation can be hard to fit around work.',
+  ],
+  weeklySets: '12-18 sets per muscle per week, 3-4 exercises per muscle',
+  intensity: '1-2 reps in reserve; no ego lifting',
+  tempo: 'Slow and strict — about 2 seconds up, 3 down, squeeze at the top',
+  exerciseBias: 'Dumbbells, cables and machines for shape; barbells used moderately',
+  deload: 'Take an extra rest day whenever the reps stop feeling crisp.',
+  weeklySplit: [
+    { day: 'Day 1', focus: 'Back & biceps — pulldowns, rows, pullovers, curls' },
+    { day: 'Day 2', focus: 'Legs & abs — squats or leg press, curls, calves, waist work' },
+    { day: 'Day 3', focus: 'Chest, shoulders & triceps — incline, flyes, laterals, extensions' },
+    { day: 'Day 4', focus: 'Rest' },
+    { day: 'Day 5-7', focus: 'Repeat the three days' },
+    { day: 'Day 8', focus: 'Rest' },
+  ],
+  picks: {
+    chest: [
+      { id: 'incline-dumbbell-press', why: 'Upper chest is the priority for a balanced chest.', role: 'compound' },
+      { id: 'incline-dumbbell-fly', why: 'Upper-chest stretch and shape.', role: 'isolation' },
+      { id: 'dumbbell-fly', why: 'Width across the chest.', role: 'isolation' },
+      { id: 'chest-dip', why: 'Lower chest line.', role: 'compound' },
+      { id: 'dumbbell-pullover', why: 'Ribcage and serratus — a classic aesthetic move.', role: 'isolation' },
+    ],
+    back: [
+      { id: 'lat-pulldown', why: 'Wide lats for the V-taper.', role: 'compound' },
+      { id: 'pull-up', why: 'Outer lat sweep.', role: 'compound' },
+      { id: 'dumbbell-row', why: 'Strict one-arm rows for thickness.', role: 'compound' },
+      { id: 'seated-row-close', why: 'Full stretch and squeeze.', role: 'compound' },
+      { id: 'dumbbell-pullover', why: 'Lats with the arms out of the way.', role: 'isolation' },
+    ],
+    shoulders: [
+      { id: 'dumbbell-lateral-raise', why: 'Side delts are the key to width.', role: 'isolation' },
+      { id: 'dumbbell-shoulder-press', why: 'Moderate seated pressing.', role: 'compound' },
+      { id: 'dumbbell-rear-delt-fly', why: 'Rear delts for a 3D shoulder.', role: 'isolation' },
+      { id: 'cable-lateral-raise', why: 'Constant-tension width work.', role: 'isolation' },
+    ],
+    biceps: [
+      { id: 'concentration-curl', why: 'Strict, squeezed peak work.', role: 'isolation' },
+      { id: 'incline-dumbbell-curl', why: 'Full stretch for the long head.', role: 'isolation' },
+      { id: 'dumbbell-curl', why: 'Strict alternating curls.', role: 'isolation' },
+    ],
+    triceps: [
+      { id: 'rope-pushdown', why: 'Detail and squeeze.', role: 'isolation' },
+      { id: 'overhead-dumbbell-extension', why: 'Long-head stretch.', role: 'isolation' },
+      { id: 'cable-triceps-kickback', why: 'Peak contraction finisher.', role: 'isolation' },
+    ],
+    quads: [
+      { id: 'leg-press', why: 'Quad size without heavy spinal loading.', role: 'compound' },
+      { id: 'barbell-squat', why: 'Moderate-weight squats, full depth.', role: 'compound' },
+      { id: 'leg-extension', why: 'Quad detail and separation.', role: 'isolation' },
+      { id: 'sissy-squat', why: 'Lower-quad sweep.', role: 'isolation' },
+    ],
+    hamstrings: [
+      { id: 'lying-leg-curl', why: 'Hamstring shape from the side.', role: 'isolation' },
+      { id: 'seated-leg-curl', why: 'Second curl angle.', role: 'isolation' },
+      { id: 'dumbbell-rdl', why: 'Moderate hinge work.', role: 'compound' },
+    ],
+    glutes: [
+      { id: 'dumbbell-walking-lunge', why: 'Shape for the glutes and legs together.', role: 'compound' },
+      { id: 'barbell-hip-thrust', why: 'Direct glute work without adding waist size.', role: 'compound' },
+    ],
+    calves: [
+      { id: 'standing-calf-raise-machine', why: 'Calves balance the lower leg with the thigh.', role: 'isolation' },
+      { id: 'seated-calf-raise-machine', why: 'Bent-knee calves.', role: 'isolation' },
+    ],
+    abs: [
+      { id: 'hanging-knee-raise', why: 'Lower abs, strict and high-rep.', role: 'isolation' },
+      { id: 'decline-sit-up', why: 'Upper abs, controlled.', role: 'isolation' },
+      { id: 'cable-crunch', why: 'Loaded abs for detail.', role: 'isolation' },
+      { id: 'plank', why: 'Core control — vacuum practice pairs well with this.', role: 'isolation' },
+    ],
+    forearms: [
+      { id: 'wrist-curl', why: 'Forearm detail at the end of arm days.', role: 'isolation' },
+      { id: 'reverse-curl', why: 'Top of the forearm.', role: 'isolation' },
+    ],
+  },
+  prescription: {
+    compound: { sets: 3, reps: [8, 12], restSec: 75, note: 'Moderate weight, strict reps, squeeze — never ego-lift.' },
+    isolation: { sets: 3, reps: [10, 15], restSec: 60, note: 'Slow negatives, hold the peak.' },
+    core: { sets: 3, reps: [15, 25], restSec: 45, note: 'Every leg day — keep the waist tight.' },
+  },
+  sampleDay: {
+    title: 'Sample chest, shoulders & triceps day',
+    lines: [
+      'Incline dumbbell press — 3 × 8-10',
+      'Incline dumbbell fly — 3 × 10-12',
+      'Dumbbell pullover — 3 × 12',
+      'Seated dumbbell press — 3 × 8-10',
+      'Lateral raise — 4 × 10-15, strict',
+      'Rope pushdown — 3 × 10-12 · Kickback — 2 × 12-15',
+    ],
+  },
+}
+
 export const COACHES: Record<CoachId, Coach> = { cbum: CBUM, nippard: NIPPARD }
 export const COACH_LIST: Coach[] = [CBUM, NIPPARD]
 export const COACH_IDS: CoachId[] = ['cbum', 'nippard']
@@ -1074,7 +1741,10 @@ export const COACH_IDS: CoachId[] = ['cbum', 'nippard']
  * wired into plan generation (their ids are not CoachId, and the generator only
  * builds blocks from COACHES). Nothing in the UI may offer to apply these.
  */
-export const EXTRA_PROGRAMS: ProgramArchetype[] = [CLASSIC_VOLUME, MACHINE_DAY, HEAVY_DUTY, BLOOD_AND_GUTS]
+export const EXTRA_PROGRAMS: ProgramArchetype[] = [
+  CLASSIC_VOLUME, MACHINE_DAY, HEAVY_DUTY, BLOOD_AND_GUTS,
+  MASS_MONSTER, VOLUME_LANDMARKS, WAVE_STRENGTH, NOVICE_LINEAR, GLUTE_BUILDER, AESTHETIC_SYMMETRY,
+]
 
 /** Every archetype, applicable ones first. */
 export const PROGRAM_LIST: ProgramArchetype[] = [...COACH_LIST, ...EXTRA_PROGRAMS]
