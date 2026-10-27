@@ -26,3 +26,13 @@ for g in groups:
     ga = g['attributes']
     gb = get(f"/v1/betaGroups/{g['id']}/builds?limit=5").get('data') or []
     print(f"group {ga.get('name')}: internal={ga.get('isInternalGroup')} auto={ga.get('hasAccessToAllBuilds')} builds={[x['attributes'].get('version') for x in gb]}")
+
+# ---- App Store review state for Ironverse AND Goldverse (read-only) ----
+for name, app in [('Ironverse', '6825232233'), ('Goldverse', '6826152198')]:
+    print(f'\n=== {name} ({app}) ===')
+    for v in (get(f'/v1/apps/{app}/appStoreVersions?limit=5').get('data') or []):
+        va = v['attributes']
+        print(f"version {va.get('versionString')}: appStoreState={va.get('appStoreState')} appVersionState={va.get('appVersionState')} release={va.get('releaseType')}")
+    for s in (get(f'/v1/reviewSubmissions?filter[app]={app}&limit=5').get('data') or []):
+        sa = s['attributes']
+        print(f"review submission {s['id'][:8]}: state={sa.get('state')} submitted={sa.get('submittedDate')}")
