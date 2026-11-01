@@ -52,3 +52,22 @@ describe('Ironverse Pro tiers', () => {
     ;(globalThis as { __IV_EDITION_OVERRIDE__?: string }).__IV_EDITION_OVERRIDE__ = 'ios'
   })
 })
+
+describe('owner access', () => {
+  it('only the right code matches, and only outside the App Store', async () => {
+    const { ownerCodeMatches, ownerEnvironmentAllowed } = await import('@/lib/pro')
+    expect(await ownerCodeMatches('IRON-WRONG-CODE')).toBe(false)
+    expect(await ownerCodeMatches('')).toBe(false)
+    expect(ownerEnvironmentAllowed('Production')).toBe(false)
+    expect(ownerEnvironmentAllowed('Unknown')).toBe(false)
+    expect(ownerEnvironmentAllowed('web')).toBe(false)
+    expect(ownerEnvironmentAllowed('Sandbox')).toBe(true)
+  })
+  it('the real owner code matches (code supplied via env, never stored in the repo)', async () => {
+    const code = process.env.IV_OWNER_CODE
+    if (!code) return
+    const { ownerCodeMatches } = await import('@/lib/pro')
+    expect(await ownerCodeMatches(code)).toBe(true)
+    expect(await ownerCodeMatches(code.toLowerCase())).toBe(true)
+  })
+})

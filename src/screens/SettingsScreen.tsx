@@ -34,6 +34,7 @@ import {
 import { Stepper } from './settings/Stepper'
 import { useTour } from '@/components/Tour'
 import { isAppStoreEdition, isNativeApp, ed } from '@/lib/edition'
+import { ownerUnlock } from '@/lib/pro'
 import { AiKeyCard } from './settings/AiKeyCard'
 import { AdaptiveCaloriesCard } from './settings/AdaptiveCaloriesCard'
 import { FoodPrefsCard } from './settings/FoodPrefsCard'
@@ -49,6 +50,18 @@ type SheetKey = 'name' | 'body' | 'goal' | 'activity' | 'experience' | 'targets'
 export default function SettingsScreen() {
   const navigate = useNavigate()
   const { toast } = useUI()
+  // owner access: tap the version row 7 times (TestFlight installs only — see lib/pro.ts)
+  const ownerTaps = useRef<number[]>([])
+  const ownerTap = async () => {
+    const now = Date.now()
+    ownerTaps.current = [...ownerTaps.current.filter((t) => now - t < 4000), now]
+    if (ownerTaps.current.length < 7) return
+    ownerTaps.current = []
+    const code = window.prompt('Owner code')
+    if (!code) return
+    const r = await ownerUnlock(code)
+    toast(r === 'ok' ? 'Pro unlocked on this phone' : r === 'store' ? 'Owner access works on TestFlight installs only' : 'That code isn’t right')
+  }
   const [params] = useSearchParams()
 
   const profile = useLiveQuery(() => getProfile(), [])
@@ -551,6 +564,7 @@ export default function SettingsScreen() {
             />
           )}
           <ListRow
+            onClick={ownerTap}
             leading={<Database size={19} className="text-ink2" />}
             title="Ironverse"
             subtitle={ed("Built for your garage — works fully offline", "Built for your equipment — works fully offline")}

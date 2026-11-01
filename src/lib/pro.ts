@@ -33,7 +33,7 @@ export function yearlySavingPct(monthly: number, yearly: number): number {
 export const TERMS_URL = 'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/'
 export const PRIVACY_URL = 'https://ironverse-legal.netlify.app/privacy-policy.html'
 
-const KEYS = { trialStart: 'pro:trialStart', entitlement: 'pro:entitlement' } as const
+const KEYS = { trialStart: 'pro:trialStart', entitlement: 'pro:entitlement', owner: 'pro:owner' } as const
 
 export type Tier = 'pro' | 'trial' | 'free'
 export interface Entitlement { active: boolean; productId?: string; expires?: string; checkedAt: string }
@@ -93,9 +93,48 @@ export const usePro = create<ProState>((set) => ({
     if (!start) { start = new Date().toISOString(); await setSetting(KEYS.trialStart, start) }
     const ent = await getSetting<Entitlement | null>(KEYS.entitlement, null)
     const now = dayjs()
+    if (await ownerActive()) { set({ tier: 'pro', daysLeft: trialDaysLeft(now, start), ready: true }); return }
     set({ tier: computeTier(now, start, ent), daysLeft: trialDaysLeft(now, start), ready: true })
   },
 }))
+
+// ---------- owner access (TestFlight only) ----------
+// The developer unlocks Pro on his own TestFlight installs with a private code
+// (only its salted SHA-256 is in the source). It is ignored in the App Store
+// build ('Production' environment): public users get Pro only by subscribing,
+// as Apple's guidelines require. Once unlocked it is remembered on the device,
+// so new TestFlight builds stay Pro.
+const OWNER_HASH = 'a3c12311523799b8916ee9180fa7963f54677b7f01043130e5bfb05ac4bf4f39'
+let envCache: string | null = null
+/** where this install came from: 'Production' (App Store), 'Sandbox' (TestFlight / review), 'Xcode', or 'web' */
+export async function appEnvironment(): Promise<string> {
+  if (!isNativeApp()) return 'web'
+  if (envCache) return envCache
+  try {
+    const { NP } = await store()
+    const { appTransaction } = await NP.getAppTransaction()
+    envCache = appTransaction?.environment ?? 'Unknown'
+  } catch { envCache = 'Unknown' }
+  return envCache
+}
+export function ownerEnvironmentAllowed(env: string): boolean { return env === 'Sandbox' || env === 'Xcode' }
+export async function ownerCodeMatches(code: string): Promise<boolean> {
+  const data = new TextEncoder().encode('ironverse-owner:' + code.trim().toUpperCase())
+  const hash = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', data))).map((b) => b.toString(16).padStart(2, '0')).join('')
+  return hash === OWNER_HASH
+}
+async function ownerActive(): Promise<boolean> {
+  if (!(await getSetting<boolean>(KEYS.owner, false))) return false
+  return ownerEnvironmentAllowed(await appEnvironment())
+}
+/** 'ok' | 'wrong' | 'store' (App Store install — owner access is TestFlight only) */
+export async function ownerUnlock(code: string): Promise<'ok' | 'wrong' | 'store'> {
+  if (!(await ownerCodeMatches(code))) return 'wrong'
+  if (!ownerEnvironmentAllowed(await appEnvironment())) return 'store'
+  await setSetting(KEYS.owner, true)
+  await usePro.getState().refresh()
+  return 'ok'
+}
 
 /** true when the user may use this Pro feature right now */
 export function hasPro(tier: Tier): boolean { return tier !== 'free' }
