@@ -194,6 +194,24 @@ export async function restore(): Promise<boolean> {
   return (await syncEntitlement()).active
 }
 
+/** Apple's own offer-code sheet: redeems a subscription offer code (iOS 16+). */
+export async function redeemCode(): Promise<boolean> {
+  const { NP } = await store()
+  await NP.presentOfferCodeRedeemSheet()
+  return (await syncEntitlement()).active
+}
+
+export const APP_STORE_URL = 'https://apps.apple.com/app/id6825232233'
+
+/** Share the App Store link with a friend (native share sheet, falls back to copying). */
+export async function inviteFriend(): Promise<'shared' | 'copied' | 'none'> {
+  const text = 'I train with Ironverse — workouts, food and progress in one app. Get it here:'
+  try {
+    if (navigator.share) { await navigator.share({ title: 'Ironverse', text, url: APP_STORE_URL }); return 'shared' }
+  } catch { return 'none' }
+  try { await navigator.clipboard.writeText(`${text} ${APP_STORE_URL}`); return 'copied' } catch { return 'none' }
+}
+
 export async function manageSubscription(): Promise<void> {
   const { NP } = await store()
   await NP.manageSubscriptions()

@@ -144,7 +144,7 @@ export default function FirstRunScreen() {
         )}
 
         {step === 2 && (
-          <StepBody title="Your goals" sub="Pick as many as you like.">
+          <StepBody title="Your goals" sub="Pick as many as you like." art="iv_goal">
             <div className="grid grid-cols-1 gap-2">
               {GOAL_OPTIONS.map((g) => {
                 const on = d.goals.includes(g.key)
@@ -179,7 +179,7 @@ export default function FirstRunScreen() {
         )}
 
         {step === 4 && (
-          <StepBody title="Training preferences" sub="Your plan is built around these.">
+          <StepBody title="Training preferences" sub="Your plan is built around these." art="iv_train">
             <Field label={`Training days per week: ${d.daysPerWeek}`}>
               <input type="range" min={1} max={6} value={d.daysPerWeek} aria-label="Training days per week" className="w-full accent-[#fbbf24]" onChange={(e) => patch({ daysPerWeek: Number(e.target.value) })} />
             </Field>
@@ -229,7 +229,7 @@ export default function FirstRunScreen() {
         )}
 
         {step === 5 && (
-          <StepBody title="Personalise" sub={`${d.name.trim() ? d.name.trim() + ', here' : 'Here'}’s what Ironverse will set up from your answers. Adjust anything.`}>
+          <StepBody title="Personalise" art="iv_food" sub={`${d.name.trim() ? d.name.trim() + ', here' : 'Here'}’s what Ironverse will set up from your answers. Adjust anything.`}>
             <Card className="space-y-3 p-4">
               <Row label="Daily calories" hint={`Maintenance ≈ ${preview.tdee.toLocaleString()} kcal`}>
                 <div className="w-28 shrink-0"><Input inputMode="numeric" className="text-right" value={targets.calories ?? preview.calories} onChange={(e) => setTargets((t) => ({ ...t, calories: num(e.target.value) }))} /></div>
@@ -294,7 +294,11 @@ function fmtW(kg: number, imperial: boolean) { return imperial ? `${Math.round(k
 
 function Welcome({ onStart, onRestore, prefilled }: { onStart: () => void; onRestore: () => void; prefilled: boolean }) {
   return (
-    <div className="flex min-h-[94svh] flex-col items-center justify-center pt-safe text-center">
+    <div className="relative isolate flex min-h-[94svh] flex-col items-center justify-end pt-safe text-center">
+      <div className="pointer-events-none fixed inset-0 -z-10">
+        <ArtLoop name="iv_hero" className="h-full w-full object-cover opacity-90" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/30 to-surface" />
+      </div>
       <div className="relative">
         <div className="pulse-ring absolute inset-0 rounded-3xl bg-brand/40" />
         <img src="/icon-512.png" alt="Ironverse" className="scale-in relative h-24 w-24 rounded-3xl shadow-lg shadow-brand/30" />
@@ -318,9 +322,28 @@ function Welcome({ onStart, onRestore, prefilled }: { onStart: () => void; onRes
   )
 }
 
-function StepBody({ title, sub, children }: { title: string; sub: string; children: ReactNode }) {
+/** a silent looping animation (Higgsfield) with its still as the poster — the still shows until the video can play */
+function ArtLoop({ name, className = '' }: { name: string; className?: string }) {
+  return (
+    <video
+      className={className}
+      src={`/media/onboarding/${name}.mp4`}
+      poster={`/media/onboarding/${name}.jpg`}
+      autoPlay muted loop playsInline preload="auto"
+      aria-hidden="true"
+    />
+  )
+}
+
+function StepBody({ title, sub, art, children }: { title: string; sub: string; art?: string; children: ReactNode }) {
   return (
     <div className="space-y-4">
+      {art && (
+        <div className="page-in relative -mx-4 -mt-2 h-[190px] overflow-hidden">
+          <ArtLoop name={art} className="h-full w-full object-cover" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-surface to-transparent" />
+        </div>
+      )}
       <div className="pb-1 pt-1">
         <h1 className="shout text-[26px] leading-none text-ink">{title}</h1>
         <p className="mt-1.5 text-[13px] leading-relaxed text-ink2">{sub}</p>

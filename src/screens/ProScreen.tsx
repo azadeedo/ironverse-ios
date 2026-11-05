@@ -9,7 +9,7 @@ import { Button, Card, Spinner } from '@/components/ui'
 import { useUI } from '@/lib/store'
 import {
   FALLBACK_AMOUNTS, FALLBACK_PRICES, PRIVACY_URL, PRODUCTS, PRO_FEATURES, TERMS_URL, buy, loadProducts,
-  manageSubscription, restore, usePro, yearlySavingPct, type StoreProduct,
+  inviteFriend, manageSubscription, redeemCode, restore, usePro, yearlySavingPct, type StoreProduct,
 } from '@/lib/pro'
 
 export default function ProScreen() {
@@ -45,7 +45,11 @@ export default function ProScreen() {
         <button type="button" onClick={() => navigate(-1)} aria-label="Close" className="pressable flex h-11 w-11 items-center justify-center rounded-full text-ink2"><X size={22} /></button>
       </div>
       <div className="text-center">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-brand to-amber-600 text-black shadow-lg shadow-brand/30"><Crown size={30} /></div>
+        <div className="relative isolate -mx-4 mb-2 h-[170px] overflow-hidden">
+          <video src="/media/onboarding/iv_pro.mp4" poster="/media/onboarding/iv_pro.jpg" autoPlay muted loop playsInline aria-hidden="true" className="absolute inset-0 -z-10 h-full w-full object-cover" />
+          <div className="absolute inset-0 -z-10 bg-gradient-to-b from-transparent via-transparent to-surface" />
+          <div className="absolute bottom-2 left-1/2 flex h-16 w-16 -translate-x-1/2 items-center justify-center rounded-2xl bg-gradient-to-br from-brand to-amber-600 text-black shadow-lg shadow-brand/30"><Crown size={30} /></div>
+        </div>
         <h1 className="shout mt-4 text-[32px] leading-none text-ink">Ironverse Pro</h1>
         <p className="mt-2 text-[13.5px] text-ink2">
           {tier === 'pro' ? 'You have Pro — thank you for supporting an Australian-made app.'
@@ -86,7 +90,11 @@ export default function ProScreen() {
 
       <div className="mt-3 flex justify-center gap-4 text-[13px]">
         <button type="button" disabled={busy} className="pressable min-h-[44px] text-brand" onClick={() => void go(restore, 'Pro restored')}>Restore purchases</button>
+        <button type="button" disabled={busy} className="pressable min-h-[44px] text-brand" onClick={() => void go(redeemCode, 'Code redeemed — welcome to Pro')}>Redeem a code</button>
         {tier === 'pro' && <button type="button" className="pressable min-h-[44px] text-brand" onClick={() => void manageSubscription()}>Manage subscription</button>}
+      </div>
+      <div className="mt-1 flex justify-center">
+        <button type="button" className="pressable min-h-[44px] text-[13px] text-brand" onClick={() => void inviteFriend()}>Invite a friend</button>
       </div>
 
       <p className="mt-3 text-[11px] leading-relaxed text-ink3">
