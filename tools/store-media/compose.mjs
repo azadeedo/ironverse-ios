@@ -1,7 +1,7 @@
 // App Store screenshots: headline + the REAL app capture (store/raw) in a phone frame.
 // 1290 x 2796 (iPhone 6.9"). Run after capture.mjs:  node tools/store-media/compose.mjs
 import { chromium } from 'playwright'
-import { mkdirSync, readFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, readdirSync } from 'node:fs'
 
 // App Store Connect (2026) iPhone slot = 'iPhone with Dynamic Island (medium display)': 1206 x 2622.
 // The layout is designed at 1290 wide and scaled, so both sizes come from one template.
@@ -23,7 +23,10 @@ export const SLIDES = [
   { raw: 'hub', head: ['Level up', 'as you train'], hi: 0, sub: 'Trophies, streaks, levels and challenges' },
 ]
 
-function html(s, img) {
+// Higgsfield backgrounds (store/bg/*.jpg), used in turn behind the frames
+const BG = existsSync('store/bg') ? readdirSync('store/bg').filter((f) => f.endsWith('.jpg')).sort().map((f) => readFileSync('store/bg/' + f).toString('base64')) : []
+
+function html(s, img, bg) {
   // shrink long headlines so each line fits on one line (heavy italic ≈ 0.66 em per character)
   const longest = Math.max(...s.head.map((t) => t.length))
   const size = Math.min(132, Math.floor(1150 / (longest * 0.66)))
@@ -46,7 +49,9 @@ function html(s, img) {
   .screen{width:100%;height:100%;border-radius:100px;overflow:hidden;position:relative;background:#0c111c}
   .screen img{width:100%;display:block}
   .island{position:absolute;top:30px;left:50%;transform:translateX(-50%);width:250px;height:72px;border-radius:40px;background:#000}
-  </style></head><body><div class="glow"></div><div class="grid"></div>
+    .bgimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .shade{position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.12) 30%,rgba(0,0,0,.4))}
+  </style></head><body>${bg ? `<img class="bgimg" src="data:image/jpeg;base64,${bg}"><div class="shade"></div>` : ''}<div class="glow"></div><div class="grid"></div>
   <div class="top"><div class="brand"><span class="bar"></span>&nbsp;IRONVERSE</div><h1>${lines}</h1><p>${s.sub}</p>${s.badge ? `<span class="badge">${s.badge.toUpperCase()}</span>` : ''}</div>
   <div class="phone"><div class="screen"><img src="data:image/png;base64,${img}"><div class="island"></div></div></div>
   </body></html>`
@@ -57,7 +62,7 @@ const scale = SIZE.w / 1290
 const page = await browser.newPage({ viewport: { width: 1290, height: Math.round(SIZE.h / scale) }, deviceScaleFactor: scale })
 for (const [i, s] of SLIDES.entries()) {
   const img = readFileSync(`store/raw/${s.raw}.png`).toString('base64')
-  await page.setContent(html(s, img), { waitUntil: 'load' })
+  await page.setContent(html(s, img, BG.length ? BG[i % BG.length] : ''), { waitUntil: 'load' })
   await page.addStyleTag({ url: 'https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=block' }).catch(() => {})
   await page.evaluate(() => document.fonts.ready)
   const name = `${String(i + 1).padStart(2, '0')}-${s.raw}.png`
