@@ -1,6 +1,6 @@
-// Ironverse Apple Watch app — entry point. Three swipeable pages:
-// Today (calories, protein, water, recovery), Workout (log sets + rest timer)
-// and Quick log (water, creatine).
+// Ironverse Apple Watch app — entry point. Swipeable pages:
+// Today (calories, protein, water, recovery), Workout (log sets + rest timer),
+// Quick log (water, creatine), and the watch-only tools: Rest timer, Plates, 1-rep max.
 
 import SwiftUI
 
@@ -16,6 +16,9 @@ struct IronverseWatchApp: App {
                 TodayView().tag(0)
                 WorkoutView().tag(1)
                 QuickLogView().tag(2)
+                RestTimerView().tag(3)
+                PlatesView().tag(4)
+                OneRepMaxView().tag(5)
             }
             .tabViewStyle(.verticalPage)
             .environmentObject(phone)
