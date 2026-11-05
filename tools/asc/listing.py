@@ -30,7 +30,7 @@ TO TRY: Workout tab > Start this workout > log a set. Food tab > + > pick a cuis
 
 Data is stored on the device. The optional meal-photo feature uses the user's OWN Anthropic API key and asks for consent before sending. Barcode lookups use the public Open Food Facts database. Location is used only while tracking an outdoor run. There are no ads and no tracking.
 
-COACH PROGRAMS: styles are described in our own words as "inspired by" publicly known training approaches of well-known athletes and coaches. Each one states it is not their program and is not affiliated with or endorsed by them; no likeness, photo or quote is used."""
+COACH PROGRAMS: 12 training styles written in our own words (e.g. "Classic Physique", "Heavy Duty HIT"). The App Store build names no real athlete or coach and uses no likeness, photo or quote."""
 
 failures = []
 

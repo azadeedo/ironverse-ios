@@ -28,7 +28,7 @@ import { minutesOf, todayTimeline, type TimelineItem } from '@/lib/schedule'
 import { useUI } from '@/lib/store'
 import { APP_VERSION, GOAL_META, fmt12, nowMinutes, parseNumber, upsertTodayWeighIn } from './settings/lib'
 import { Bookmark, Compass, Crown, MessageSquarePlus, Moon, Timer } from 'lucide-react'
-import { isAppStoreEdition } from '@/lib/edition'
+import { isAppStoreEdition, ed } from '@/lib/edition'
 
 const TIMELINE_ICONS: Record<TimelineItem['kind'], typeof Droplets> = {
   water: Droplets,
@@ -62,7 +62,7 @@ const TILES = [
   { label: 'Exercise Library', sub: 'Your full arsenal', icon: BookOpen, to: '/exercises', tint: 'text-violet-400', bg: 'bg-violet-400/12' },
   { label: 'Plan settings', sub: 'Weeks & rebuild', icon: CalendarRange, to: '/plan', tint: 'text-brand', bg: 'bg-brand/12' },
   { label: 'Progress', sub: 'Weight & strength', icon: TrendingUp, to: '/progress', tint: 'text-emerald-400', bg: 'bg-emerald-400/12' },
-  { label: 'Coach programs', sub: '12 styles — Bumstead, Coleman, Israetel, Wendler, Zane…', icon: ClipboardList, to: '/programs', tint: 'text-amber-400', bg: 'bg-amber-400/12' },
+  { label: 'Coach programs', sub: ed('12 styles — Bumstead, Coleman, Israetel, Wendler, Zane…', '12 training styles, from classic volume to heavy-duty HIT'), icon: ClipboardList, to: '/programs', tint: 'text-amber-400', bg: 'bg-amber-400/12' },
   { label: 'Weekly review', sub: 'How the week went', icon: CalendarCheck, to: '/review', tint: 'text-cyan-400', bg: 'bg-cyan-400/12' },
   { label: 'Progress photos', sub: 'Side-by-side, on device', icon: Camera, to: '/photos', tint: 'text-fuchsia-400', bg: 'bg-fuchsia-400/12' },
   { label: 'Achievements', sub: 'Earned from your log', icon: Award, to: '/achievements', tint: 'text-amber-300', bg: 'bg-amber-300/12' },

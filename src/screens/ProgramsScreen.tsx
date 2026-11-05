@@ -1,3 +1,4 @@
+import { ed } from '@/lib/edition'
 // /programs — the coach styles.
 //
 // Two training philosophies, presented honestly and side by side, with three
@@ -279,7 +280,7 @@ export default function ProgramsScreen() {
             {EXTRA_PROGRAMS.map((p) => (
               <button key={p.id} type="button" aria-pressed={p.id === extra.id} onClick={() => setExtraId(p.id)}
                 className={`pressable rounded-full px-3 py-1.5 text-[12.5px] font-semibold ${p.id === extra.id ? 'bg-brand text-black' : 'bg-surface3 text-ink2'}`}>
-                {p.inspiredBy ?? p.name}
+                {ed(p.inspiredBy, undefined) ?? p.name}
               </button>
             ))}
           </div>

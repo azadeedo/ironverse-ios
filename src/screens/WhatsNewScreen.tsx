@@ -1,3 +1,4 @@
+import { ed } from '@/lib/edition'
 // WHAT'S NEW — a hand-written record of everything that has been added, with
 // the path to actually find each thing. Written by reading docs/UPGRADE.md and
 // the shipped libraries; nothing here is generated, and nothing is listed that
@@ -18,7 +19,6 @@ import {
 } from '@/components/ui'
 import { getSetting, setSetting } from '@/db'
 import { APP_VERSION } from './settings/lib'
-import { ed } from '@/lib/edition'
 
 interface Feature {
   icon: typeof Sparkles
@@ -502,7 +502,7 @@ const RELEASES: Release[] = [
       {
         icon: ClipboardList,
         title: 'Coach programs',
-        body: 'CBum and Nippard blocks you can run as 4, 8 or 12 weeks, applied as day or week overrides without overwriting your saved plan.',
+        body: ed('CBum and Nippard blocks', 'Classic Physique and Evidence-Based blocks') + ' you can run as 4, 8 or 12 weeks, applied as day or week overrides without overwriting your saved plan.',
         where: 'More → Coach programs',
         to: '/programs',
       },
