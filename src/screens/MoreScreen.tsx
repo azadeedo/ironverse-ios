@@ -1,6 +1,7 @@
 // MORE — launcher hub: profile card, feature tiles, today's mini timeline,
 // one-tap backup. Everything mirrors the Today screen's visual language.
 
+import { ALL_FREE } from '@/lib/pro'
 import { halalMode } from '@/db/defaults'
 import { QuickLogButton } from '@/components/QuickLog'
 import { AppVersionCard } from '@/components/UpdatePrompt'
@@ -54,7 +55,7 @@ const TILE_GROUPS: [string, string[]][] = [
   ['Training', ['/saved', '/programs', '/plan', '/exercises', '/cardio']],
   ['Food & health', ['/health-scan', '/fasting', '/meal-plan', '/nutrition-week', '/calories', '/hydration', '/pill-box']],
   ['Connect', ['/devices']],
-  ['App', [...(isAppStoreEdition() ? ['/pro'] : []), '/feedback', '/whats-new', '/backup', '/settings']],
+  ['App', [...(isAppStoreEdition() && !ALL_FREE ? ['/pro'] : []), '/feedback', '/whats-new', '/backup', '/settings']],
 ]
 const TILES = [
   { label: 'Cardio', sub: 'Runs, walks & rope', icon: HeartPulse, to: '/cardio', tint: 'text-rose-400', bg: 'bg-rose-400/12' },

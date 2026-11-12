@@ -35,13 +35,13 @@ describe('Ironverse Pro tiers', () => {
     expect(proFeatureForPath('/health-scan')).toBe('barcode')
   })
 
-  it('the trial clock starts on first launch and the store answer is remembered', async () => {
-    const { db, getSetting } = await import('@/db')
+  it('everything is free: every install has every feature, no trial clock', async () => {
+    const { db } = await import('@/db')
     await db.open()
     const pro = await import('@/lib/pro')
+    expect(pro.ALL_FREE).toBe(true)
     await pro.usePro.getState().refresh()
-    expect(pro.usePro.getState().tier).toBe('trial')
-    expect(await getSetting('pro:trialStart', null)).not.toBeNull()
+    expect(pro.usePro.getState().tier).toBe('pro')
   })
 
   it('web build is never gated', async () => {

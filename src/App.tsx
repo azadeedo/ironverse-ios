@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useState, type ReactNode } from 'react'
 import AppLock from '@/components/AppLock'
-import { createBrowserRouter, Outlet, RouterProvider, useLocation, useNavigate } from 'react-router-dom'
+import { createBrowserRouter, Navigate, Outlet, RouterProvider, useLocation, useNavigate } from 'react-router-dom'
 import { Apple, Dumbbell, House, LayoutGrid, TrendingUp } from 'lucide-react'
 import { seedIfNeeded } from './db/seed'
 import { autoSnapshotIfDue } from './lib/backup'
@@ -13,7 +13,7 @@ import { LaunchStatus, UpdatePrompt } from './components/UpdatePrompt'
 import { isAppStoreEdition } from './lib/edition'
 import { TourOverlay } from './components/Tour'
 import { ProLocked } from './components/ProGate'
-import { hasPro, proFeatureForPath, usePro } from './lib/pro'
+import { ALL_FREE, hasPro, proFeatureForPath, usePro } from './lib/pro'
 
 const TodayScreen = lazy(() => import('@/screens/TodayScreen'))
 const WorkoutScreen = lazy(() => import('@/screens/WorkoutScreen'))
@@ -146,7 +146,7 @@ const router = createBrowserRouter([
       { index: true, element: <S><TodayScreen /></S> },
       { path: 'onboarding', element: <S><OnboardingScreen /></S> },
       { path: 'welcome', element: <S><FirstRunScreen /></S> },
-      { path: 'pro', element: <S><ProScreen /></S> },
+      { path: 'pro', element: ALL_FREE ? <Navigate to="/more" replace /> : <S><ProScreen /></S> },
       { path: 'feedback', element: <S><FeedbackScreen /></S> },
       { path: 'workout', element: <S><WorkoutScreen /></S> },
       { path: 'plan', element: <S><PlanScreen /></S> },
@@ -211,7 +211,7 @@ export default function App() {
         if (owner) void import('./lib/ownerFoods').then((m) => m.ensureOwnerFoodsOnce()).catch(() => {})
         if (!owner) void import('./native/bridge').then((m) => m.initNative()).catch(() => {})
         // Pro: trial clock + what the App Store says this Apple Account owns
-        if (!owner) void usePro.getState().refresh().then(() => import('./lib/pro')).then((m) => m.syncEntitlement()).catch(() => {})
+        if (!owner) void usePro.getState().refresh().then(() => import('./lib/pro')).then((m) => (m.ALL_FREE ? undefined : m.syncEntitlement())).catch(() => {})
         void autoSnapshotIfDue()
         // v6: user-created exercises join the registry before any screen renders
         try { registerCustomExercises(await db.customExercises.toArray()) } catch { /* table missing on a failed upgrade */ }

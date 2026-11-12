@@ -34,7 +34,7 @@ import {
 import { Stepper } from './settings/Stepper'
 import { useTour } from '@/components/Tour'
 import { isAppStoreEdition, isNativeApp, ed } from '@/lib/edition'
-import { ownerUnlock } from '@/lib/pro'
+import { ALL_FREE, ownerUnlock } from '@/lib/pro'
 import { AiKeyCard } from './settings/AiKeyCard'
 import { AdaptiveCaloriesCard } from './settings/AdaptiveCaloriesCard'
 import { FoodPrefsCard } from './settings/FoodPrefsCard'
@@ -539,7 +539,7 @@ export default function SettingsScreen() {
             subtitle="Ideas, bugs, fixes and additions — sent to the developer"
             onClick={() => navigate('/feedback')}
           />
-          {isAppStoreEdition() && (
+          {isAppStoreEdition() && !ALL_FREE && (
             <ListRow
               leading={<Sparkles size={19} className="text-brand" />}
               title="Ironverse Pro"

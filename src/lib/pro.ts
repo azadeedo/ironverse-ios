@@ -16,6 +16,10 @@ import dayjs from 'dayjs'
 import { getSetting, setSetting } from '@/db'
 import { isAppStoreEdition, isNativeApp } from './edition'
 
+/** 13 Nov 2026, owner's decision: Ironverse is completely free — every feature for everyone,
+ *  no paywall, no subscription. The Pro code below stays (unused) in case that ever changes. */
+export const ALL_FREE = true
+
 export const TRIAL_DAYS = 7
 export const PRODUCTS = {
   monthly: 'com.nouriapps.ironverse.pro.monthly',
@@ -88,7 +92,7 @@ interface ProState {
 export const usePro = create<ProState>((set) => ({
   tier: 'pro', daysLeft: TRIAL_DAYS, ready: false,
   async refresh() {
-    if (!isAppStoreEdition()) { set({ tier: 'pro', ready: true }); return }
+    if (!isAppStoreEdition() || ALL_FREE) { set({ tier: 'pro', ready: true }); return }
     let start = await getSetting<string | null>(KEYS.trialStart, null)
     if (!start) { start = new Date().toISOString(); await setSetting(KEYS.trialStart, start) }
     const ent = await getSetting<Entitlement | null>(KEYS.entitlement, null)
@@ -157,8 +161,9 @@ export async function loadProducts(): Promise<StoreProduct[]> {
 
 /** Ask the App Store what this Apple Account is entitled to and remember it. */
 export async function syncEntitlement(): Promise<Entitlement> {
-  // outside the iOS app there is no App Store to ask — keep whatever is stored
-  if (!isNativeApp()) {
+  // outside the iOS app there is no App Store to ask — keep whatever is stored.
+  // With everything free there is nothing to ask the App Store either.
+  if (!isNativeApp() || ALL_FREE) {
     await usePro.getState().refresh()
     return (await getSetting<Entitlement | null>(KEYS.entitlement, null)) ?? { active: false, checkedAt: new Date().toISOString() }
   }

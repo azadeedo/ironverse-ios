@@ -192,7 +192,9 @@ describe('auto-progression rules', () => {
     expect(rx.sets[0].kg).toBeLessThanOrEqual(120)
   })
   it('repeated reductions → overreach flag', () => {
-    const logs = ['2026-10-01', '2026-10-08', '2026-10-15'].map((d) => log(d, 'barbell-squat', [{ kg: 120, reps: 5, rir: 2, adjusted: 'reduced' }]))
+    // recent sessions (fixed dates aged out of the look-back window on 13 Nov 2026)
+    const ago = (n: number) => new Date(Date.now() - n * 86400000).toISOString().slice(0, 10)
+    const logs = [ago(15), ago(8), ago(1)].map((d) => log(d, 'barbell-squat', [{ kg: 120, reps: 5, rir: 2, adjusted: 'reduced' }]))
     expect(prescribeMain(sq(3), 'squat', 3, logs, {}, gym).flags).toContain('overreach')
   })
   it('deload week is 60–70% of recent working weight', () => {
