@@ -283,11 +283,15 @@ export async function buildProgramSession(plan: Plan, week: number, day: DayKey,
       // 2.5–5% lighter, snapped to a load this room (or this machine's own steps) can build
       sets = sets.map((s) => {
         if (!s.weightKg) return s
-        const lighter = snapLoad(byId.get(pe.exerciseId), s.weightKg * 0.965, eq, meta.get(pe.exerciseId))
+        // the accepted percentage (a weekly review says ~3.5%; coming back from a break 5–15%)
+        const factor = accepted && plan.loadAdjust?.pct ? 1 - Math.min(20, Math.max(1, plan.loadAdjust.pct)) / 100 : 0.965
+        const lighter = snapLoad(byId.get(pe.exerciseId), s.weightKg * factor, eq, meta.get(pe.exerciseId))
         return { ...s, weightKg: lighter < s.weightKg ? lighter : s.weightKg }
       })
     }
-    if (opts?.adjust === 'drop-set' && pe.role !== 'main' && sets.length > 1) sets = sets.slice(0, -1)
+    // a re-entry week after a break (5%+ lighter) also has one fewer accessory set
+    const reentry = accepted && (plan.loadAdjust?.pct ?? 0) >= 5
+    if ((opts?.adjust === 'drop-set' || reentry) && pe.role !== 'main' && sets.length > 1) sets = sets.slice(0, -1)
     // warm-ups for the big lifts: generated, snapped to real plates, never counted as volume
     if (pe.role === 'main' && pe.warmupRule !== 'none' && eq && sets[0]?.weightKg && r.flags.indexOf('pr-test') < 0) {
       const w = warmupSets(sets[0].weightKg, byId.get(pe.exerciseId), eq)

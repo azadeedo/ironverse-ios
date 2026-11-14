@@ -36,6 +36,7 @@ import type { CardioLog, Plan, PlanDay, PlanExercise } from '@/db/types'
 import { newId, nowIso } from '@/lib/id'
 import { upsertTodayWeighIn } from './settings/lib'
 import { ed } from '@/lib/edition'
+import { RebuildPrompt } from './program/RebuildPlan'
 
 export default function ProgramScreen() {
   const [params] = useSearchParams()
@@ -241,6 +242,8 @@ function Dashboard({ plan }: { plan: Plan }) {
         {pw.finished && <Callout tone="good"><div className="space-y-1.5"><div className="font-semibold">12 weeks complete.</div><div>Review your strength journey and start a new block when you are ready.</div><Button small onClick={() => navigate('/strength-journey')}>Review the 12 weeks</Button></div></Callout>}
         {pw.repeat && <Callout tone="neutral">This is a repeat of week {pw.week}.</Callout>}
         {(plan.manualDeloads ?? []).includes(pw.calendarWeek) && <Callout tone="info">Manual deload this week — sessions are built lighter automatically.</Callout>}
+        {viewWeek === null && !pw.finished && <RebuildPrompt plan={plan} logs={logs} />}
+        {plan.loadAdjust?.week === pw.week && (plan.loadAdjust?.pct ?? 0) >= 5 && <Callout tone="info">Easing back in: this week is about {plan.loadAdjust?.pct}% lighter with one fewer accessory set.</Callout>}
 
         {reviewDue && viewWeek === null && (
           <Callout tone="good">

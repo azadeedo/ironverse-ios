@@ -1,0 +1,36 @@
+Ironverse is the all-in-one gym and nutrition app: plan your training, log every set, count calories and watch your body change, all in one place. Australian made, and used every day by its developer in his own training.
+
+TRAIN
+• Plans built around YOUR equipment: a full gym or a home setup. Switch Gym/Home and the exercises adapt.
+• The Ironverse 12-week program: 48 individually written workouts with squat, bench and deadlift progression.
+• 194 exercises with animated demos, muscles worked, form cues and setup tips.
+• Log weight, reps and effort in seconds, with rest timer, warm-ups, supersets, drop sets, rest-pause, myo-reps and AMRAP.
+• Weights you can actually load: the plate calculator only suggests weights your plates can build.
+• Personal records and estimated one-rep max, spotted automatically.
+
+EAT
+• Count calories and protein from 400+ foods across 15 cuisines: Australian, Middle Eastern, Turkish, Greek, Italian, Mexican, Indian, Chinese, Japanese, Korean, Thai, Vietnamese, Filipino, African and American.
+• Barcode scanner with a food health score , using the Open Food Facts database.
+• Meal photo calorie estimates using your own Anthropic (Claude) key (optional).
+• Smart calorie targets that only change with your OK, plus macro, water and supplement tracking.
+• Halal food filter, plus Ramadan and prayer-time awareness, all optional.
+
+PROGRESS
+• Weight trend, body measurements, strength charts and weekly reviews.
+• Progress photos with side-by-side compare.
+• Interactive anatomy map and a 3D body explorer.
+• Trophies, streaks, levels and challenges.
+
+PRIVATE BY DESIGN
+• No account needed. Your data stays on your iPhone and works offline.
+• No ads, no analytics, no tracking.
+• Full backup and restore to a file you control.
+• Suggest a feature or report a bug right inside the app. It goes straight to the developer.
+
+100% FREE
+Every feature is free for everyone: the 12-week program, advanced progress and reviews, the barcode scanner, meal photo estimates, the goal coach, photo compare, the 3D body and meal plans. No subscription, no trial, no ads and no account.
+
+Terms of Use: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+Privacy Policy: https://ironverse-legal.netlify.app/privacy-policy.html
+
+Ironverse gives general fitness and nutrition guidance, not medical advice. Check with a doctor before starting a new training or diet plan.

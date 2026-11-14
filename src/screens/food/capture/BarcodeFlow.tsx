@@ -26,9 +26,10 @@ import { fmtEnergy } from '@/lib/energy'
 import { cautionReason, isHalalHidden, primaryTagLabel } from '@/lib/halal'
 import { compressImage } from './compress'
 import { DraftEditor } from './DraftEditor'
+import { ProductEditor } from './ProductEditor'
 import type { DraftItem } from './types'
 
-type Stage = 'start' | 'live' | 'looking' | 'product' | 'draft'
+type Stage = 'start' | 'live' | 'looking' | 'product' | 'draft' | 'edit'
 type Basis = 'serve' | 'per100'
 
 interface Problem { headline: string; detail?: string }
@@ -178,6 +179,17 @@ export function BarcodeFlow({ halal, unit, confirmLabel, busy, onConfirm }: {
     )
   }
 
+  // ---------- fix / add a product ----------
+  if (stage === 'edit') {
+    return (
+      <ProductEditor
+        start={product ?? { barcode: normaliseBarcode(manual) }}
+        onSaved={(p) => showProduct(p)}
+        onCancel={() => setStage(product ? 'product' : 'start')}
+      />
+    )
+  }
+
   // ---------- product ----------
   if (stage === 'product' && product) {
     const serveG = product.servingGrams
@@ -209,7 +221,7 @@ export function BarcodeFlow({ halal, unit, confirmLabel, busy, onConfirm }: {
         </div>
 
         <div className="mt-2 flex flex-wrap gap-1.5">
-          {product.cached && <Badge tone="blue">Saved on this phone</Badge>}
+          {product.userVerified ? <Badge tone="green">✓ Your checked version</Badge> : product.cached && <Badge tone="blue">Saved on this phone</Badge>}
           {(() => { const c = matchConfidence(product); return <span title={c.why}><Badge tone={c.level === 'high' ? 'green' : c.level === 'medium' ? 'amber' : 'red'}>{c.level === 'high' ? '✓ Good match' : c.level === 'medium' ? 'Check numbers' : '⚠ Check the label'}</Badge></span> })()}
           {product.energyFromKj && <Badge tone="gray">Converted from kJ</Badge>}
           {flagged && <Badge tone="red">{primaryTagLabel({ dietTags: product.dietTags }) ?? 'Flagged'} — not halal</Badge>}
@@ -306,6 +318,9 @@ export function BarcodeFlow({ halal, unit, confirmLabel, busy, onConfirm }: {
             <RefreshCw size={14} /> Refresh data
           </Button>
         </div>
+        <Button full variant="secondary" small className="mt-2" onClick={() => setStage('edit')}>
+          ✏️ Wrong product or numbers? Fix it
+        </Button>
       </div>
     )
   }
@@ -395,6 +410,11 @@ export function BarcodeFlow({ halal, unit, confirmLabel, busy, onConfirm }: {
                   {problem.detail && <p className="mt-1 text-[12.5px] leading-relaxed text-ink2">{problem.detail}</p>}
                 </div>
               </div>
+              {normaliseBarcode(manual).length >= 8 && (
+                <Button full small className="mt-3" onClick={() => { setProduct(null); setStage('edit') }}>
+                  ➕ Add this product from the label
+                </Button>
+              )}
             </div>
           )}
 

@@ -35,7 +35,9 @@ function detectorCtor(): BarcodeDetectorCtor | null {
   return typeof g.BarcodeDetector === 'function' ? g.BarcodeDetector : null
 }
 
-export const PRODUCT_FORMATS = ['ean_13', 'ean_8', 'upc_a', 'upc_e', 'code_128', 'itf']
+// Food products carry EAN/UPC codes. Code 128 / ITF on the same packaging are shipping or
+// batch codes; reading one of those used to fetch an unrelated product (15 Nov 2026).
+export const PRODUCT_FORMATS = ['ean_13', 'ean_8', 'upc_a', 'upc_e']
 
 /** True when this browser has a NATIVE decoder (Android Chrome etc). */
 export function nativeDetectorSupported(): boolean {
@@ -159,8 +161,9 @@ export async function detectBarcodeInImage(blob: Blob): Promise<string | null> {
   }
   try {
     const hits = await detector.detect(source as CanvasImageSource)
-    const code = hits.map((h) => normaliseBarcode(h.rawValue)).find((c) => c.length >= 6)
-    return code ?? null
+    const codes = hits.map((h) => normaliseBarcode(h.rawValue)).filter((c) => c.length >= 6)
+    // prefer a code whose check digit is right; a misread one is still returned so lookup can explain
+    return codes.find((c) => barcodeChecksumOk(c)) ?? codes[0] ?? null
   } catch {
     return null
   } finally {
@@ -223,6 +226,7 @@ export async function startLiveScan(
   let stream: MediaStream | null = null
   let raf = 0
   let timer: number | undefined
+  let lastRead: string | null = null
 
   const stop = () => {
     stopped = true
@@ -279,12 +283,14 @@ export async function startLiveScan(
     if (video.readyState >= 2) {
       try {
         const hits = await detector.detect(video)
-        const code = hits.map((h) => normaliseBarcode(h.rawValue)).find((c) => c.length >= 6)
-        if (code) {
+        const code = hits.map((h) => normaliseBarcode(h.rawValue)).find((c) => c.length >= 8 && barcodeChecksumOk(c))
+        // accept only when two frames in a row agree: a moving 1D barcode is easy to misread once
+        if (code && code === lastRead) {
           stop()
           onDetect(code)
           return
         }
+        lastRead = code ?? lastRead
       } catch {
         /* transient decode failures are normal; keep scanning */
       }
@@ -310,6 +316,50 @@ export function normaliseBarcode(raw: string): string {
 export function isPlausibleBarcode(code: string): boolean {
   const c = normaliseBarcode(code)
   return c.length >= 6 && c.length <= 14
+}
+
+/** GS1 mod-10 check digit (EAN-8, UPC-A, EAN-13, GTIN-14). */
+function gtinCheckOk(c: string): boolean {
+  if (!/^\d+$/.test(c) || ![8, 12, 13, 14].includes(c.length)) return false
+  const digits = c.split('').map(Number)
+  const check = digits.pop() as number
+  const sum = digits.reverse().reduce((acc, d, i) => acc + d * (i % 2 === 0 ? 3 : 1), 0)
+  return (10 - (sum % 10)) % 10 === check
+}
+
+/** UPC-E (8 digits) → the UPC-A it stands for. */
+export function expandUpcE(c: string): string | null {
+  if (!/^[01]\d{7}$/.test(c)) return null
+  const [ns, d1, d2, d3, d4, d5, d6, chk] = c.split('')
+  let body: string
+  if ('012'.includes(d6)) body = `${d1}${d2}${d6}0000${d3}${d4}${d5}`
+  else if (d6 === '3') body = `${d1}${d2}${d3}00000${d4}${d5}`
+  else if (d6 === '4') body = `${d1}${d2}${d3}${d4}00000${d5}`
+  else body = `${d1}${d2}${d3}${d4}${d5}0000${d6}`
+  return `${ns}${body}${chk}`
+}
+
+/**
+ * True when the digits pass the barcode's own check digit. A camera that misreads one digit
+ * almost always fails this, which is how a wrong product used to slip through.
+ */
+export function barcodeChecksumOk(raw: string): boolean {
+  const c = normaliseBarcode(raw)
+  if (gtinCheckOk(c)) return true
+  const upca = c.length === 8 ? expandUpcE(c) : null
+  return !!upca && gtinCheckOk(upca)
+}
+
+/** The same product written different ways (UPC-A 12 ↔ EAN-13 with a leading 0, UPC-E, GTIN-14). */
+export function barcodeVariants(raw: string): string[] {
+  const c = normaliseBarcode(raw)
+  const out = [c]
+  const upca = c.length === 8 ? expandUpcE(c) : null
+  if (upca) out.push(upca, `0${upca}`)
+  if (c.length === 12) out.push(`0${c}`)
+  if (c.length === 13 && c.startsWith('0')) out.push(c.slice(1))
+  if (c.length === 14 && c.startsWith('0')) out.push(c.slice(1), c.slice(2))
+  return [...new Set(out)].filter((x) => x.length >= 8)
 }
 
 // ---------- product model ----------
@@ -341,6 +391,8 @@ export interface ScannedProduct {
   energyFromKj?: boolean
   /** set when the database calories were too low for its own macros and were recalculated (the old value) */
   energyCorrectedFrom?: number
+  /** your own checked version of this barcode */
+  userVerified?: boolean
 }
 
 export type BarcodeErrorKind = 'offline' | 'timeout' | 'not-found' | 'no-nutrition' | 'server' | 'bad-code' | 'unknown'
@@ -533,6 +585,7 @@ function entryToProduct(e: BarcodeEntry): ScannedProduct {
     dietTags: e.dietTags ?? [],
     cached: true,
     fetchedAt: e.fetchedAt,
+    userVerified: e.userVerified,
   }
 }
 
@@ -553,16 +606,35 @@ function productToEntry(p: ScannedProduct): BarcodeEntry {
     servingName: p.servingName,
     dietTags: p.dietTags,
     fetchedAt: p.fetchedAt,
+    userVerified: p.userVerified,
   }
 }
 
 export async function cachedProduct(code: string): Promise<ScannedProduct | null> {
   try {
-    const row = await db.barcodeCache.get(normaliseBarcode(code))
-    return row ? entryToProduct(row) : null
+    for (const v of barcodeVariants(code)) {
+      const row = await db.barcodeCache.get(v)
+      if (row) return entryToProduct(row)
+    }
+    return null
   } catch {
     return null
   }
+}
+
+/** Save your own checked or typed-in product for this barcode. It wins over every database from now on. */
+export async function saveUserProduct(p: ScannedProduct): Promise<ScannedProduct> {
+  const fixed: ScannedProduct = { ...p, barcode: normaliseBarcode(p.barcode), userVerified: true, cached: true, energyCorrectedFrom: undefined, energyFromKj: false, fetchedAt: new Date().toISOString() }
+  await db.barcodeCache.put(productToEntry(fixed))
+  return fixed
+}
+
+/** 4·protein + 4·carbs + 9·fat (+2·fibre) against the calories you typed; a hint, not a block. */
+export function macroCheck(per100: { kcal: number; protein: number; carbs: number; fat: number; fibre?: number }): string | null {
+  const est = per100.protein * 4 + per100.carbs * 4 + per100.fat * 9 + (per100.fibre ?? 0) * 2
+  if (!per100.kcal || est < 20) return null
+  const off = Math.abs(per100.kcal - est) / Math.max(per100.kcal, est)
+  return off > 0.15 ? `Protein, carbs and fat add up to about ${Math.round(est)} cal per 100 g, but the calories say ${per100.kcal}. Double-check the label.` : null
 }
 
 export async function cacheProduct(p: ScannedProduct): Promise<void> {
@@ -598,9 +670,13 @@ export async function lookupBarcode(
     throw new BarcodeError('bad-code', "That doesn't look like a barcode.", 'Product barcodes are 8 to 14 digits.')
   }
 
-  if (!opts.forceRefresh) {
-    const hit = await cachedProduct(code)
-    if (hit) return hit
+  // your own checked version always wins, even over "refresh"
+  const hit = await cachedProduct(code)
+  if (hit && (hit.userVerified || !opts.forceRefresh)) return hit
+
+  // a misread digit fails the check digit; never look up a guess
+  if (!barcodeChecksumOk(code)) {
+    throw new BarcodeError('bad-code', "That barcode didn't read cleanly.", 'The last digit does not check out, so it was not looked up. Scan again holding steady, or type the number under the bars.')
   }
 
   if (typeof navigator !== 'undefined' && navigator.onLine === false) {
@@ -618,10 +694,16 @@ export async function lookupBarcode(
 
   let res: Response
   try {
-    res = await fetch(OFF_URL(code), {
-      signal: controller.signal,
-      headers: { accept: 'application/json' },
-    })
+    // UPC-A (12) and EAN-13 with a leading 0 are the same product; try each way it may be stored
+    const tries = barcodeVariants(code)
+    res = await fetch(OFF_URL(tries[0]), { signal: controller.signal, headers: { accept: 'application/json' } })
+    for (const v of tries.slice(1)) {
+      if (res.status !== 404) {
+        const peek = (await res.clone().json().catch(() => null)) as { status?: number } | null
+        if (!peek || peek.status !== 0) break
+      }
+      res = await fetch(OFF_URL(v), { signal: controller.signal, headers: { accept: 'application/json' } })
+    }
   } catch {
     if (controller.signal.aborted && !opts.signal?.aborted) {
       throw new BarcodeError('timeout', 'Open Food Facts took too long to answer.', 'Try again, or add it by hand.')

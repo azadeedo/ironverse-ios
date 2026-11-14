@@ -875,6 +875,8 @@ export interface BarcodeEntry {
   servingName?: string
   dietTags?: DietTag[]
   fetchedAt: string
+  /** you checked or typed these numbers yourself: always used before any database */
+  userVerified?: boolean
 }
 
 // ---------- calorie carry-over ("take it off tomorrow") ----------
