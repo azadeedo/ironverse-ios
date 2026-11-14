@@ -2,9 +2,10 @@
 // What you save here becomes your verified version of that barcode: every later scan
 // of it uses your numbers before any database.
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Button, Input } from '@/components/ui'
 import { barcodeChecksumOk, macroCheck, normaliseBarcode, saveUserProduct, type ScannedProduct } from '@/lib/barcode'
+import { readNutritionLabel } from '@/lib/labelOcr'
 
 const num = (s: string) => {
   const v = parseFloat(String(s).replace(',', '.'))
@@ -32,6 +33,31 @@ export function ProductEditor({ start, onSaved, onCancel }: {
     sodium: str(p100?.sodium),
   })
   const [saving, setSaving] = useState(false)
+  const [reading, setReading] = useState<string | null>(null)
+  const photoRef = useRef<HTMLInputElement>(null)
+
+  /** "📷 Read the label": on-device OCR of the nutrition panel fills the per-100 numbers */
+  const readLabel = async (file: File | undefined) => {
+    if (!file) return
+    setReading('Reading the label on this phone…')
+    try {
+      const r = await readNutritionLabel(file)
+      const p = r.per100
+      const pick = (v: number | undefined, cur: string) => (v === undefined ? cur : String(v))
+      setF((cur) => ({
+        ...cur,
+        kcal: pick(p.kcal === undefined ? undefined : Math.round(p.kcal * 10) / 10, cur.kcal),
+        protein: pick(p.protein, cur.protein), carbs: pick(p.carbs, cur.carbs), fat: pick(p.fat, cur.fat),
+        sugar: pick(p.sugar, cur.sugar), fibre: pick(p.fibre, cur.fibre), sodium: pick(p.sodium, cur.sodium),
+        serving: pick(r.servingGrams, cur.serving),
+      }))
+      setReading(r.found >= 4
+        ? `Read ${r.found} of 6 values from the label (per 100 g/mL). Check each one against the label, then save.`
+        : `Only ${r.found} of 6 values could be read. Fill the frame with just the nutrition panel, flat and in good light, and try again — or type them in.`)
+    } catch {
+      setReading('The label could not be read on this phone. Type the numbers in instead.')
+    }
+  }
   const set = (k: keyof typeof f) => (e: React.ChangeEvent<HTMLInputElement>) => setF({ ...f, [k]: e.target.value })
 
   const per100 = { kcal: Math.round(num(f.kcal)), protein: num(f.protein), carbs: num(f.carbs), fat: num(f.fat), fibre: f.fibre ? num(f.fibre) : undefined }
@@ -75,6 +101,9 @@ export function ProductEditor({ start, onSaved, onCancel }: {
     <div>
       <h3 className="text-[18px] font-bold text-ink">{start.name ? 'Fix this product' : 'Add this product'}</h3>
       <p className="mt-1 text-[12.5px] text-ink3">Copy it from the nutrition panel (per 100 g). Saved as your checked version: next time you scan this barcode, these numbers are used first.</p>
+      <input ref={photoRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={(e) => { void readLabel(e.target.files?.[0]); e.target.value = '' }} />
+      <Button full variant="secondary" className="mt-3" onClick={() => photoRef.current?.click()}>📷 Read the nutrition label</Button>
+      {reading && <p className="mt-2 rounded-xl bg-surface3 p-2.5 text-[12.5px] text-ink2">{reading}</p>}
       <div className="mt-3 space-y-2.5">
         {field('Barcode', 'barcode', '', 'numeric')}
         {codeWarn && <p className="text-[12px] text-amber-400">{codeWarn}</p>}

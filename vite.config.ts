@@ -38,7 +38,7 @@ export default defineConfig(({ mode }) => ({
         globPatterns: ['**/*.{js,css,html,png,svg,woff2,mjs}'],
         // exercise demonstration images are cached the first time they are viewed,
         // not all up-front — keeps installs and updates small
-        globIgnores: ['**/media/**', 'version.json', '**/Anatomy3DScreen-*.js', '**/Body3D-*.js', '**/three*.js', '**/OrbitControls-*.js'],
+        globIgnores: ['**/media/**', '**/ocr/**', 'version.json', '**/Anatomy3DScreen-*.js', '**/Body3D-*.js', '**/three*.js', '**/OrbitControls-*.js'],
         runtimeCaching: [
           // the 3D body (three.js, ~500 KB) is cached the first time it is opened, not in every update
           { urlPattern: /\/assets\/(Anatomy3DScreen|Body3D|three|OrbitControls)[^/]*\.js$/, handler: 'CacheFirst', options: { cacheName: 'iv-3d', expiration: { maxEntries: 8 } } },

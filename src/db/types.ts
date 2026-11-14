@@ -877,6 +877,8 @@ export interface BarcodeEntry {
   fetchedAt: string
   /** you checked or typed these numbers yourself: always used before any database */
   userVerified?: boolean
+  mapVersion?: number
+  macrosFromServing?: number
 }
 
 // ---------- calorie carry-over ("take it off tomorrow") ----------

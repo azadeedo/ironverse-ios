@@ -391,6 +391,10 @@ export interface ScannedProduct {
   energyFromKj?: boolean
   /** set when the database calories were too low for its own macros and were recalculated (the old value) */
   energyCorrectedFrom?: number
+  /** protein/carbs/fat in the database were for one serve of this many grams, not per 100 g — scaled back */
+  macrosFromServing?: number
+  /** how the record was mapped; older cache entries are refreshed */
+  mapVersion?: number
   /** your own checked version of this barcode */
   userVerified?: boolean
 }
@@ -449,6 +453,23 @@ interface OffNutriments {
  * the real label ~63). Energy can be higher than the macros (fibre, alcohol, polyols), but it
  * can't be meaningfully lower — so then the calories are rebuilt from the macros.
  */
+/**
+ * Open Food Facts records sometimes hold one serve's protein/carbs/fat in the per-100 g fields
+ * while the energy is really per 100 g (Pauls protein yoghurt, 15 Nov 2026: 15.1 g protein "per
+ * 100 g" on a 150 g pouch that has 10.1 g per 100 g). Then the macros only agree with the energy
+ * after dividing by the serve size. Returns the scale to apply to the macros, or null.
+ */
+export function macrosLookPerServing(per100: { kcal: number; protein: number; carbs: number; fat: number; fibre?: number }, servingGrams?: number): number | null {
+  if (!servingGrams || servingGrams < 20 || Math.abs(servingGrams - 100) < 5 || !(per100.kcal > 0)) return null
+  const est = per100.protein * 4 + per100.carbs * 4 + per100.fat * 9 + (per100.fibre ?? 0) * 2
+  if (est < 15) return null
+  const off = Math.abs(per100.kcal - est) / Math.max(per100.kcal, est)
+  if (off <= 0.15) return null
+  const scaled = (est * 100) / servingGrams
+  const offScaled = Math.abs(per100.kcal - scaled) / Math.max(per100.kcal, scaled)
+  return offScaled <= 0.12 ? 100 / servingGrams : null
+}
+
 export function correctEnergy<T extends { kcal: number; protein: number; carbs: number; fat: number; fibre?: number }>(per100: T): { per100: T; from?: number } {
   const { kcal, protein, carbs, fat } = per100
   if (!(protein > 0 || carbs > 0 || fat > 0)) return { per100 }
@@ -458,6 +479,9 @@ export function correctEnergy<T extends { kcal: number; protein: number; carbs: 
 }
 
 /** Map an Open Food Facts product object into our shape. Exported for testing. */
+/** bump when the mapping changes: cached products mapped before it are fetched again */
+export const MAP_VERSION = 2
+
 export function mapOffProduct(code: string, product: Record<string, unknown>): ScannedProduct {
   const nut = (product.nutriments ?? {}) as OffNutriments
 
@@ -473,9 +497,9 @@ export function mapOffProduct(code: string, product: Record<string, unknown>): S
   // OFF's plain energy_100g is always kJ, never kcal
   if (kcal === undefined && n(nut['energy_100g']) !== undefined) { kcal = kjToKcal(n(nut['energy_100g'])!); energyFromKj = true }
 
-  const protein = n(nut['proteins_100g'])
-  const carbs = n(nut['carbohydrates_100g'])
-  const fat = n(nut['fat_100g'])
+  let protein = n(nut['proteins_100g'])
+  let carbs = n(nut['carbohydrates_100g'])
+  let fat = n(nut['fat_100g'])
 
   if (kcal === undefined && protein === undefined && carbs === undefined && fat === undefined) {
     throw new BarcodeError(
@@ -510,16 +534,25 @@ export function mapOffProduct(code: string, product: Record<string, unknown>): S
       ? product.serving_size.trim()
       : undefined
 
+  // per-serve macros stored as per 100 g: scale them back before any calorie check
+  const scale = macrosLookPerServing({ kcal: Math.round(kcal ?? 0), protein: protein ?? 0, carbs: carbs ?? 0, fat: fat ?? 0, fibre: n(nut['fiber_100g']) }, servingGrams) ?? 1
+  const sc = (v: number | undefined) => (v === undefined ? undefined : v * scale)
+  protein = sc(protein); carbs = sc(carbs); fat = sc(fat)
+  const fibre100 = sc(n(nut['fiber_100g'])), sugar100 = sc(n(nut['sugars_100g'])), sat100 = sc(n(nut['saturated-fat_100g']))
+  const sodium100 = sc(sodiumG)
+
   const fixed = correctEnergy({
       kcal: Math.round(kcal ?? 0),
       protein: round1(protein ?? 0),
       carbs: round1(carbs ?? 0),
       fat: round1(fat ?? 0),
-      fibre: n(nut['fiber_100g']) !== undefined ? round1(n(nut['fiber_100g'])!) : undefined,
+      fibre: fibre100 !== undefined ? round1(fibre100) : undefined,
   })
 
   return {
     energyCorrectedFrom: fixed.from,
+    macrosFromServing: scale !== 1 ? servingGrams : undefined,
+    mapVersion: MAP_VERSION,
     barcode: code,
     name: String(name).slice(0, 90),
     brand: brand?.slice(0, 60),
@@ -528,11 +561,11 @@ export function mapOffProduct(code: string, product: Record<string, unknown>): S
       protein: round1(protein ?? 0),
       carbs: round1(carbs ?? 0),
       fat: round1(fat ?? 0),
-      fibre: n(nut['fiber_100g']) !== undefined ? round1(n(nut['fiber_100g'])!) : undefined,
-      sugar: n(nut['sugars_100g']) !== undefined ? round1(n(nut['sugars_100g'])!) : undefined,
+      fibre: fibre100 !== undefined ? round1(fibre100) : undefined,
+      sugar: sugar100 !== undefined ? round1(sugar100) : undefined,
       // OFF reports sodium in GRAMS per 100g; we store milligrams.
-      sodium: sodiumG !== undefined ? Math.round(sodiumG * 1000) : undefined,
-      satFat: n(nut['saturated-fat_100g']) !== undefined ? round1(n(nut['saturated-fat_100g'])!) : undefined,
+      sodium: sodium100 !== undefined ? Math.round(sodium100 * 1000) : undefined,
+      satFat: sat100 !== undefined ? round1(sat100) : undefined,
     },
     servingGrams,
     servingName,
@@ -554,6 +587,7 @@ export function matchConfidence(p: ScannedProduct): { level: 'high' | 'medium' |
   const named = !/^Product \d+$/.test(p.name)
   if (!kcal || (missing >= 2 && kcal > 40)) return { level: 'low', why: 'Most nutrition numbers are missing — check the label.' }
   const off = fromMacros > 0 ? Math.abs(kcal - fromMacros) / Math.max(kcal, fromMacros) : 1
+  if (p.macrosFromServing) return { level: 'medium', why: `The database had protein, carbs and fat for one serve (${p.macrosFromServing} g) in its per-100 g boxes — scaled back to per 100 g. Check the label if you can.` }
   if (p.energyCorrectedFrom !== undefined) return { level: 'medium', why: `The database said ${p.energyCorrectedFrom} cal per 100 g, which is too low for its own protein, carbs and fat — recalculated to ${kcal}. Check the label if you can.` }
   if (off > 0.35 && kcal > 40) return { level: 'low', why: `Calories (${kcal}) do not match the macros (about ${Math.round(fromMacros)}) — check the label.` }
   if (off > 0.12 || p.energyFromKj || missing || !named) return { level: 'medium', why: p.energyFromKj ? 'Calories converted from kJ.' : !named ? 'No product name in the database.' : missing ? 'Some macros are missing.' : 'Calories and macros differ a little.' }
@@ -586,6 +620,8 @@ function entryToProduct(e: BarcodeEntry): ScannedProduct {
     cached: true,
     fetchedAt: e.fetchedAt,
     userVerified: e.userVerified,
+    mapVersion: e.mapVersion,
+    macrosFromServing: e.macrosFromServing,
   }
 }
 
@@ -607,6 +643,8 @@ function productToEntry(p: ScannedProduct): BarcodeEntry {
     dietTags: p.dietTags,
     fetchedAt: p.fetchedAt,
     userVerified: p.userVerified,
+    mapVersion: p.mapVersion,
+    macrosFromServing: p.macrosFromServing,
   }
 }
 
@@ -672,7 +710,10 @@ export async function lookupBarcode(
 
   // your own checked version always wins, even over "refresh"
   const hit = await cachedProduct(code)
-  if (hit && (hit.userVerified || !opts.forceRefresh)) return hit
+  const online = typeof navigator === 'undefined' || navigator.onLine !== false
+  // products saved before the per-serve fix (MAP_VERSION) are fetched again when online
+  const stale = !!hit && !hit.userVerified && (hit.mapVersion ?? 1) < MAP_VERSION && online
+  if (hit && (hit.userVerified || (!opts.forceRefresh && !stale))) return hit
 
   // a misread digit fails the check digit; never look up a guess
   if (!barcodeChecksumOk(code)) {
