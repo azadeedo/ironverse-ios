@@ -65,9 +65,9 @@
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>NSCameraUsageDescription</key>
-	<string>Ironverse uses the camera only when you choose to scan a food barcode, photograph a meal, or take a progress photo. Photos stay on your iPhone.</string>
+	<string>Ironverse uses the camera only when you choose to scan a food barcode, read a nutrition label, photograph a meal, or take a progress photo. Labels are read on your iPhone.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Ironverse lets you pick a meal or progress photo from your library. Photos stay on your iPhone.</string>
+	<string>Ironverse lets you pick a meal, nutrition label or progress photo from your library.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Ironverse can save a workout share card to your Photos when you ask it to.</string>
 	<key>NSHealthShareUsageDescription</key>
