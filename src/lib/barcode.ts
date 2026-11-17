@@ -585,6 +585,8 @@ export function matchConfidence(p: ScannedProduct): { level: 'high' | 'medium' |
   const fromMacros = protein * 4 + carbs * 4 + fat * 9
   const missing = [protein, carbs, fat].filter((v) => !v).length
   const named = !/^Product \d+$/.test(p.name)
+  // his own checked version came from the label: zero protein in a diet drink is right, not "missing"
+  if (p.userVerified && kcal >= 0) return { level: 'high', why: 'Your checked version, from the label.' }
   if (!kcal || (missing >= 2 && kcal > 40)) return { level: 'low', why: 'Most nutrition numbers are missing — check the label.' }
   const off = fromMacros > 0 ? Math.abs(kcal - fromMacros) / Math.max(kcal, fromMacros) : 1
   if (p.macrosFromServing) return { level: 'medium', why: `The database had protein, carbs and fat for one serve (${p.macrosFromServing} g) in its per-100 g boxes — scaled back to per 100 g. Check the label if you can.` }
@@ -597,8 +599,11 @@ export function matchConfidence(p: ScannedProduct): { level: 'high' | 'medium' |
 // ---------- cache ----------
 
 function entryToProduct(e: BarcodeEntry): ScannedProduct {
-  // products saved before the calorie check get the same correction when read back
-  const fixed = correctEnergy({ kcal: e.kcal, protein: e.protein, carbs: e.carbs, fat: e.fat, fibre: e.fibre })
+  // products saved before the calorie check get the same correction when read back,
+  // but never his own checked version: that is the label, exactly as he saved it (17 Nov 2026)
+  const fixed = e.userVerified
+    ? { per100: { kcal: e.kcal }, from: undefined }
+    : correctEnergy({ kcal: e.kcal, protein: e.protein, carbs: e.carbs, fat: e.fat, fibre: e.fibre })
   return {
     energyCorrectedFrom: fixed.from,
     barcode: e.barcode,

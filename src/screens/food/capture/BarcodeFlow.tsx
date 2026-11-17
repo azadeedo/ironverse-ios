@@ -381,9 +381,12 @@ export function BarcodeFlow({ halal, unit, confirmLabel, busy, onConfirm }: {
             <div className="flex gap-2">
               <Input
                 inputMode="numeric"
-                placeholder="e.g. 9300675024235" aria-label="9300675024235"
+                placeholder="e.g. 9300675024235" aria-label="Barcode number"
+                enterKeyHint="search"
                 value={manual}
                 onChange={(e) => setManual(e.target.value)}
+                // the keyboard's return key looks it up too (17 Nov 2026), not only the search button
+                onKeyDown={(e) => { if (e.key === 'Enter' && isPlausibleBarcode(manual)) { e.preventDefault(); void doLookup(manual) } }}
               />
               <Button
                 disabled={!isPlausibleBarcode(manual)}

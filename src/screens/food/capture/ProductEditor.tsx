@@ -5,7 +5,7 @@
 import { useRef, useState } from 'react'
 import { Button, Input } from '@/components/ui'
 import { barcodeChecksumOk, macroCheck, normaliseBarcode, saveUserProduct, type ScannedProduct } from '@/lib/barcode'
-import { readNutritionLabel } from '@/lib/labelOcr'
+import { readNutritionLabel, trustworthy } from '@/lib/labelOcr'
 
 const num = (s: string) => {
   const v = parseFloat(String(s).replace(',', '.'))
@@ -42,14 +42,21 @@ export function ProductEditor({ start, onSaved, onCancel }: {
     setReading('Reading the label on this phone…')
     try {
       const r = await readNutritionLabel(file)
+      // never fill the form with numbers that don't add up (a misread is worse than an empty box)
+      if (!trustworthy(r)) {
+        setReading('The label could not be read clearly enough to trust. Take it again straight on, close up, flat and in good light — or type the numbers in.')
+        return
+      }
       const p = r.per100
-      const pick = (v: number | undefined, cur: string) => (v === undefined ? cur : String(v))
+      // the label replaces every nutrient: one it couldn't read is left EMPTY, never the database's
+      // old number (17 Nov 2026: the Monster kept the database's per-can 284 mg sodium next to label values)
+      const fromLabel = (v: number | undefined) => (v === undefined ? '' : String(v))
       setF((cur) => ({
         ...cur,
-        kcal: pick(p.kcal === undefined ? undefined : Math.round(p.kcal * 10) / 10, cur.kcal),
-        protein: pick(p.protein, cur.protein), carbs: pick(p.carbs, cur.carbs), fat: pick(p.fat, cur.fat),
-        sugar: pick(p.sugar, cur.sugar), fibre: pick(p.fibre, cur.fibre), sodium: pick(p.sodium, cur.sodium),
-        serving: pick(r.servingGrams, cur.serving),
+        kcal: fromLabel(p.kcal === undefined ? undefined : Math.round(p.kcal * 100) / 100),
+        protein: fromLabel(p.protein), carbs: fromLabel(p.carbs), fat: fromLabel(p.fat),
+        sugar: fromLabel(p.sugar), fibre: fromLabel(p.fibre), sodium: fromLabel(p.sodium),
+        serving: r.servingGrams === undefined ? cur.serving : String(r.servingGrams),
       }))
       setReading(r.found >= 4
         ? `Read ${r.found} of 6 values from the label (per 100 g/mL). Check each one against the label, then save.`
@@ -60,7 +67,8 @@ export function ProductEditor({ start, onSaved, onCancel }: {
   }
   const set = (k: keyof typeof f) => (e: React.ChangeEvent<HTMLInputElement>) => setF({ ...f, [k]: e.target.value })
 
-  const per100 = { kcal: Math.round(num(f.kcal)), protein: num(f.protein), carbs: num(f.carbs), fat: num(f.fat), fibre: f.fibre ? num(f.fibre) : undefined }
+  // calories keep 2 decimals: a diet drink is 2.36 per 100 mL, and rounding to 2 loses 15% per can
+  const per100 = { kcal: Math.round(num(f.kcal) * 100) / 100, protein: num(f.protein), carbs: num(f.carbs), fat: num(f.fat), fibre: f.fibre ? num(f.fibre) : undefined }
   const code = normaliseBarcode(f.barcode)
   const warn = macroCheck(per100)
   const codeWarn = code && !barcodeChecksumOk(code) ? 'That number fails the barcode check digit — check it against the digits under the bars.' : null

@@ -1,13 +1,14 @@
 // "I've been away — rebuild my plan" (15 Nov 2026). Shows the rebuilt remaining
 // programme first; nothing changes until it is accepted, and the old schedule is kept.
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { RotateCcw } from 'lucide-react'
 import { db, getSetting, setSetting } from '@/db'
 import { Button, Callout, Input, Sheet } from '@/components/ui'
 import { useUI } from '@/lib/store'
 import { todayStr, nowIso } from '@/lib/id'
 import { applyRecovery, buildRecoveryPlan, lastProgramWorkout, weeksAwayFrom } from '@/lib/recovery'
+import { programWeekFor } from '@/lib/program12'
 import type { Plan, WorkoutLog } from '@/db/types'
 
 /** Away two weeks or more: the programme offers the rebuild itself. */
@@ -15,9 +16,11 @@ export function RebuildPrompt({ plan, logs }: { plan: Plan; logs: WorkoutLog[] }
   const [open, setOpen] = useState(false)
   const last = lastProgramWorkout(plan, logs)
   const away = weeksAwayFrom(last.date, todayStr())
+  // already rebuilt (or set "I'm on week N") since the last workout: no need to keep asking
+  const handled = !!plan.manualWeek?.setAt && (!last.date || plan.manualWeek.setAt.slice(0, 10) >= last.date)
   return (
     <>
-      {away >= 2 ? (
+      {away >= 2 && !handled ? (
         <Callout tone="info">
           <div className="space-y-1.5">
             <div className="font-semibold">Welcome back — about {away} weeks away</div>
@@ -38,8 +41,16 @@ export function RebuildSheet({ open, onClose, plan, logs }: { open: boolean; onC
   const today = todayStr()
   const last = lastProgramWorkout(plan, logs)
   const autoAway = weeksAwayFrom(last.date, today)
-  const [left, setLeft] = useState(String(Math.max(1, 12 - Math.max(0, last.week) + (autoAway >= 2 ? 0 : 0))))
+  // default "weeks left": up to the programme's original end date (12 weeks from its start)
+  const autoLeft = Math.max(1, 12 - Math.max(0, programWeekFor(plan, today).calendarWeek))
+  const [left, setLeft] = useState(String(autoLeft))
   const [away, setAway] = useState(String(autoAway))
+  // 17 Nov 2026: the sheet is mounted with the page, before the workout history has loaded, so it
+  // showed "0 weeks away". Work the numbers out again every time it opens.
+  useEffect(() => {
+    if (open) { setLeft(String(autoLeft)); setAway(String(autoAway)) }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open])
   const rp = useMemo(() => buildRecoveryPlan(plan, logs, { today, weeksLeft: Math.max(1, parseInt(left, 10) || 1), weeksAway: Math.max(0, parseInt(away, 10) || 0) }), [plan, logs, today, left, away])
 
   const accept = async () => {
